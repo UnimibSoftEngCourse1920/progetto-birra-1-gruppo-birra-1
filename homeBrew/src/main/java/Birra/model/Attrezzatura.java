@@ -1,4 +1,4 @@
-package homeBrew.domain;
+package Birra.model;
 
 public class Attrezzatura 
 {
