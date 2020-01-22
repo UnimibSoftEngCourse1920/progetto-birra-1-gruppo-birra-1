@@ -3,7 +3,7 @@ package Birra.model;
 public class Ingrediente 
 {
 	private String nome; //nome dell'ingrediente		
-	private double quantita; //Quantita (assoluta) dell'ingrediente
+	private double quantita; //Quantita (in percentuale) dell'ingrediente
 	private boolean bloccato; //se true significa che l'ingrediente non può essere usato dal birraio
 	private String tipo; //tipo di ingrediente (malto/luppoli/zucchero/acqua/lievito)
 	public Ingrediente(String nome, double quantita, boolean bloccato, String tipo)
