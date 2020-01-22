@@ -1,26 +1,26 @@
 package Birra.model;
 
-public class Attrezzatura 
-{
-	private String nome; //Nome dello strumento 
-	private double portata; //Capacità dello strumento
-	private String tipo; //Tipo dello strumento (può essere di tre tipi tubo, fementatore, cisterna.
-	public Attrezzatura(String nome, double portata, String tipo)
-	{
-		this.nome=nome;
-		this.portata=portata;
-		this.tipo=tipo;
+public class Attrezzatura {
+	
+	private String nome; // Nome dello strumento
+	private double portata; // Capacità dello strumento
+	private TipoAttrezzatura tipo; // Tipo dello strumento (può essere di tre tipi: tubo, fementatore, cisterna)
+
+	public Attrezzatura(String nome, double portata, TipoAttrezzatura tipo) {
+		this.nome = nome;
+		this.portata = portata;
+		this.tipo = tipo;
 	}
-	public String getNome()
-	{
-		return this.nome;
+
+	public String getNome() {
+		return nome;
 	}
-	public double getPortata()
-	{
-		return this.portata;
+
+	public double getPortata() {
+		return portata;
 	}
-	public String tipo()
-	{
-		return this.tipo;
+
+	public TipoAttrezzatura tipo() {
+		return tipo;
 	}
 }
