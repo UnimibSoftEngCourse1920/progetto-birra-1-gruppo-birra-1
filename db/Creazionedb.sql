@@ -11,7 +11,7 @@ create table ricetta(
 	
 create table ingrediente (
      nome varchar(50) NOT NULL PRIMARY KEY,
-     quantità decimal(3,2),
+     quantità double,
      tipo enum('malto','luppoli','zucchero','acqua','lievito'),
      bloccato boolean)
      Engine=Innodb;
