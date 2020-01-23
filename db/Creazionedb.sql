@@ -26,7 +26,7 @@ create table ricettaIngrediente(
 	
 create table attrezzatura(
      nomeAttrezzatura varchar(50) NOT NULL PRIMARY KEY,
-     portata decimal(3,2),
+     portata double,
      tipo enum('tubo','fermentatore','cisterna'))
      Engine=Innodb;
 
