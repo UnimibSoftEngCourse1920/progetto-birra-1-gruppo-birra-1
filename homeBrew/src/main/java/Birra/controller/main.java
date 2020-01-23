@@ -14,6 +14,8 @@ public class main
 		Nota nota =new Nota("nota1", "blablabla...");
 		Ricetta r=new Ricetta("stout", 3.30, "fare...", strumenti, ingredienti, null);
 		ControllerRicetta cr=new ControllerRicetta();
+		//System.out.println(cr.getRicetta(r.getNomeBirra()));
+		//System.out.println(cr.getNota(r.getNomeBirra()));
 		cr.aggiungiRicetta(r);
 	}
 }
