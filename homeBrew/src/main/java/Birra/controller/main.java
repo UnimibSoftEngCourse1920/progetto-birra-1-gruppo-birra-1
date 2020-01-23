@@ -16,6 +16,6 @@ public class main
 		ControllerRicetta cr=new ControllerRicetta();
 		//System.out.println(cr.getRicetta(r.getNomeBirra()));
 		//System.out.println(cr.getNota(r.getNomeBirra()));
-		cr.aggiungiRicetta(r);
+		cr.eliminaRicetta(r.getNomeBirra());
 	}
 }

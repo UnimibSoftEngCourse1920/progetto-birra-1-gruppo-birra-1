@@ -17,7 +17,6 @@ public class ControllerRicetta
 	{
 		Statement st=null;
 		String queryInserisciRicetta= getQueryInserisciRicetta(ricetta); //Creo la query per l'inserimento della ricetta
-		
 		System.out.println(queryInserisciRicetta);
         try (Connection conn = DriverManager.getConnection(
                 "jdbc:mysql://127.0.0.1:3306/homeBrew", "root",getPsw()); //Connessione al database
@@ -136,12 +135,54 @@ public class ControllerRicetta
 		return true;
 	}
 	/*
+	 * Elimino la ricetta identificata dal nome ricevuto in input
+	 */
+	public boolean eliminaRicetta(String ricetta)
+	{
+		Statement st=null;
+		String queryEliminaRicettaAttrezzatura= getQueryEliminaRicettaAttrezzatura(ricetta); //Creo la query per eliminare le righe nella tabella ricettaAttrezzatura
+		String queryEliminaRicetta=getQueryEliminaRicetta(ricetta);
+		try (Connection conn = DriverManager.getConnection(
+				"jdbc:mysql://127.0.0.1:3306/homeBrew", "root",getPsw()); //Connessione al database
+			Statement preparedStatement =  conn.prepareStatement(queryEliminaRicettaAttrezzatura)) {
+				st = conn.createStatement();
+				st.executeUpdate(queryEliminaRicettaAttrezzatura); //Viene eseguita la prima query
+				st.executeUpdate(queryEliminaRicetta); //Viene eseguita la seconda query
+			} catch (SQLException e) {
+				System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+			} catch (Exception e) {
+				System.out.println(e);
+			}finally {
+				if(st!=null)
+					try {
+						st.close();
+					} catch (SQLException e) {
+						System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+					}
+				System.out.println("Closing database connection");
+			}
+		return true;
+	}
+	/*
 	 * Metodo che restituisce la passowrd del database, è più sicuro rispetto a scrivere la 
 	 * password direttamente nel metodo getConnection di DriverManager
 	 */
 	private String getPsw()
 	{
 		return "root";
+	}
+	private String getQueryEliminaRicettaAttrezzatura(String ricetta)
+	{
+		String query ="";
+		query= "delete from ricettaAttrezzatura where ricetta = '"+ricetta+"';";
+		return query;
+		
+	}
+	private String getQueryEliminaRicetta(String ricetta)
+	{
+		String query ="";
+		query= "delete from ricetta where nomeBirra = '"+ricetta+"';";
+		return query;
 	}
 	/*
 	 * Metodo che restituisce la query necessaria per aggiungere una nota
