@@ -3,7 +3,7 @@ use homebrew;
 
 create table ricetta(
      nomeBirra varchar(50) NOT NULL PRIMARY KEY,
-     tempo decimal(3,2),
+     tempo double,
      procedimento varchar(500),
      titoloNota varchar(50),
      descrizioneNota varchar(500))
