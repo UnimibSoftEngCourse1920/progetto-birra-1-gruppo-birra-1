@@ -1,0 +1,6 @@
+Birra\model\Nota.class
+Birra\model\Ricetta.class
+Birra\model\Attrezzatura.class
+Birra\model\TipoIngrediente.class
+Birra\model\Ingrediente.class
+Birra\model\TipoAttrezzatura.class
