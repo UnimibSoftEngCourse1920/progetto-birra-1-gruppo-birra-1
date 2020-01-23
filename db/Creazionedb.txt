@@ -12,7 +12,7 @@ create table ricetta(
 create table ingrediente (
      nomeIngrediente varchar(50) NOT NULL PRIMARY KEY,
      quantita double,
-     tipo enum('malto','luppoli','zucchero','acqua','lievito'),
+     tipo enum('MALTO','LUPPOLI','ZUCCHERO','ACQUA','LIEVITO'),
      bloccato boolean)
      Engine=Innodb;
 	
@@ -27,7 +27,7 @@ create table ricettaIngrediente(
 create table attrezzatura(
      nomeAttrezzatura varchar(50) NOT NULL PRIMARY KEY,
      portata double,
-     tipo enum('tubo','fermentatore','cisterna'))
+     tipo enum('TUBO','FERMENTATORE','CISTERNA'))
      Engine=Innodb;
 
 create table ricettaAttrezzatura(
