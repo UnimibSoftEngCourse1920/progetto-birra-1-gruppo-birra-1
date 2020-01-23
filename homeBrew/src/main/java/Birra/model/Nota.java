@@ -17,4 +17,30 @@ public class Nota {
 		return descrizione;
 	}
 	
+	@Override
+	public String toString() {
+		return "[titolo=" + titolo + ", descrizione=" + descrizione + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = prime + descrizione.hashCode();
+		result = prime * result + titolo.hashCode();
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		
+		if (obj instanceof Nota) {
+			Nota nota = (Nota) obj;
+			return titolo.equals(nota.titolo) && descrizione.equals(nota.descrizione);
+		}
+		
+		return false;
+	}
+	
 }
