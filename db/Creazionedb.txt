@@ -1,39 +1,39 @@
 create database homebrew;
 use homebrew;
-	
+
 create table ricetta(
      nomeBirra varchar(50) NOT NULL PRIMARY KEY,
-     tempo decimal(3,2),
+     tempo double,
      procedimento varchar(500),
      titoloNota varchar(50),
      descrizioneNota varchar(500))
      Engine=Innodb;
 	
 create table ingrediente (
-     nome varchar(50) NOT NULL PRIMARY KEY,
-     quantità decimal(3,2),
-     tipo enum('malto','luppoli','zucchero','acqua','lievito'),
+     nomeIngrediente varchar(50) NOT NULL PRIMARY KEY,
+     quantita double,
+     tipo enum('MALTO','LUPPOLI','ZUCCHERO','ACQUA','LIEVITO'),
      bloccato boolean)
      Engine=Innodb;
 	
 create table ricettaIngrediente(
-     ricetta varchar(50) NOT NULL,
-     ingrediente varchar(50) NOT NULL,
-     PRIMARY KEY (ricetta, ingrediente),
-     FOREIGN KEY (ricetta) REFERENCES ricetta(nomeBirra),
-     FOREIGN KEY (ingrediente) REFERENCES ingrediente(nome))
+     nomeBirra varchar(50) NOT NULL,
+	 nomeIngrediente varchar(50) NOT NULL,
+     PRIMARY KEY (nomeBirra, nomeIngrediente),
+     FOREIGN KEY (nomeBirra) REFERENCES ricetta(nomeBirra),
+     FOREIGN KEY (nomeIngrediente) REFERENCES ingrediente(nomeIngrediente))
      Engine = Innodb;
 	
 create table attrezzatura(
-     nome varchar(50) NOT NULL PRIMARY KEY,
-     portata decimal(3,2),
-     tipo enum('tubo','fermentatore','cisterna'))
+     nomeAttrezzatura varchar(50) NOT NULL PRIMARY KEY,
+     portata double,
+     tipo enum('TUBO','FERMENTATORE','CISTERNA'))
      Engine=Innodb;
 
 create table ricettaAttrezzatura(
-     ricetta varchar(50) NOT NULL,
-     attrezzatura varchar(50) NOT NULL,
-     PRIMARY KEY (ricetta, attrezzatura),
-     FOREIGN KEY (ricetta) REFERENCES ricetta (nomeBirra),
-     FOREIGN KEY (attrezzatura) REFERENCES attrezzatura (nome))
+     nomeBirra varchar(50) NOT NULL,
+     nomeAttrezzatura varchar(50) NOT NULL,
+     PRIMARY KEY (nomeBirra, nomeAttrezzatura),
+     FOREIGN KEY (nomeBirra) REFERENCES ricetta (nomeBirra),
+     FOREIGN KEY (nomeAttrezzatura) REFERENCES attrezzatura (nomeAttrezzatura))
      Engine=Innodb;
