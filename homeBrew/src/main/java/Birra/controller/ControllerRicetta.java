@@ -77,7 +77,7 @@ public class ControllerRicetta {
 	}
 
 	/*
-	 * Viene eliminata una ricetta (identificata dal parametro nomeBirra) dal db
+	 * Metodo che crea la query necessaria per eliminare la ricetta dal db
 	 */
 	private String sqlEliminaRicetta(String nomeBirra) {
 		return "delete from ricetta where nomeBirra = '" + nomeBirra + "'";
@@ -92,8 +92,7 @@ public class ControllerRicetta {
 	}
 
 	/*
-	 * Metodo che crea le query necessarie per inserire la ricetta e l'attrezzatura
-	 * nel db
+	 * Metodo che crea la query necessaria per inserire la ricetta nel db
 	 */
 	private String sqlAggiungiRicetta(Ricetta ricetta) {
 		String query;
