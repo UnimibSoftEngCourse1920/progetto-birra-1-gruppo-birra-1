@@ -1,233 +1,100 @@
 package Birra.controller;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.HashMap;
 
 import Birra.model.*;
 
-public class ControllerRicetta 
-{
+public class ControllerRicetta {
+
+	private ControllerIngrediente controllerIngr;
+	private ControllerAttrezzatura controllerAttr;
+
+	public ControllerRicetta(ControllerIngrediente controllerIngr, ControllerAttrezzatura controllerAttr) {
+		this.controllerIngr = controllerIngr;
+		this.controllerAttr = controllerAttr;
+	}
+	
 	/*
 	 * Aggiungo una ricetta nel db
 	 */
-	public boolean aggiungiRicetta(Ricetta ricetta)
-	{
-		Statement st=null;
-		String queryInserisciRicetta= getQueryInserisciRicetta(ricetta); //Creo la query per l'inserimento della ricetta
-		System.out.println(queryInserisciRicetta);
-        try (Connection conn = DriverManager.getConnection(
-                "jdbc:mysql://127.0.0.1:3306/homeBrew", "root",getPsw()); //Connessione al database
-             Statement preparedStatement =  conn.prepareStatement(queryInserisciRicetta)) {
-        	st = conn.createStatement();
-        	st.executeUpdate(queryInserisciRicetta); //Viene eseguita la query
-        } catch (SQLException e) {
-            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
-        } catch (Exception e) {
-            System.out.println(e);
-        }finally {
-        	if(st!=null)
-				try {
-					st.close();
-				} catch (SQLException e) {
-					System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
-				}
-        	System.out.println("Closing database connection");
-        }
-        return true;
+	public void aggiungiRicetta(Ricetta ricetta) {
+		DBUtils.update(sqlAggiungiRicetta(ricetta));
+		
+		String nomeBirra = ricetta.getNomeBirra();
+		Ingrediente[] ingredienti = ricetta.getIngredienti();
+		
+		controllerIngr.aggiungiIngredienti(ingredienti);
+		controllerIngr.associaRicetta(nomeBirra, ingredienti);
+		controllerAttr.associaRicetta(nomeBirra, ricetta.getStrumenti());
 	}
+
 	/*
-	 * Questo metodo dato il nome della birra che una ricetta permette di produrre, restituisce una 
-	 * stringa contenente le informazioni della ricetta come nomeBirra, tempo, procedimento, il titolo di eventauli note
-	 * e il testo di eventauli note 
-	 * restituisce null se la ricetta non è salvat nel database
+	 * Questo metodo dato il nome della birra che una ricetta permette di produrre,
+	 * restituisce una stringa contenente le informazioni della ricetta come
+	 * nomeBirra, tempo, procedimento, il titolo di eventauli note e il testo di
+	 * eventauli note restituisce null se la ricetta non è salvat nel database
 	 */
-	public String getRicetta(String ricetta) 
-	{
-		ResultSet rs=null;
-		String result = null;
-		String queryGetRicetta =  getQueryGetRicetta(ricetta);
-		 try (Connection conn = DriverManager.getConnection(
-	                "jdbc:mysql://127.0.0.1:3306/homeBrew", "root",getPsw()); //Connessione al database
-	            Statement preparedStatement =  conn.prepareStatement(queryGetRicetta)) {
-			 	rs = preparedStatement.executeQuery(queryGetRicetta); //Eseguo la query
-	        	while (rs.next())
-	            {
-	        		result = "NomeBirra: " + rs.getString("nomeBirra")+" Tempo: "+rs.getString("tempo")+
-	        				" Procedimento: "+rs.getString("procedimento")+" titoloNota: "+rs.getString("titoloNota")+" descrizioneNota: "+
-	        				rs.getString("descrizioneNota");
-	            }
-	        } catch (SQLException e) {
-	            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
-	        } catch (Exception e) {
-	            System.out.println(e);
-	        }finally {
-	        	if(rs!=null)
-					try {
-						rs.close();
-					} catch (SQLException e) {
-						System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
-					}
-				}
-	        	System.out.println("Closing database connection");
-		 return result;
+	public Ricetta getRicetta(String nomeBirra) {
+		return parseRicetta(DBUtils.getRows(sqlGetRicetta(nomeBirra)).get(0));
 	}
-	/*
-	 * Questo metodo restituisce le info relative ad una nota, data in input la ricetta ad essa associata
-	 * restituisce null se la ricetta non è stata salvata nel db
-	 */
-	public String getNota(String ricetta)
-	{
-		ResultSet rs=null;
-		String result = null;
-		String queryGetNota =  getQueryGetNota(ricetta);
-		 try (Connection conn = DriverManager.getConnection(
-	                "jdbc:mysql://127.0.0.1:3306/homeBrew", "root",getPsw()); //Connessione al database
-	             Statement preparedStatement =  conn.prepareStatement(queryGetNota)) {
-			 	 rs = preparedStatement.executeQuery(queryGetNota); //Eseguo la query
-	        	while (rs.next())
-	            {
-	        		result = "titoloNota: " + rs.getString("titoloNota")+" descrizioneNota: "+
-	        				rs.getString("descrizioneNota");
-	            }
-	        } catch (SQLException e) {
-	            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
-	        } catch (Exception e) {
-	            System.out.println(e);
-	        }finally {
-	        	if(rs!=null)
-					try {
-						rs.close();
-					} catch (SQLException e) {
-						System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
-					}
-	        	System.out.println("Closing database connection");
-	        }
-		 return result;
+	
+	public Ricetta parseRicetta(HashMap<String, String> row) {
+		String nomeBirra = row.get("nomeBirra");
+		return new Ricetta(nomeBirra, Double.parseDouble(row.get("tempo")), row.get("procedimento"),
+				controllerAttr.getStrumenti(nomeBirra), controllerIngr.getIngredienti(nomeBirra),
+				new Nota(row.get("titoloNota"), row.get("descrizioneNota")));
 	}
-	/*
-	 * Aggiungo la nota ricevuta in input alla ricetta ricevuta anch'essa in input
-	 */
-	public boolean aggiungiNota(Nota nota, Ricetta ricetta)
-	{
-		Statement st=null;
-		String queryAggiungiNota= getQueryAggiungiNota(nota, ricetta); //Creo la query per l'inserimento della nota
-		try (Connection conn = DriverManager.getConnection(
-				"jdbc:mysql://127.0.0.1:3306/homeBrew", "root",getPsw()); //Connessione al database
-			Statement preparedStatement =  conn.prepareStatement(queryAggiungiNota)) {
-				st = conn.createStatement();
-				st.executeUpdate(queryAggiungiNota); //Viene eseguita la query
-			} catch (SQLException e) {
-				System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
-			} catch (Exception e) {
-				System.out.println(e);
-			}finally {
-				if(st!=null)
-					try {
-						st.close();
-					} catch (SQLException e) {
-						System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
-					}
-				System.out.println("Closing database connection");
-			}
-		return true;
-	}
+	
 	/*
 	 * Elimino la ricetta identificata dal nome ricevuto in input
 	 */
-	public boolean eliminaRicetta(String ricetta)
-	{
-		Statement st=null;
-		String queryEliminaRicettaAttrezzatura= getQueryEliminaRicettaAttrezzatura(ricetta); //Creo la query per eliminare le righe nella tabella ricettaAttrezzatura
-		String queryEliminaRicetta=getQueryEliminaRicetta(ricetta);
-		try (Connection conn = DriverManager.getConnection(
-				"jdbc:mysql://127.0.0.1:3306/homeBrew", "root",getPsw()); //Connessione al database
-			Statement preparedStatement =  conn.prepareStatement(queryEliminaRicettaAttrezzatura)) {
-				st = conn.createStatement();
-				st.executeUpdate(queryEliminaRicettaAttrezzatura); //Viene eseguita la prima query
-				st.executeUpdate(queryEliminaRicetta); //Viene eseguita la seconda query
-			} catch (SQLException e) {
-				System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
-			} catch (Exception e) {
-				System.out.println(e);
-			}finally {
-				if(st!=null)
-					try {
-						st.close();
-					} catch (SQLException e) {
-						System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
-					}
-				System.out.println("Closing database connection");
-			}
-		return true;
+	public void eliminaRicetta(String nomeBirra) {
+		controllerIngr.disassociaRicetta(nomeBirra);
+		controllerAttr.disassociaRicetta(nomeBirra);
+		DBUtils.update(sqlEliminaRicetta(nomeBirra));
 	}
+	
+	public void modificaRicetta(Ricetta ricetta) {
+		eliminaRicetta(ricetta.getNomeBirra());
+		aggiungiRicetta(ricetta);
+	}
+	
 	/*
-	 * Metodo che restituisce la passowrd del database, è più sicuro rispetto a scrivere la 
-	 * password direttamente nel metodo getConnection di DriverManager
+	 * Aggiungo la nota ricevuta in input alla ricetta ricevuta anch'essa in input
 	 */
-	private String getPsw()
-	{
-		return "root";
+	public void aggiungiNota(String nomeBirra, Nota nota) {
+		Ricetta ricetta = getRicetta(nomeBirra);
+		modificaRicetta(new Ricetta(nomeBirra, ricetta.getTempo(), ricetta.getProcedimento(), ricetta.getStrumenti(), ricetta.getIngredienti(), nota));
 	}
-	private String getQueryEliminaRicettaAttrezzatura(String ricetta)
-	{
-		String query ="";
-		query= "delete from ricettaAttrezzatura where ricetta = '"+ricetta+"';";
-		return query;
+
+	private String sqlEliminaRicetta(String nomeBirra) {
+		return "delete from ricetta where nomeBirra = '" + nomeBirra + "'";
+	}
+	
+	/*
+	 * Metodo che restituisce la query necessaria per prelevare la ricetta dal db,
+	 * dato l'attributo nomeBirra.
+	 */
+	private String sqlGetRicetta(String nomeBirra) {
+		return "select * from ricetta where nomeBirra = " + "'" + nomeBirra + "'";
+	}
+
+	/*
+	 * Metodo che crea le query necessarie per inserire la ricetta e l'attrezzatura
+	 * nel db
+	 */
+	private String sqlAggiungiRicetta(Ricetta ricetta) {
+		String query;
+		Nota nota = ricetta.getNota();
 		
-	}
-	private String getQueryEliminaRicetta(String ricetta)
-	{
-		String query ="";
-		query= "delete from ricetta where nomeBirra = '"+ricetta+"';";
-		return query;
-	}
-	/*
-	 * Metodo che restituisce la query necessaria per aggiungere una nota
-	 */
-	private String getQueryAggiungiNota(Nota nota, Ricetta ricetta)
-	{
-		String query = "";
-		query = "update ricetta set titoloNota = '" + nota.getTitolo()+ "', descrizioneNota = '"+
-		nota.getDescrizione()+ "' where nomeBirra = '"+ricetta.getNomeBirra()+"';";
-		return query;
-	}
-	private String getQueryGetNota(String ricetta)
-	{
-		String query = "";
-		query = "select ricetta.titoloNota, ricetta.descrizioneNota from ricetta where nomeBirra = " + "'" + ricetta + "';";
-		return query;
-	}
-	/*
-	 * Meotodo che restituisce la query necessaria per prelevare la 
-	 * ricetta dal db, dato l'attributo nomeBirra.
-	 */
-	private String getQueryGetRicetta(String ricetta)
-	{
-		String query = "";
-		query = "select * from ricetta where nomeBirra = " + "'" + ricetta + "';";
-		return query;
-	}
-	/*
-	 * Metodo che crea le query necessarie per inserire la ricetta e l'attrezzatura nel db 
-	 */
-	private String getQueryInserisciRicetta(Ricetta ricetta)
-	{
-		String query="";
-		Nota nota=ricetta.getNota();
-		//Attrezzatura[] strumenti=ricetta.getStrumenti();
-		if(nota!=null)
-		{
-			query = "insert ignore into ricetta (nomeBirra, tempo, procedimento, titoloNota, descrizioneNota) values ('" +ricetta.getNomeBirra() +"',"+ricetta.getTempo()
-			+",'"+ricetta.getProcedimento()+"','"+nota.getTitolo()+"','"+nota.getDescrizione()+"');";
-		}
-		if (nota==null)
-		{
-			query="insert ignore into ricetta (nomeBirra, tempo, procedimento) values ('"+ricetta.getNomeBirra() +"',"+ricetta.getTempo()
-			+",'"+ricetta.getProcedimento()+"');";
-		}
+		if (nota == null)
+			query = "insert ignore into ricetta (nomeBirra, tempo, procedimento) values ('" + ricetta.getNomeBirra()
+					+ "'," + ricetta.getTempo() + ",'" + ricetta.getProcedimento() + "')";
+		else
+			query = "insert ignore into ricetta (nomeBirra, tempo, procedimento, titoloNota, descrizioneNota) values ('"
+					+ ricetta.getNomeBirra() + "'," + ricetta.getTempo() + ",'" + ricetta.getProcedimento() + "','"
+					+ nota.getTitolo() + "','" + nota.getDescrizione() + "')";
+		
 		return query;
 	}
 }
