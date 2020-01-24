@@ -22,7 +22,7 @@ public class DBUtils {
 		} catch (SQLException e) {
 			printSQLException(e);
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		} finally {
 
 			if (st != null)
@@ -59,7 +59,7 @@ public class DBUtils {
 		} catch (SQLException e) {
 			printSQLException(e);
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		} finally {
 			if (rs != null)
 				try {
@@ -74,7 +74,7 @@ public class DBUtils {
 	}
 	
 	private static Connection DBConnection() throws SQLException {
-		return DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/homeBrew", "root", "root"); // Connessione al
+		return DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/homeBrew", "root", getPsw()); // Connessione al
 																									// database
 	}
 	
@@ -84,5 +84,9 @@ public class DBUtils {
 
 	private static void printSQLException(SQLException e) {
 		System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+	}
+	private static String getPsw()
+	{
+		return "root";
 	}
 }
