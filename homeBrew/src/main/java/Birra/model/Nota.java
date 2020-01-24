@@ -2,13 +2,14 @@ package Birra.model;
 
 public class Nota {
 	
-	private String titolo, descrizione;
+	private String titolo, descrizione; //vengono definiti i campi che compongono l'oggetto Nota
 	
+	//viene creato il costruttore di Nota
 	public Nota(String titolo, String descrizione) {
 		this.titolo = titolo;
 		this.descrizione = descrizione;
 	}
-
+	//Vengono aggiunti i metodi per ottenere i vari valori delle variabili provate
 	public String getTitolo() {
 		return titolo;
 	}
@@ -21,7 +22,8 @@ public class Nota {
 	public String toString() {
 		return "[titolo=" + titolo + ", descrizione=" + descrizione + "]";
 	}
-
+	
+	//Si definiscono i metodi per confrontare gli oggetti di tipo Nota
 	@Override
 	public int hashCode() {
 		final int prime = 31;

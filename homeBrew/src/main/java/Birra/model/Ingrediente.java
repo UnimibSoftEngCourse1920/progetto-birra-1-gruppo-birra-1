@@ -7,13 +7,14 @@ public class Ingrediente {
 	private boolean bloccato; // se true significa che l'ingrediente non può essere usato dal birraio
 	private TipoIngrediente tipo; // tipo di ingrediente (malto/luppoli/zucchero/acqua/lievito)
 
+	//definisco il costrutture di Ingredienti
 	public Ingrediente(String nome, double quantita, boolean bloccato, TipoIngrediente tipo) {
 		this.nome = nome;
 		this.quantita = quantita;
 		this.bloccato = bloccato;
 		this.tipo = tipo;
 	}
-
+	//definisco i metodi per ottenere le informazioni delle variabili private 
 	public String getNome() {
 		return nome;
 	}

@@ -6,12 +6,14 @@ public class Attrezzatura {
 	private double portata; // Capacità dello strumento
 	private TipoAttrezzatura tipo; // Tipo dello strumento (può essere di tre tipi: tubo, fementatore, cisterna)
 
-	public Attrezzatura(String nome, double portata, TipoAttrezzatura tipo) {
+	//definisco il costrutture di Attrezzatura
+	public Attrezzatura(String nome, double portata, TipoAttrezzatura tipo) { 
 		this.nome = nome;
 		this.portata = portata;
 		this.tipo = tipo;
 	}
-
+	
+	//definisco i metodi per ottenere le informazioni presenti nelle variabili private
 	public String getNome() {
 		return nome;
 	}
@@ -28,7 +30,8 @@ public class Attrezzatura {
 	public String toString() {
 		return "[nome=" + nome + ", portata=" + portata + ", tipo=" + tipo + "]";
 	}
-
+	
+	//definisco i metodi per la comparazione con altri oggetti simili
 	@Override
 	public int hashCode() {
 		return nome.hashCode();
