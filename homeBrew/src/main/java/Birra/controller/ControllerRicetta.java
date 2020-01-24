@@ -1,5 +1,6 @@
 package Birra.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import Birra.model.*;
@@ -36,7 +37,8 @@ public class ControllerRicetta {
 	 * restituisce l'oggetto Ricetta
 	 */
 	public Ricetta getRicetta(String nomeBirra) {
-		return parseRicetta(DBUtils.getRows(sqlGetRicetta(nomeBirra)).get(0));
+		ArrayList<HashMap<String, String>> rows = DBUtils.getRows(sqlGetRicetta(nomeBirra));
+		return rows.isEmpty() ? null : parseRicetta(rows.get(0));
 	}
 	
 	/*

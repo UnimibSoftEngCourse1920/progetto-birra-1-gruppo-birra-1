@@ -95,7 +95,8 @@ public class ControllerIngrediente {
 	 */
 	public Ingrediente getIngrediente(String nomeIngrediente) {
 		String query = "select * from ingrediente where nomeIngrediente = '" + nomeIngrediente + "'";
-		return parseIngrediente(DBUtils.getRows(query).get(0));
+		ArrayList<HashMap<String, String>> rows = DBUtils.getRows(query);
+		return rows.isEmpty() ? null : parseIngrediente(rows.get(0));
 	}
 	
 	/*
