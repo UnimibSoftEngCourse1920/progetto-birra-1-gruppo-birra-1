@@ -12,37 +12,26 @@ import java.util.HashMap;
 public class DBUtils {
 
 	public static void update(String sql) {
-		Statement st = null;
 		System.out.println(sql);
 
-		try (Connection conn = DBConnection()) {
-			st = conn.createStatement();
+		try (Connection conn = DBConnection();
+				Statement st = conn.createStatement();) {
 			st.executeUpdate(sql); // Viene eseguito l'update
 
 		} catch (SQLException e) {
 			printSQLException(e);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-		} finally {
-
-			if (st != null)
-				try {
-					st.close();
-				} catch (SQLException e) {
-					printSQLException(e);
-				}
-
-			printClosingConnection();
 		}
 	}
 
 	public static ArrayList<HashMap<String, String>> getRows(String query) {
-		ResultSet rs = null;
 		ArrayList<HashMap<String, String>> rows = null;
 		
-		try (Connection conn = DBConnection()) {
-
-			rs = conn.prepareStatement(query).executeQuery(query); // Eseguo la query
+		try (Connection conn = DBConnection();
+				Statement st = conn.createStatement();
+				ResultSet rs = st.executeQuery(query);) {
+			 // Eseguo la query
 			ResultSetMetaData md = rs.getMetaData();
 			int nColumns = md.getColumnCount();
 			rows = new ArrayList<>();
@@ -60,13 +49,6 @@ public class DBUtils {
 			printSQLException(e);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					printSQLException(e);
-				}
 		}
 
 		printClosingConnection();
