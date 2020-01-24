@@ -9,8 +9,14 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/*
+ * La classe DBUtils permette di eseguire le query di aggiornamento e select
+ */
 public class DBUtils {
 
+	/*
+	 * Viene eseguita una query di aggiornamento dati del db
+	 */
 	public static void update(String sql) {
 		System.out.println(sql);
 
@@ -25,6 +31,9 @@ public class DBUtils {
 		}
 	}
 
+	/*
+	 * Viene eseguita una query di tipo select
+	 */
 	public static ArrayList<HashMap<String, String>> getRows(String query) {
 		ArrayList<HashMap<String, String>> rows = null;
 		
@@ -55,18 +64,31 @@ public class DBUtils {
 		return rows;
 	}
 	
+	/*
+	 * Viene eseguita la connessione con il db
+	 */
 	private static Connection DBConnection() throws SQLException {
 		return DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/homeBrew", "root", getPsw()); // Connessione al
 																									// database
 	}
 	
+	/*
+	 * Viene stampato un messaggio di chiusura della connessione con il db 
+	 */
 	private static void printClosingConnection() {
 		System.out.println("Closing database connection");
 	}
-
+	
+	/*
+	 * Viene stampata una eccezione 
+	 */
 	private static void printSQLException(SQLException e) {
 		System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
 	}
+	
+	/*
+	 * Viene restitiuta la password per l'accesso al database 
+	 */
 	private static String getPsw()
 	{
 		return "root";

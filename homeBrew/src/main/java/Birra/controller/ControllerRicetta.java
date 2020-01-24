@@ -4,6 +4,9 @@ import java.util.HashMap;
 
 import Birra.model.*;
 
+/*
+ * La classe ControllerRicetta gestisce le ricette nel database
+ */
 public class ControllerRicetta {
 
 	private ControllerIngrediente controllerIngr;
@@ -30,14 +33,16 @@ public class ControllerRicetta {
 
 	/*
 	 * Questo metodo dato il nome della birra che una ricetta permette di produrre,
-	 * restituisce una stringa contenente le informazioni della ricetta come
-	 * nomeBirra, tempo, procedimento, il titolo di eventauli note e il testo di
-	 * eventauli note restituisce null se la ricetta non è salvat nel database
+	 * restituisce l'oggetto Ricetta
 	 */
 	public Ricetta getRicetta(String nomeBirra) {
 		return parseRicetta(DBUtils.getRows(sqlGetRicetta(nomeBirra)).get(0));
 	}
-
+	
+	/*
+	 * Dato il risultato della query che preleva dal database una ricetta, restituisce un
+	 * oggetto di tipo ricetta
+	 */
 	public Ricetta parseRicetta(HashMap<String, String> row) {
 		String nomeBirra = row.get("nomeBirra");
 		return new Ricetta(nomeBirra, Double.parseDouble(row.get("tempo")), row.get("procedimento"),
@@ -46,7 +51,7 @@ public class ControllerRicetta {
 	}
 
 	/*
-	 * Elimino la ricetta identificata dal nome ricevuto in input
+	 * Viene eliminata la ricetta identificata dal nome ricevuto in input
 	 */
 	public void eliminaRicetta(String nomeBirra) {
 		controllerIngr.disassociaRicetta(nomeBirra);
@@ -54,13 +59,16 @@ public class ControllerRicetta {
 		DBUtils.update(sqlEliminaRicetta(nomeBirra));
 	}
 
+	/*
+	 * Viene modificata una ricetta presente nel database
+	 */
 	public void modificaRicetta(Ricetta ricetta) {
 		eliminaRicetta(ricetta.getNomeBirra());
 		aggiungiRicetta(ricetta);
 	}
 
 	/*
-	 * Aggiungo la nota ricevuta in input alla ricetta ricevuta anch'essa in input
+	 * Viene aggiunta una nota alla ricetta identificata dal parametro nomeBirra
 	 */
 	public void aggiungiNota(String nomeBirra, Nota nota) {
 		Ricetta ricetta = getRicetta(nomeBirra);
@@ -68,6 +76,9 @@ public class ControllerRicetta {
 				ricetta.getIngredienti(), nota));
 	}
 
+	/*
+	 * Viene eliminata una ricetta (identificata dal parametro nomeBirra) dal db
+	 */
 	private String sqlEliminaRicetta(String nomeBirra) {
 		return "delete from ricetta where nomeBirra = '" + nomeBirra + "'";
 	}
