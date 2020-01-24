@@ -13,7 +13,7 @@ public class main
 		Ingrediente[] ingredienti = {i};
 		Nota nota =new Nota("nota1", "blablabla...");
 		Ricetta r=new Ricetta("stout", 3.30, "fare...", strumenti, ingredienti, null);
-		ControllerRicetta cr=new ControllerRicetta();
+		ControllerRicetta cr=new ControllerRicetta(new ControllerIngrediente(), new ControllerAttrezzatura());
 		//System.out.println(cr.getRicetta(r.getNomeBirra()));
 		//System.out.println(cr.getNota(r.getNomeBirra()));
 		cr.eliminaRicetta(r.getNomeBirra());
