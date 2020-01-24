@@ -18,7 +18,8 @@ create table ingrediente (
 	
 create table ricettaIngrediente(
      nomeBirra varchar(50) NOT NULL,
-	 nomeIngrediente varchar(50) NOT NULL,
+     nomeIngrediente varchar(50) NOT NULL,
+     percentuale double(3, 2),
      PRIMARY KEY (nomeBirra, nomeIngrediente),
      FOREIGN KEY (nomeBirra) REFERENCES ricetta(nomeBirra),
      FOREIGN KEY (nomeIngrediente) REFERENCES ingrediente(nomeIngrediente))
