@@ -1,4 +1,6 @@
 package Birra.controller;
+import java.util.HashMap;
+
 import Birra.model.*;
 
 public class main 
@@ -10,7 +12,8 @@ public class main
 		Attrezzatura strumento=new Attrezzatura("tuobo1", 10.10, tipo);
 		Attrezzatura[] strumenti= {strumento};
 		Ingrediente i=new Ingrediente("malto", 3.20, false, tipoI);
-		Ingrediente[] ingredienti = {i};
+		HashMap<Ingrediente, Double> ingredienti = new HashMap<>();
+		ingredienti.put(i, 0.5);
 		Nota nota =new Nota("nota1", "blablabla...");
 		Ricetta r=new Ricetta("stout", 3.30, "fare...", strumenti, ingredienti, null);
 		ControllerRicetta cr=new ControllerRicetta(new ControllerIngrediente(), new ControllerAttrezzatura());
