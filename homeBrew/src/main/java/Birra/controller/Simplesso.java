@@ -11,36 +11,37 @@ public class Simplesso {
 	public void esegui() {
 		final int n = tableau[0].length, m = tableau.length;
 		
-		final int colonnaPivot;
-		while ((colonnaPivot = colonnaPivot()) != -1) {
-			final int rigaPivot = rigaPivot(colonnaPivot);
-			final double pivot = tableau[rigaPivot][colonnaPivot];
+		int jPivot;
+		while ((jPivot = colonnaPivot()) != -1) {
+			final int iPivot = rigaPivot(jPivot);
+			final double pivot = tableau[iPivot][jPivot];
 			
 			for (int j = 0; j < n; j++)
-				tableau[rigaPivot][j] /= pivot;
+				tableau[iPivot][j] /= pivot;
 			
-			for (int i = 0; i < rigaPivot; i++)
-				sottraiMultiploRigaPivot(i, rigaPivot, colonnaPivot);
+			for (int i = 0; i < iPivot; i++)
+				sottraiMultiploRigaPivot(i, iPivot, jPivot);
 			
-			for (int i = rigaPivot + 1; i < m; i++)
-				sottraiMultiploRigaPivot(i, rigaPivot, colonnaPivot);
+			for (int i = iPivot + 1; i < m; i++)
+				sottraiMultiploRigaPivot(i, iPivot, jPivot);
 		}
 	}
 	
-	private void sottraiMultiploRigaPivot(int i, int rigaPivot, int colonnaPivot) {
-		double[] ai = tableau[i];
-		double coeff = ai[colonnaPivot];
+	private void sottraiMultiploRigaPivot(int i, int iPivot, int jPivot) {
+		double[] riga = tableau[i];
+		double coeff = riga[jPivot];
+		double[] rigaPivot = tableau[iPivot];
 		
-		for (int j = 0; j < ai.length; j++)
-			ai[j] -= coeff * tableau[rigaPivot][j];
+		for (int j = 0; j < rigaPivot.length; j++)
+			riga[j] -= coeff * rigaPivot[j];
 	}
 	
-	private int rigaPivot(int colonnaPivot) {
+	private int rigaPivot(int jPivot) {
 		double minRapp = Double.POSITIVE_INFINITY;
 		int riga = -1;
 		
 		for (int i = 1; i < tableau.length; i++) {
-			double coeff = tableau[i][colonnaPivot];
+			double coeff = tableau[i][jPivot];
 			
 			if (coeff > 0) {
 				double rapp = tableau[i][0] / coeff;
