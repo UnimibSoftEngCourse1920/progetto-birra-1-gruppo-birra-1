@@ -16,8 +16,9 @@ public class Simplesso {
 			final int iPivot = rigaPivot(jPivot);
 			final double pivot = tableau[iPivot][jPivot];
 			
-			for (int j = 0; j < n; j++)
-				tableau[iPivot][j] /= pivot;
+			if (pivot != 1)
+				for (int j = 0; j < n; j++)
+					tableau[iPivot][j] /= pivot;
 			
 			for (int i = 0; i < iPivot; i++)
 				sottraiMultiploRigaPivot(i, iPivot, jPivot);
@@ -30,10 +31,13 @@ public class Simplesso {
 	private void sottraiMultiploRigaPivot(int i, int iPivot, int jPivot) {
 		double[] riga = tableau[i];
 		double coeff = riga[jPivot];
-		double[] rigaPivot = tableau[iPivot];
 		
-		for (int j = 0; j < rigaPivot.length; j++)
-			riga[j] -= coeff * rigaPivot[j];
+		if (coeff != 0) {
+			double[] rigaPivot = tableau[iPivot];
+			
+			for (int j = 0; j < riga.length; j++)
+				riga[j] -= coeff * rigaPivot[j];
+		}
 	}
 	
 	private int rigaPivot(int jPivot) {
