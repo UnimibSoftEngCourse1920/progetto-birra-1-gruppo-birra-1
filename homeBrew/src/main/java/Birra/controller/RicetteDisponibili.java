@@ -70,44 +70,44 @@ public class RicetteDisponibili {
 	}
 	
 	/*
-	 * funzione obiettivo: quantita di birra producibile
-	 * vincoli ingredienti: ogni ingrediente non può eccedere la sua quatita disponibile
-	 * vincolo birra: la birra non può essere in eccesso rispetto alla minima tra le capienze dei suoi strumenti
+	 * funzione obiettivo: quantita di birra da produrre
+	 * vincoli ingredienti: non eccedere la quantità disponibile, rispettare percentuale ricetta
+	 * vincolo birra: non eccedere la minima tra le capienze dei suoi strumenti
 	 */
 	private double[][] creaTableau(Ricetta r) {
 		final ArrayList<Entry<Ingrediente, Double>> ingr = new ArrayList<>(r.getIngredienti().entrySet());
 		final Attrezzatura[] strum = r.getStrumenti();
 		
-		final int m = 2 + ingr.size(); //(funzione obiettivo) + (vincoli ingredienti) + (vincolo birra)
-		final int n = 2 + (ingr.size() << 1); //(termine noto) + (var ingredienti) + (slack ingredienti) + (slack birra)
-		
+		final int m = (ingr.size() + 1) << 1; //(funzione obiettivo) + (vincoli quantità) + (vincoli percentuali) + (vincolo birra)
+		final int n = ingr.size() << 1 + 3; //(termine noto) + (var ingredienti) + (slack ingredienti) + (var birra) + (slack birra)
+		final int jVarBirra = n - 2;
 		final double[][] tab = new double[m][n];
 		
 		//riga funzione obiettivo
-		int j = 1; //termine noto funzione obiettivo = 0
-		for (Entry<Ingrediente, Double> coppia : ingr) {
-			tab[0][j] = -coppia.getValue(); //coeff funzione obiettivo negati (percentuali ingredienti negate)
-			j++;
-		}
+		tab[0][jVarBirra] = -1; //coeff var birra negato
 		
-		//righe vincoli ingredienti
+		//righe vincoli quantità (quantità ingrediente + slack ingrediente = quantità disponibile)
 		int i = 1;
-		for (Entry<Ingrediente,Double> coppia : ingr) {
-			tab[i][0] = coppia.getKey().getQuantita(); //termine noto (quantita ingrediente)
+		for (Entry<Ingrediente, Double> coppia : ingr) {
+			tab[i][0] = coppia.getKey().getQuantita(); //termine noto (quantità disponibile)
 			tab[i][i] = 1; // coeff var ingrediente
 			tab[i][i + ingr.size()] = 1; //coeff var slack
+			i++;
 		}
 		
-		//riga vincolo birra
-		final int last = m - 1;
-		tab[last][0] = minCapienza(strum); //termine noto (min capienza)
-		
-		j = 1;
+		//righe vincoli percentuali (percentuale ricetta * quantità birra - quantità ingrediente = 0)
+		int j = 1;
 		for (Entry<Ingrediente, Double> coppia : ingr) {
-			tab[last][j] = coppia.getValue(); //coeff var ingrediente (percentuali ingredienti)
+			tab[i][j] = -1; // sottrarre var ingrediente
+			tab[i][jVarBirra] = coppia.getValue(); //coeff var birra (percentuale ricetta)
+			i++;
 			j++;
 		}
 		
+		//riga vincolo birra (quantità birra + slack birra = min capienza)
+		final int last = m - 1;
+		tab[last][0] = minCapienza(strum); //termine noto (min capienza)
+		tab[last][jVarBirra] = 1; // coeff var birra
 		tab[last][n - 1] = 1; //coeff var slack birra
 		
 		return tab;
