@@ -9,12 +9,12 @@ public class Simplesso {
 	}
 	
 	public void esegui() {
-		int n = tableau[0].length, m = tableau.length;
+		final int n = tableau[0].length, m = tableau.length;
 		
-		int colonnaPivot;
+		final int colonnaPivot;
 		while ((colonnaPivot = colonnaPivot()) != -1) {
-			int rigaPivot = rigaPivot(colonnaPivot);
-			double pivot = tableau[rigaPivot][colonnaPivot];
+			final int rigaPivot = rigaPivot(colonnaPivot);
+			final double pivot = tableau[rigaPivot][colonnaPivot];
 			
 			for (int j = 0; j < n; j++)
 				tableau[rigaPivot][j] /= pivot;
