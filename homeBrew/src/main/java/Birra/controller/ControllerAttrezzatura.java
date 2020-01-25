@@ -58,7 +58,7 @@ public class ControllerAttrezzatura {
 	 * Viene creato un oggetto di tipo attrezzatura a partire dal risultato della query 
 	 * che preleva gli strumenti memorizzati nel database.
 	 */
-	public Attrezzatura parseAttrezzatura(HashMap<String, String> row) {
+	private Attrezzatura parseAttrezzatura(HashMap<String, String> row) {
 		return new Attrezzatura(row.get("nomeAttrezzatura"), Double.parseDouble(row.get("portata")),
 				TipoAttrezzatura.valueOf(row.get("tipo")));
 	}

@@ -45,7 +45,7 @@ public class ControllerRicetta {
 	 * Dato il risultato della query che preleva dal database una ricetta, restituisce un
 	 * oggetto di tipo ricetta
 	 */
-	public Ricetta parseRicetta(HashMap<String, String> row) {
+	private Ricetta parseRicetta(HashMap<String, String> row) {
 		String nomeBirra = row.get("nomeBirra");
 		return new Ricetta(nomeBirra, Double.parseDouble(row.get("tempo")), row.get("procedimento"),
 				controllerAttr.getStrumenti(nomeBirra), controllerIngr.getIngredienti(nomeBirra),

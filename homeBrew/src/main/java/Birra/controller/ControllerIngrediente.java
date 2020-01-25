@@ -103,7 +103,7 @@ public class ControllerIngrediente {
 	 * Dato il risultato della query per prelevare un ingrediente dal database viene restituito
 	 * un ogetto di tipo Ingrediente
 	 */
-	public Ingrediente parseIngrediente(HashMap<String, String> row) {
+	private Ingrediente parseIngrediente(HashMap<String, String> row) {
 		return new Ingrediente(row.get("nomeIngrediente"), Double.parseDouble(row.get("quantita")),
 				Boolean.parseBoolean(row.get("bloccato")), TipoIngrediente.valueOf(row.get("tipo")));
 	}
