@@ -243,10 +243,12 @@ public class GuiRicetta implements Gui {
 			@Override
 			public void actionPerformed(ActionEvent event)
 			{
-				Ricetta r = controller.getRicetta(nome.getText());
-				Nota nota = r.getNota();
+				Ricetta r =null;
+				r = controller.getRicetta(nome.getText());
+				Nota nota = null;
 				if(r != null)
 				{
+					nota = r.getNota();
 					String n ="";
 					if(nota != null)
 					{
@@ -278,7 +280,7 @@ public class GuiRicetta implements Gui {
 		eliminaRicetta.addActionListener(new ActionListener () {
 			public void actionPerformed(ActionEvent e) 
 			{
-				cr.eliminaRicetta(nome.getText());
+				controller.eliminaRicetta(nome.getText());
 				JOptionPane.showMessageDialog(guiFrame, "Ricetta eliminata");	
 			}
 		});
@@ -310,6 +312,10 @@ public class GuiRicetta implements Gui {
 						JOptionPane.showMessageDialog(null,"Nessuna nota da visualizzare","Errore",JOptionPane.WARNING_MESSAGE);
 					}
 					
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null,"La ricetta "+ nome.getText()+ " non esiste","Errore",JOptionPane.WARNING_MESSAGE);
 				}
 			}
 			
@@ -405,13 +411,11 @@ public class GuiRicetta implements Gui {
 				campiIngrediente.add(nomeLabel, gbc);
 				
 				JTextField nome = new JTextField(15);
-				nome.setCaretColor(Color.DARK_GRAY);
 				gbc.gridx = 1;
 				gbc.gridy = 0;
 				gbc.insets = new Insets(5, 0, 0, 10);
 				gbc.anchor = GridBagConstraints.LINE_END;
 				campiIngrediente.add(nome, gbc);
-				
 				
 				
 				JLabel quantitaLabel = new JLabel("quantità: ");
@@ -555,11 +559,13 @@ public class GuiRicetta implements Gui {
 				Ingrediente i = new Ingrediente(nomeIngrediente, quantitaIngrediente, bloccatoIngrediente, tipoIngrediente);
 				double percentualeIngrediente = 0.0; 
 				try {
-					percentualeIngrediente = Double.parseDouble(quantita.getText());
+					percentualeIngrediente = Double.parseDouble(percentuale.getText());
+					System.out.println(percentualeIngrediente);
+					System.out.println(i.toString());
+					ingredienti.put(i, percentualeIngrediente);
 				}catch (Exception e1) {
 					JOptionPane.showMessageDialog(dialog, "Inserire un numero");
 				}
-				ingredienti.put(i, percentualeIngrediente);
 			}
 		});
 	}
@@ -573,17 +579,25 @@ public class GuiRicetta implements Gui {
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				Ricetta ricetta = parseRicetta(nomeText, tempoText, procedimentoText, notaText, descrizioneNotaText); 
-				if (ricetta == null)
-					JOptionPane.showMessageDialog(guiFrame, "Inserire un numero nel campo tempo");
-				else
+				String nomeBirra = nomeText.getText();
+				String tempo = tempoText.getText();
+				String procedimento = procedimentoText.getText();
+				String titoloNota = notaText.getText();
+				String descrizioneNota = descrizioneNotaText.getText();
+				//System.out.println(nomeBirra + tempo + procedimento  + ingredienti + titoloNota + descrizioneNota);
+				Attrezzatura[] a = strumenti.toArray(new Attrezzatura[strumenti.size()]);
+				try 
 				{
-					cr.aggiungiRicetta(ricetta);
+					System.out.println(ingredienti.toString());
+					controller.aggiungiRicetta(nomeBirra, tempo, procedimento, a, ingredienti, titoloNota, descrizioneNota);
+				}catch(IllegalArgumentException error)
+				{
+					JOptionPane.showMessageDialog(guiFrame, error.toString());
+				}finally
+				{
 					ingredienti = new HashMap<>();
 					strumenti = new ArrayList<Attrezzatura>();
-					JOptionPane.showMessageDialog(guiFrame, "Ricetta inserita nel database");
-				}
-					
+				}	
 			}
 		});
 	}
@@ -597,17 +611,29 @@ public class GuiRicetta implements Gui {
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				Ricetta ricetta = parseRicetta(nomeText, tempoText, procedimentoText, notaText, descrizioneNotaText); 
-				if (ricetta == null)
-					JOptionPane.showMessageDialog(guiFrame, "Inserire un numero nel campo tempo");
-				else
+				String nomeBirra = nomeText.getText();
+				String tempo = tempoText.getText();
+				String procedimento = procedimentoText.getText();
+				String titoloNota = notaText.getText();
+				String descrizioneNota = descrizioneNotaText.getText();
+				Attrezzatura[] a = strumenti.toArray(new Attrezzatura[strumenti.size()]);
+				try 
 				{
-					cr.modificaRicetta(ricetta);
-					ingredienti = new HashMap<>();
-					strumenti = new ArrayList<Attrezzatura>();
-					JOptionPane.showMessageDialog(guiFrame, "Ricetta modificata");
+					boolean risultato = controller.modificaRicetta(nomeBirra, tempo, procedimento, a, ingredienti, titoloNota, descrizioneNota);
+					if (risultato)
+					{
+						JOptionPane.showMessageDialog(guiFrame, "Ricetta modificata correttamente");
+						ingredienti = new HashMap<>();
+						strumenti = new ArrayList<Attrezzatura>();
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(guiFrame, "Impossibile modificare la ricetta");
+					}
+				}catch (Exception e2) 
+				{
+					JOptionPane.showMessageDialog(null,e2.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
 				}
-					
 			}
 		});
 	}
@@ -625,37 +651,24 @@ public class GuiRicetta implements Gui {
 				String descrizioneNota = descrizioneNotaText.getText();
 				Nota nota = new Nota(titoloNota, descrizioneNota);
 				String nomeBirra = nomeText.getText();
-				if (nomeBirra == null)
-					JOptionPane.showMessageDialog(guiFrame, "Inserire il nome della ricetta a cui aggiungere la nota");
-				else
+				boolean risultato = false;
+				try 
 				{
-					cr.aggiungiNota(nomeBirra, nota);
-					JOptionPane.showMessageDialog(guiFrame, "Nota aggiunta");
+					risultato = controller.aggiungiNota(nomeBirra, titoloNota, descrizioneNota);
+					if(risultato)
+					{
+						JOptionPane.showMessageDialog(null,"nota modificata correttamenete");
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(null,"Impossibile aggiungere la nota","Errore",JOptionPane.WARNING_MESSAGE);
+					}
 				}
-					
+				catch(IllegalArgumentException exception)
+				{
+					JOptionPane.showMessageDialog(null,exception.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		});
 	}
-	
-	//Creo un ogetto di tipo ricetta
-	private Ricetta parseRicetta(JTextField nomeText, JTextField tempoText, JTextField procedimentoText, 
-			JTextField notaText, JTextField descrizioneNotaText)
-	{
-		String nome = nomeText.getText();
-		String tempo = tempoText.getText();
-		double t = 0.0; 
-		try {
-			t = Double.parseDouble(tempo);
-		}catch (Exception e1) {
-			return null;
-		}
-		String procedimento = procedimentoText.getText();
-		String titoloNota = notaText.getText();
-		String descrizioneNota = descrizioneNotaText.getText();
-		Nota n = new Nota(titoloNota, descrizioneNota);
-		Attrezzatura[] a = strumenti.toArray(new Attrezzatura[strumenti.size()]);
-		Ricetta r = new Ricetta(nome, t, procedimento, a, ingredienti,n);
-		return r;
-	}
-	
 }
