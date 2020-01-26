@@ -17,9 +17,8 @@ public class FacadeController {
 	private RicetteDisponibili rd;
 
 	public FacadeController() {
-		ControllerAttrezzatura ca = new ControllerAttrezzatura();
 		ci = new ControllerIngrediente();
-		cr = new ControllerRicetta(ci, ca);
+		cr = new ControllerRicetta(ci, new ControllerAttrezzatura());
 		rd = new RicetteDisponibili(cr);
 	}
 
