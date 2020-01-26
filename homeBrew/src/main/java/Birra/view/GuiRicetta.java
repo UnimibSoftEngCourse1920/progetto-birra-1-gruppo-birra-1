@@ -273,8 +273,27 @@ public class GuiRicetta implements Gui {
 		eliminaRicetta.addActionListener(new ActionListener () {
 			public void actionPerformed(ActionEvent e) 
 			{
-				controller.eliminaRicetta(nome.getText());
-				JOptionPane.showMessageDialog(guiFrame, "Ricetta eliminata");	
+				JDialog.setDefaultLookAndFeelDecorated(true); //Chiedo conferma che voglia davvero eliminare l'ingrediente 
+				int response = JOptionPane.showConfirmDialog(null, "Vuoi davvero eliminare la ricetta?", "Conferma",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				boolean conferma = false;
+				if (response == JOptionPane.NO_OPTION)
+				{
+					conferma = false;
+				} 
+				else if (response == JOptionPane.YES_OPTION) 
+				{
+					conferma = true;
+				} 
+				if(conferma)
+				{
+					controller.eliminaRicetta(nome.getText());
+					JOptionPane.showMessageDialog(guiFrame, "Ricetta eliminata");
+				}	
+				else
+				{
+					JOptionPane.showMessageDialog(guiFrame, "Non elimino la ricetta");
+				}
 			}
 		});
 	}
@@ -378,7 +397,7 @@ public class GuiRicetta implements Gui {
 				dialog.add(elementiGraficiAggiungiStrumento);
 				
 				//Se clicco sul bottone aggiungi
-				clickAggiungiStrumento(aggiungi, nomeText, portataText, tipo, dialog);
+				clickAssociaStrumento(aggiungi, nomeText, portataText, tipo, dialog);
 				
 				dialog.setSize(500, 500);
 				dialog.setVisible(true);
@@ -490,7 +509,7 @@ public class GuiRicetta implements Gui {
 	}
 	
 	//Ascoltatore del bottone aggiungi strumento
-	private void clickAggiungiStrumento(JButton bottone, final JTextField nome, final JTextField portata, final JComboBox tipo, final JDialog dialog)
+	private void clickAssociaStrumento(JButton bottone, final JTextField nome, final JTextField portata, final JComboBox tipo, final JDialog dialog)
 	{
 		bottone.addActionListener(new ActionListener() 
 		{
@@ -553,8 +572,6 @@ public class GuiRicetta implements Gui {
 				double percentualeIngrediente = 0.0; 
 				try {
 					percentualeIngrediente = Double.parseDouble(percentuale.getText());
-					System.out.println(percentualeIngrediente);
-					System.out.println(i.toString());
 					ingredienti.put(i, percentualeIngrediente);
 				}catch (Exception e1) {
 					JOptionPane.showMessageDialog(dialog, "Inserire un numero");
@@ -577,11 +594,10 @@ public class GuiRicetta implements Gui {
 				String procedimento = procedimentoText.getText();
 				String titoloNota = notaText.getText();
 				String descrizioneNota = descrizioneNotaText.getText();
-				//System.out.println(nomeBirra + tempo + procedimento  + ingredienti + titoloNota + descrizioneNota);
+				
 				Attrezzatura[] a = strumenti.toArray(new Attrezzatura[strumenti.size()]);
 				try 
 				{
-					System.out.println(ingredienti.toString());
 					controller.aggiungiRicetta(nomeBirra, tempo, procedimento, a, ingredienti, titoloNota, descrizioneNota);
 				}catch(IllegalArgumentException error)
 				{

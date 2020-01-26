@@ -228,14 +228,12 @@ public class GuiIngredienti implements Gui
 				String nomeIngrediente = nome.getText();
 				String quantitaIngrediente = quantita.getText();
 				boolean bloccatoIngrediente = bloccato.isSelected();
-				System.out.println(bloccatoIngrediente);
 				String tipoIngrediente = tipo.getSelectedItem().toString();
 				try 
 				{
-					Ingrediente i = controller.creaIngrediente(nomeIngrediente, quantitaIngrediente, bloccatoIngrediente, tipoIngrediente);
 					controller.aggiungiIngrediente(nomeIngrediente, quantitaIngrediente, bloccatoIngrediente, tipoIngrediente);
 				}catch (IllegalArgumentException e) {
-					JOptionPane.showMessageDialog(null,"Valori inseriti non corretti","Errore",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,e.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
@@ -256,7 +254,7 @@ public class GuiIngredienti implements Gui
 				try {
 					controller.modificaIngrediente(nomeIngrediente, quantitaIngrediente, bloccatoIngrediente, tipoIngrediente);
 				}catch (IllegalArgumentException e) {
-					JOptionPane.showMessageDialog(null,"Valori inseriti non corretti","Errore",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,e.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
