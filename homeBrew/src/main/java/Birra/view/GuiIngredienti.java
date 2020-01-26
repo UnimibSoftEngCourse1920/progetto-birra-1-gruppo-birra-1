@@ -13,14 +13,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
-import javax.swing.plaf.basic.BasicBorders.RadioButtonBorder;
-
-import Birra.controller.ControllerIngrediente;
 import Birra.controller.FacadeController;
 import Birra.model.Ingrediente;
-import Birra.model.Ricetta;
-import Birra.model.TipoIngrediente;
+
 
 public class GuiIngredienti implements Gui 
 {
@@ -33,8 +28,9 @@ public class GuiIngredienti implements Gui
 		//make sure the program exits when the frame closes
 		guiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		guiFrame.setTitle("Ingredienti");
-		guiFrame.setSize(450,450);
-		guiFrame.setLocation(650, 100);
+		guiFrame.setSize(500,350);
+		guiFrame.setLocation(630, 100);
+		/*
 		final JPanel panel = new JPanel(new BorderLayout());
 		final JPanel visualizzaIngrediente = new JPanel(new BorderLayout());
 		final JLabel messaggio = new JLabel("Inserisci il nome dell'ingrediente che vuoi visualizzare");
@@ -45,23 +41,51 @@ public class GuiIngredienti implements Gui
 		visualizzaIngrediente.add(getIngrediente, BorderLayout.SOUTH);
 		panel.add(visualizzaIngrediente, BorderLayout.NORTH);
 		guiFrame.add(panel, BorderLayout.NORTH);
-		
+		*/
 		
 		JPanel campiIngrediente = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		
-		
-		JLabel nomeLabel = new JLabel("Inserisci il nome dell'ingrediente: ");
+		JLabel visualizzaLabel = new JLabel("Inserisci il nome dell'ingrediente");
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.insets = new Insets(5, 0, 0, 10);
+		gbc.anchor = GridBagConstraints.LINE_START;
+		campiIngrediente.add(visualizzaLabel, gbc);
+		
+		JTextField testo = new JTextField(20);
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.insets = new Insets(5, 0, 0, 10);
 		gbc.anchor = GridBagConstraints.LINE_END;
+		campiIngrediente.add(testo, gbc);
+		
+		JButton getIngrediente = new JButton("Visualizza ingrediente");
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.insets = new Insets(5, 0, 0, 10);
+		gbc.anchor = GridBagConstraints.LINE_START;
+		campiIngrediente.add(getIngrediente, gbc);
+		
+		JButton eliminaIngrediente = new JButton("Elimina ingrediente");
+		gbc.gridx = 1;
+		gbc.gridy = 1;
+		gbc.insets = new Insets(5, 0, 0, 10);
+		gbc.anchor = GridBagConstraints.LINE_END;
+		campiIngrediente.add(eliminaIngrediente, gbc);
+		
+		
+		JLabel nomeLabel = new JLabel("Inserisci il nome dell'ingrediente: ");
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		gbc.insets = new Insets(5, 0, 0, 10);
+		gbc.anchor = GridBagConstraints.LINE_START;
 		campiIngrediente.add(nomeLabel, gbc);
 		
 		JTextField nome = new JTextField(15);
 		nome.setCaretColor(Color.DARK_GRAY);
 		gbc.gridx = 1;
-		gbc.gridy = 0;
+		gbc.gridy = 2;
 		gbc.insets = new Insets(5, 0, 0, 10);
 		gbc.anchor = GridBagConstraints.LINE_END;
 		campiIngrediente.add(nome, gbc);
@@ -70,14 +94,14 @@ public class GuiIngredienti implements Gui
 		
 		JLabel quantitaLabel = new JLabel("quantità: ");
 		gbc.gridx = 0;
-		gbc.gridy = 1;
+		gbc.gridy = 3;
 		gbc.insets = new Insets(5, 0, 0, 10);
-		gbc.anchor = GridBagConstraints.LINE_END;
+		gbc.anchor = GridBagConstraints.LINE_START;
 		campiIngrediente.add(quantitaLabel, gbc);
 		
 		JTextField quantita = new JTextField(15);
 		gbc.gridx = 1;
-		gbc.gridy = 1;
+		gbc.gridy = 3;
 		gbc.insets = new Insets(5, 0, 0, 10);
 		gbc.anchor = GridBagConstraints.LINE_END;
 		campiIngrediente.add(quantita, gbc);
@@ -85,15 +109,15 @@ public class GuiIngredienti implements Gui
 		
 		JLabel tipoLabel = new JLabel("tipo: ");
 		gbc.gridx = 0;
-		gbc.gridy = 2;
+		gbc.gridy = 4;
 		gbc.insets = new Insets(5, 0, 0, 10);
-		gbc.anchor = GridBagConstraints.LINE_END;
+		gbc.anchor = GridBagConstraints.LINE_START;
 		campiIngrediente.add(tipoLabel, gbc);
 		
 		String[] opzioni = {"MALTO", "LUPPOLI", "ZUCCHERO", "ACQUA", "LIEVITO"};
 		JComboBox tipo = new JComboBox(opzioni);
 		gbc.gridx = 1;
-		gbc.gridy = 2;
+		gbc.gridy = 4;
 		gbc.insets = new Insets(5, 0, 0, 10);
 		gbc.anchor = GridBagConstraints.LINE_END;
 		campiIngrediente.add(tipo, gbc);
@@ -101,14 +125,14 @@ public class GuiIngredienti implements Gui
 		
 		JLabel bloccatoLabel = new JLabel("Bloccato: ");
 		gbc.gridx = 0;
-		gbc.gridy = 3;
+		gbc.gridy = 5;
 		gbc.insets = new Insets(5, 0, 0, 10);
-		gbc.anchor = GridBagConstraints.LINE_END;
+		gbc.anchor = GridBagConstraints.LINE_START;
 		campiIngrediente.add(bloccatoLabel, gbc);
 		
 		JCheckBox bloccato = new JCheckBox();
 		gbc.gridx = 1;
-		gbc.gridy = 3;
+		gbc.gridy = 5;
 		gbc.insets = new Insets(5, 0, 0, 10);
 		gbc.anchor = GridBagConstraints.LINE_END;
 		campiIngrediente.add(bloccato, gbc);
@@ -116,14 +140,14 @@ public class GuiIngredienti implements Gui
 		
 		JButton aggiungiIngrediente = new JButton("Aggiungi ingrediente");
 		gbc.gridx = 0;
-		gbc.gridy = 4;
+		gbc.gridy = 6;
 		gbc.insets = new Insets(5, 0, 0, 10);
-		gbc.anchor = GridBagConstraints.LINE_END;
+		gbc.anchor = GridBagConstraints.LINE_START;
 		campiIngrediente.add(aggiungiIngrediente, gbc);
 		
 		JButton modificaIngrediente = new JButton("Modfica ingrediente");
 		gbc.gridx = 1;
-		gbc.gridy = 4;
+		gbc.gridy = 6;
 		gbc.insets = new Insets(5, 0, 0, 10);
 		gbc.anchor = GridBagConstraints.LINE_END;
 		campiIngrediente.add(modificaIngrediente, gbc);
@@ -132,6 +156,9 @@ public class GuiIngredienti implements Gui
 		
 		//Se clicco su visualizza ingrediente
 		clickGetIngrediente(getIngrediente, testo, guiFrame);
+		
+		//Se clicco su elimina ingrediente
+		clickEliminaIngrediente(eliminaIngrediente, testo, guiFrame);
 		
 		//Se clicco su aggiungi ingrediente 
 		clickAggiungiIngrediente(aggiungiIngrediente, nome, quantita, tipo, bloccato, guiFrame); 
@@ -163,7 +190,7 @@ public class GuiIngredienti implements Gui
 				{
 					String ingrediente = "nome: " + i.getNome() + " quantità: " + i.getQuantita() +
 							" tipo: " + i.getTipo() + " bloccato: " + i.isBloccato();
-					JDialog dialog = new JDialog(guiFrame, "Ricette disponibili");
+					JDialog dialog = new JDialog(guiFrame, "Dettagli ingrediente");
 					JLabel label = new JLabel(ingrediente);
 					dialog.add(label);
 					dialog.setSize(500, 500);
@@ -173,6 +200,19 @@ public class GuiIngredienti implements Gui
 				{
 					JOptionPane.showMessageDialog(null,"Non c'è nessun ingrediente che si chiama "+testo.getText(),"Errore",JOptionPane.WARNING_MESSAGE);
 				}
+			}
+		});
+	}
+	
+	//Ascoltatore dell'evento elimina ingrediente
+	private void clickEliminaIngrediente(JButton eliminaIngrediente, final JTextField testo, final JFrame guiFrame)
+	{
+		eliminaIngrediente.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent event)
+			{
+				controller.eliminaIngrediente(testo.getText());
 			}
 		});
 	}
@@ -188,6 +228,7 @@ public class GuiIngredienti implements Gui
 				String nomeIngrediente = nome.getText();
 				String quantitaIngrediente = quantita.getText();
 				boolean bloccatoIngrediente = bloccato.isSelected();
+				System.out.println(bloccatoIngrediente);
 				String tipoIngrediente = tipo.getSelectedItem().toString();
 				try 
 				{

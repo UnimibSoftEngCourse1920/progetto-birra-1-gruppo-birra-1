@@ -24,7 +24,7 @@ public class GuiRicetteDisponibili implements Gui
 		//make sure the program exits when the frame closes
 		guiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		guiFrame.setTitle("What should i brew today?");
-		guiFrame.setSize(400,450);
+		guiFrame.setSize(400,350);
 		guiFrame.setLocation(1130, 100);
 		final JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());

@@ -36,7 +36,7 @@ public class GuiRicetta implements Gui {
 		guiFrame.setLocation(30, 100);
 		guiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		guiFrame.setTitle("Ricetta");
-		guiFrame.setSize(600,450);
+		guiFrame.setSize(600,350);
 		JPanel elementiGraficiRicetta = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		
