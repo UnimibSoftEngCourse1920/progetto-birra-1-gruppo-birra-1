@@ -16,15 +16,13 @@ public class FacadeController {
 	private ControllerIngrediente ci;
 	private RicetteDisponibili rd;
 
-	public FacadeController()
-	{
+	public FacadeController() {
 		ControllerAttrezzatura ca = new ControllerAttrezzatura();
 		ci = new ControllerIngrediente();
 		cr = new ControllerRicetta(ci, ca);
 		rd = new RicetteDisponibili(cr);
 	}
-	
-	
+
 	// metodi per richiamare ingredienti
 	public Ingrediente creaIngrediente(String nome, String quantita, boolean bloccato, String tipo) {
 		checkString(nome, "Nome dell'ingrediente vuoto");
@@ -56,7 +54,7 @@ public class FacadeController {
 			throws IllegalArgumentException {
 		Ingrediente newIngr = creaIngrediente(nome, quantita, bloccato, tipo);
 		Ingrediente oldIngr = ci.getIngrediente(nome);
-		
+
 		if (oldIngr == null || oldIngr.equals(newIngr))
 			return false;
 
@@ -72,7 +70,7 @@ public class FacadeController {
 	private Nota creaNota(String titolo, String descrizione) throws NullPointerException {
 		if (titolo == null)
 			return null;
-		
+
 		Objects.requireNonNull(descrizione, "Nessuna descrizione nella nota " + titolo);
 		checkString(titolo, "Titolo della nota vuoto");
 		checkString(descrizione, "La nota " + titolo + " ha descrizione vuota");
