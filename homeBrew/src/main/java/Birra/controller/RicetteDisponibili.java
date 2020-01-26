@@ -24,8 +24,10 @@ public class RicetteDisponibili {
 	public Ricetta cosaDovreiPreparareOggi() {
 		String[] nomiBirre = nomiBirreDisponibili();
 		
-		if (nomiBirre.length == 0)
+		if (nomiBirre.length == 0) {
+			quantitaBirra = 0;
 			return null;
+		}
 		
 		Ricetta ricDaPrep = controllerRic.getRicetta(nomiBirre[0]);
 		quantitaBirra = getMaxQuantita(ricDaPrep);
@@ -63,8 +65,8 @@ public class RicetteDisponibili {
 					+ ")";
 	}
 	
-	public double getMaxQuantita(Ricetta r) {
-		double[][] tab = creaTableau(r);
+	public double getMaxQuantita(Ricetta ricetta) {
+		double[][] tab = creaTableau(ricetta);
 		new Simplesso(tab).esegui();
 		return tab[0][0];
 	}
@@ -74,9 +76,8 @@ public class RicetteDisponibili {
 	 * vincoli ingredienti: non eccedere la quantità disponibile, rispettare percentuale ricetta
 	 * vincolo birra: non eccedere la minima tra le capienze dei suoi strumenti
 	 */
-	private double[][] creaTableau(Ricetta r) {
-		final ArrayList<Entry<Ingrediente, Double>> ingr = new ArrayList<>(r.getIngredienti().entrySet());
-		final Attrezzatura[] strum = r.getStrumenti();
+	private double[][] creaTableau(Ricetta ric) {
+		final ArrayList<Entry<Ingrediente, Double>> ingr = new ArrayList<>(ric.getIngredienti().entrySet());
 		
 		final int m = (ingr.size() + 1) << 1; //(funzione obiettivo) + (vincoli quantità) + (vincoli percentuali) + (vincolo birra)
 		final int n = ingr.size() << 1 + 3; //(termine noto) + (var ingredienti) + (slack ingredienti) + (var birra) + (slack birra)
@@ -106,14 +107,14 @@ public class RicetteDisponibili {
 		
 		//riga vincolo birra (quantità birra + slack birra = min capienza)
 		final int last = m - 1;
-		tab[last][0] = minCapienza(strum); //termine noto (min capienza)
+		tab[last][0] = minCapienza(ric); //termine noto (min capienza)
 		tab[last][jVarBirra] = 1; // coeff var birra
 		tab[last][n - 1] = 1; //coeff var slack birra
 		
 		return tab;
 	}
 	
-	private double minCapienza(Attrezzatura[] strum) {
-		return Arrays.stream(strum).mapToDouble(Attrezzatura::getPortata).min().getAsDouble();
+	private double minCapienza(Ricetta ric) {
+		return Arrays.stream(ric.getStrumenti()).mapToDouble(Attrezzatura::getPortata).min().getAsDouble();
 	}
 }
