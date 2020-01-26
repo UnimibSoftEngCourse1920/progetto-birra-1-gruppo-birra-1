@@ -37,7 +37,7 @@ public class ControllerRicetta {
 	 * restituisce l'oggetto Ricetta
 	 */
 	public Ricetta getRicetta(String nomeBirra) {
-		ArrayList<HashMap<String, String>> rows = DBUtils.getRows(sqlGetRicetta(nomeBirra));
+		ArrayList<HashMap<String, Object>> rows = DBUtils.getRows(sqlGetRicetta(nomeBirra));
 		return rows.isEmpty() ? null : parseRicetta(rows.get(0));
 	}
 
@@ -45,12 +45,12 @@ public class ControllerRicetta {
 	 * Dato il risultato della query che preleva dal database una ricetta,
 	 * restituisce un oggetto di tipo ricetta
 	 */
-	private Ricetta parseRicetta(HashMap<String, String> row) {
-		String nomeBirra = row.get("nomeBirra");
-		String titolo = row.get("titoloNota");
-		Nota nota = titolo == null ? null : new Nota(titolo, row.get("descrizioneNota"));
+	private Ricetta parseRicetta(HashMap<String, Object> row) {
+		String nomeBirra = (String) row.get("nomeBirra");
+		String titolo = (String) row.get("titoloNota");
+		Nota nota = titolo == null ? null : new Nota(titolo, (String) row.get("descrizioneNota"));
 
-		return new Ricetta(nomeBirra, Double.parseDouble(row.get("tempo")), row.get("procedimento"),
+		return new Ricetta(nomeBirra, (double) row.get("tempo"), (String) row.get("procedimento"),
 				controllerAttr.getStrumenti(nomeBirra), controllerIngr.getIngredienti(nomeBirra), nota);
 	}
 
@@ -103,10 +103,10 @@ public class ControllerRicetta {
 		Nota nota = ricetta.getNota();
 
 		if (nota == null)
-			query = "insert ignore into ricetta (nomeBirra, tempo, procedimento) values ('" + ricetta.getNomeBirra()
+			query = "insert into ricetta (nomeBirra, tempo, procedimento) values ('" + ricetta.getNomeBirra()
 					+ "', '" + ricetta.getTempo() + "', '" + ricetta.getProcedimento() + "')";
 		else
-			query = "insert ignore into ricetta (nomeBirra, tempo, procedimento, titoloNota, descrizioneNota) values ('"
+			query = "insert into ricetta (nomeBirra, tempo, procedimento, titoloNota, descrizioneNota) values ('"
 					+ ricetta.getNomeBirra() + "', '" + ricetta.getTempo() + "', '" + ricetta.getProcedimento() + "', '"
 					+ nota.getTitolo() + "', '" + nota.getDescrizione() + "')";
 

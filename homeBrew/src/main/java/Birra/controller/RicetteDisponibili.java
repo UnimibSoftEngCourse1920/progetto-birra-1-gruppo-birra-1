@@ -46,23 +46,22 @@ public class RicetteDisponibili {
 	}
 	
 	private String[] nomiBirreDisponibili() {
-		ArrayList<HashMap<String, String>> rows = DBUtils.getRows(sqlNomiBirreDisponibili());
-		String[] nomi = new String[rows.size()];
+		ArrayList<HashMap<String, Object>> rows = DBUtils.getRows(sqlNomiBirreDisponibili());
+	String[] nomi = new String[rows.size()];
 		
 		for (int i = 0; i < nomi.length; i++)
-			nomi[i] = rows.get(i).get("nomebirra");
+			nomi[i] = (String) rows.get(i).get("nomeBirra");
 		
 		return nomi;
 	}
 	
 	private String sqlNomiBirreDisponibili() {
-		return "select nomebirra"
-				+ "from ricetta as ric"
-				+ "where not exists"
-					+ "(select * "
-					+ "from (ingrediente join ricettaIngrediente) as ingr"
-					+ "where ingr.nomeBirra = ric.nomeBirra AND (bloccato OR quantita = 0)"
-					+ ")";
+		return "select nomeBirra "
+				+ "from ricetta as ric "
+				+ "where not exists("
+					+ "select * "
+					+ "from ingrediente natural join ricettaIngrediente as ingr "
+					+ "where ingr.nomeBirra = ric.nomeBirra AND (bloccato OR quantita = 0))";
 	}
 	
 	public double getMaxQuantita(Ricetta ricetta) {

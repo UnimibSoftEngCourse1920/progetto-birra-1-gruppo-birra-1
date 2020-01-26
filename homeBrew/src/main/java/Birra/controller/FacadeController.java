@@ -142,6 +142,14 @@ public class FacadeController {
 		cr.modificaRicetta(newRicetta);
 		return true;
 	}
+	
+	public Ricetta getRicetta(String nomeBirra) {
+		return cr.getRicetta(nomeBirra);
+	}
+	
+	public Nota getNota(String nomeBirra) {
+		return cr.getRicetta(nomeBirra).getNota();
+	}
 
 	public boolean aggiungiNota(String nomeBirra, String titolo, String descrizione)
 			throws IllegalArgumentException, NullPointerException {
@@ -155,15 +163,15 @@ public class FacadeController {
 		return true;
 	}
 
-	public Ricetta getRicetta(String nome) {
-		return cr.getRicetta(nome);
-	}
-
 	// creo i metodi di controllo per le ricette disponibili
 	public Ricetta cosaDovreiPreparareOggi() {
 		return rd.cosaDovreiPreparareOggi();
 	}
-
+	
+	public double getQuantitaBirra() {
+		return rd.getQuantitaBirra();
+	}
+	
 	public double getMaxQuantita(String nomeBirra) {
 		Ricetta ricetta = cr.getRicetta(nomeBirra);
 		return ricetta == null ? 0 : rd.getMaxQuantita(ricetta);

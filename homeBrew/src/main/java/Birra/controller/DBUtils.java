@@ -34,8 +34,8 @@ public class DBUtils {
 	/*
 	 * Viene eseguita una query di tipo select
 	 */
-	public static ArrayList<HashMap<String, String>> getRows(String query) {
-		ArrayList<HashMap<String, String>> rows = null;
+	public static ArrayList<HashMap<String, Object>> getRows(String query) {
+		ArrayList<HashMap<String, Object>> rows = null;
 		
 		try (Connection conn = DBConnection();
 				Statement st = conn.createStatement();
@@ -46,10 +46,10 @@ public class DBUtils {
 			rows = new ArrayList<>();
 			
 			while (rs.next()) {
-				HashMap<String, String> row = new HashMap<>(nColumns);
+				HashMap<String, Object> row = new HashMap<>(nColumns);
 
 				for (int i = 1; i <= nColumns; i++)
-					row.put(md.getColumnName(i), rs.getString(i));
+					row.put(md.getColumnName(i), rs.getObject(i));
 
 				rows.add(row);
 			}

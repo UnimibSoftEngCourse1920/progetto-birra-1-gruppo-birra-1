@@ -35,7 +35,7 @@ public class ControllerIngrediente {
 	 * l'ingrediente necessario.  
 	 */
 	public void associaRicetta(String nomeBirra, String nomeIngrediente, double percentuale) {
-		String sql = "insert ignore into ricettaIngrediente (nomeBirra, nomeIngrediente, percentuale) values ('"
+		String sql = "insert into ricettaIngrediente (nomeBirra, nomeIngrediente, percentuale) values ('"
 				+ nomeBirra + "', '" + nomeIngrediente + "', '" + percentuale + "')";
 		DBUtils.update(sql);
 	}
@@ -79,13 +79,13 @@ public class ControllerIngrediente {
 	 * Vengono prelevati tuttti gli ingredienti associati alla ricetta identificata dal parametro nomeBirra
 	 */
 	public HashMap<Ingrediente, Double> getIngredienti(String nomeBirra) {
-		String queryIngredienti = "select ingrediente.*, percentuale from ingrediente join ricettaIngrediente where nomeBirra = '"
+		String queryIngredienti = "select ingrediente.*, percentuale from ingrediente natural join ricettaIngrediente where nomeBirra = '"
 				+ nomeBirra + "'";
-		ArrayList<HashMap<String, String>> rows = DBUtils.getRows(queryIngredienti);
+		ArrayList<HashMap<String, Object>> rows = DBUtils.getRows(queryIngredienti);
 		HashMap<Ingrediente, Double> ingredienti = new HashMap<>(rows.size());
 
-		for (HashMap<String, String> row : rows)
-			ingredienti.put(parseIngrediente(row), Double.parseDouble(row.get("percentuale")));
+		for (HashMap<String, Object> row : rows)
+			ingredienti.put(parseIngrediente(row), (double) row.get("percentuale"));
 
 		return ingredienti;
 	}
@@ -95,7 +95,7 @@ public class ControllerIngrediente {
 	 */
 	public Ingrediente getIngrediente(String nomeIngrediente) {
 		String query = "select * from ingrediente where nomeIngrediente = '" + nomeIngrediente + "'";
-		ArrayList<HashMap<String, String>> rows = DBUtils.getRows(query);
+		ArrayList<HashMap<String, Object>> rows = DBUtils.getRows(query);
 		return rows.isEmpty() ? null : parseIngrediente(rows.get(0));
 	}
 	
@@ -103,8 +103,8 @@ public class ControllerIngrediente {
 	 * Dato il risultato della query per prelevare un ingrediente dal database viene restituito
 	 * un ogetto di tipo Ingrediente
 	 */
-	private Ingrediente parseIngrediente(HashMap<String, String> row) {
-		return new Ingrediente(row.get("nomeIngrediente"), Double.parseDouble(row.get("quantita")),
-				Boolean.parseBoolean(row.get("bloccato")), TipoIngrediente.valueOf(row.get("tipo")));
+	private Ingrediente parseIngrediente(HashMap<String, Object> row) {
+		return new Ingrediente((String) row.get("nomeIngrediente"), (double) row.get("quantita"),
+				(boolean) row.get("bloccato"), TipoIngrediente.valueOf(row.get("tipo").toString()));
 	}
 }

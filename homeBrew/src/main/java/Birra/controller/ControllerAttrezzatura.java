@@ -34,7 +34,7 @@ public class ControllerAttrezzatura {
 	 * l'identificativo della ricetta e quello dello strumento
 	 */
 	public void associaRicetta(String nomeBirra, String nomeAttrezzatura) {
-		String sql = "insert ignore into ricettaAttrezzatura (nomeBirra, nomeAttrezzatura) values ('" + nomeBirra
+		String sql = "insert into ricettaAttrezzatura (nomeBirra, nomeAttrezzatura) values ('" + nomeBirra
 				+ "', '" + nomeAttrezzatura + "')";
 		DBUtils.update(sql);
 	}
@@ -43,9 +43,9 @@ public class ControllerAttrezzatura {
 	 * Vengono prelevati dal database tutti gli strumenti associati alla ricetta identificata dal parametro nomeBirra
 	 */
 	public Attrezzatura[] getStrumenti(String nomeBirra) {
-		String queryStrumenti = "select attrezzatura.* from attrezzatura join ricettaAttrezzatura where nomeBirra = '"
+		String queryStrumenti = "select attrezzatura.* from attrezzatura natural join ricettaAttrezzatura where nomeBirra = '"
 				+ nomeBirra + "'";
-		ArrayList<HashMap<String, String>> rows = DBUtils.getRows(queryStrumenti);
+		ArrayList<HashMap<String, Object>> rows = DBUtils.getRows(queryStrumenti);
 		Attrezzatura[] strumenti = new Attrezzatura[rows.size()];
 		
 		for (int i = 0; i < strumenti.length; i++)
@@ -58,8 +58,8 @@ public class ControllerAttrezzatura {
 	 * Viene creato un oggetto di tipo attrezzatura a partire dal risultato della query 
 	 * che preleva gli strumenti memorizzati nel database.
 	 */
-	private Attrezzatura parseAttrezzatura(HashMap<String, String> row) {
-		return new Attrezzatura(row.get("nomeAttrezzatura"), Double.parseDouble(row.get("portata")),
-				TipoAttrezzatura.valueOf(row.get("tipo")));
+	private Attrezzatura parseAttrezzatura(HashMap<String, Object> row) {
+		return new Attrezzatura((String) row.get("nomeAttrezzatura"), (double) row.get("portata"),
+				TipoAttrezzatura.valueOf(row.get("tipo").toString()));
 	}
 }
