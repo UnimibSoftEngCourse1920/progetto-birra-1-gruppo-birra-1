@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import Birra.controller.*;
 import Birra.model.Attrezzatura;
 import Birra.model.Ingrediente;
@@ -21,18 +22,9 @@ public class GuiRicetta implements Gui {
 	private ControllerIngrediente ci; 
 	private ControllerAttrezzatura ca; 
 	private ControllerRicetta cr;
-	private FacadeController controller; 
+	private FacadeController controller;
 	private ArrayList<Attrezzatura> strumenti = new ArrayList<>();
 	HashMap<Ingrediente, Double> ingredienti = new HashMap<>();
-	
-	public GuiRicetta(FacadeController controller)
-	{
-		this.controller = controller;
-		ci = new ControllerIngrediente();
-		ca = new ControllerAttrezzatura();
-		cr = new ControllerRicetta(ci, ca);
-		draw();
-	}
 	
 	@Override
 	public void draw() 
@@ -234,6 +226,15 @@ public class GuiRicetta implements Gui {
 	}
 
 	
+	public GuiRicetta(FacadeController controller)
+	{
+		this.controller = controller;
+		ci = new ControllerIngrediente();
+		ca = new ControllerAttrezzatura();
+		cr = new ControllerRicetta(ci, ca);
+		draw();
+	}
+	
 	//Ascoltatore dell'evento click del bottone mostraRicetta
 	private void clickGetRicetta(JButton getRicetta, final JTextField nome, final JFrame guiFrame)
 	{
@@ -242,9 +243,31 @@ public class GuiRicetta implements Gui {
 			@Override
 			public void actionPerformed(ActionEvent event)
 			{
-				Ricetta ricetta = controller.getRicetta(nome.getText());
-				JOptionPane.showMessageDialog(guiFrame, "nomeBirra: " + ricetta.getNomeBirra() +
-						" tempo: "+ ricetta.getTempo() + " Procedimento: " + ricetta.getProcedimento());	
+				Ricetta r = controller.getRicetta(nome.getText());
+				Nota nota = r.getNota();
+				if(r != null)
+				{
+					String n ="";
+					if(nota != null)
+					{
+						n = "nomeBirra: " + r.getNomeBirra() +
+								" titolo nota: "+ nota.getTitolo() + " Descrizione: " + nota.getDescrizione();
+					}
+					else
+					{
+						n = "nomeBirra: " + r.getNomeBirra();
+					}
+					JDialog dialog = new JDialog(guiFrame, "Nota");
+					JLabel label = new JLabel(n);
+					dialog.add(label);
+					dialog.setSize(500, 500);
+					dialog.setVisible(true);
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null,"Nessuna nota da visualizzare","Errore",JOptionPane.WARNING_MESSAGE);
+				}
+				
 			}
 		});
 	}
@@ -255,8 +278,7 @@ public class GuiRicetta implements Gui {
 		eliminaRicetta.addActionListener(new ActionListener () {
 			public void actionPerformed(ActionEvent e) 
 			{
-				controller.eliminaRicetta(nome.getText());
-				//cr.eliminaRicetta(nome.getText());
+				cr.eliminaRicetta(nome.getText());
 				JOptionPane.showMessageDialog(guiFrame, "Ricetta eliminata");	
 			}
 		});
@@ -269,10 +291,26 @@ public class GuiRicetta implements Gui {
 			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
-				Ricetta r = cr.getRicetta(nome.getText());
-				Nota nota = r.getNota();
-				JOptionPane.showMessageDialog(guiFrame, "nomeBirra: " + r.getNomeBirra() +
-						" titolo nota: "+ nota.getTitolo() + " Descrizione: " + nota.getDescrizione());
+				Ricetta r = controller.getRicetta(nome.getText());
+				Nota nota = null;
+				if(r != null)
+				{
+					nota = r.getNota();
+					if (nota != null)
+					{
+						String n = "titolo nota: "+ nota.getTitolo() + " Descrizione: " + nota.getDescrizione();
+						JDialog dialog = new JDialog(guiFrame, "Nota");
+						JLabel label = new JLabel(n);
+						dialog.add(label);
+						dialog.setSize(500, 500);
+						dialog.setVisible(true);
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(null,"Nessuna nota da visualizzare","Errore",JOptionPane.WARNING_MESSAGE);
+					}
+					
+				}
 			}
 			
 		});
