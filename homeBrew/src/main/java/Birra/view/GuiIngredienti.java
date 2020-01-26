@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -16,13 +17,14 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicBorders.RadioButtonBorder;
 
 import Birra.controller.ControllerIngrediente;
+import Birra.controller.FacadeController;
 import Birra.model.Ingrediente;
 import Birra.model.Ricetta;
 import Birra.model.TipoIngrediente;
 
 public class GuiIngredienti implements Gui 
 {
-	private ControllerIngrediente ci;
+	private FacadeController controller;
 	
 	@Override
 	public void draw() 
@@ -141,9 +143,9 @@ public class GuiIngredienti implements Gui
 		guiFrame.setVisible(true);
 	}
 	
-	public GuiIngredienti()
+	public GuiIngredienti(FacadeController controller)
 	{
-		this.ci = new ControllerIngrediente();
+		this.controller = controller;
 		draw();
 	}
 	
@@ -156,10 +158,21 @@ public class GuiIngredienti implements Gui
 			@Override
 			public void actionPerformed(ActionEvent event)
 			{
-				Ingrediente i = ci.getIngrediente(testo.getText());
-				String ingrediente = "nome: " + i.getNome() + " quantità: " + i.getQuantita() +
-						" tipo: " + i.getTipo() + " bloccato: " + i.isBloccato();
-				JOptionPane.showMessageDialog(guiFrame, ingrediente);
+				Ingrediente i = controller.getIngrediente(testo.getText());
+				if(i != null)
+				{
+					String ingrediente = "nome: " + i.getNome() + " quantità: " + i.getQuantita() +
+							" tipo: " + i.getTipo() + " bloccato: " + i.isBloccato();
+					JDialog dialog = new JDialog(guiFrame, "Ricette disponibili");
+					JLabel label = new JLabel(ingrediente);
+					dialog.add(label);
+					dialog.setSize(500, 500);
+					dialog.setVisible(true);
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null,"Non c'è nessun ingrediente che si chiama "+testo.getText(),"Errore",JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		});
 	}
@@ -172,42 +185,22 @@ public class GuiIngredienti implements Gui
 			@Override
 			public void actionPerformed(ActionEvent event)
 			{
-				Ingrediente i =parseIngrediente(nome, quantita, tipo, bloccato);
-				ci.aggiungiIngrediente(i);
-				JOptionPane.showMessageDialog(guiFrame, "Ingrediente aggiunto al database");
+				String nomeIngrediente = nome.getText();
+				String quantitaIngrediente = quantita.getText();
+				boolean bloccatoIngrediente = bloccato.isSelected();
+				String tipoIngrediente = tipo.getSelectedItem().toString();
+				try 
+				{
+					Ingrediente i = controller.creaIngrediente(nomeIngrediente, quantitaIngrediente, bloccatoIngrediente, tipoIngrediente);
+					controller.aggiungiIngrediente(nomeIngrediente, quantitaIngrediente, bloccatoIngrediente, tipoIngrediente);
+				}catch (IllegalArgumentException e) {
+					JOptionPane.showMessageDialog(null,"Valori inseriti non corretti","Errore",JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		});
 	}
 	
-	//Presi in input i campi compilati dall'utente, viene restituito l'oggetto di tipo ingrediente da aggiungere al database
-	private Ingrediente parseIngrediente(JTextField nome, JTextField quantita, JComboBox tipo, JCheckBox bloccato)
-	{
-		String nomeIngrediente = nome.getText();
-		Double quantitaIngrediente = null;
-		try 
-		{
-			quantitaIngrediente = Double.parseDouble(quantita.getText());
-		}
-		catch(Exception e)
-		{
-			quantitaIngrediente = 0.0;
-		}
-		String tipoIngrediente = tipo.getSelectedItem().toString();
-		TipoIngrediente ti = null;
-		if(tipoIngrediente.equals("MALTO"))
-			ti = TipoIngrediente.MALTO;
-		if(tipoIngrediente.equals("ZUCCHERO"))
-			ti = TipoIngrediente.ZUCCHERO;
-		if(tipoIngrediente.equals("LIEVITO"))
-			ti = TipoIngrediente.LIEVITO;
-		if(tipoIngrediente.equals("LUPPOLI"))
-			ti = TipoIngrediente.LUPPOLI;
-		if(tipoIngrediente.equals("ACQUA"))
-			ti = TipoIngrediente.ACQUA;
-		boolean bloccatoIngrediente = bloccato.isSelected();
-		return new Ingrediente(nomeIngrediente, quantitaIngrediente, bloccatoIngrediente, ti);
-	}
-	
+	//Ascoltatore del bottone modifica ingrediente
 	private void clickModificaIngrediente(JButton modificaIngrediente, final JTextField nome, final JTextField quantita, final JComboBox tipo, final JCheckBox bloccato, final JFrame guiFrame)
 	{
 		modificaIngrediente.addActionListener(new ActionListener()
@@ -215,10 +208,17 @@ public class GuiIngredienti implements Gui
 			@Override
 			public void actionPerformed(ActionEvent event)
 			{
-				Ingrediente i =parseIngrediente(nome, quantita, tipo, bloccato);
-				ci.modificaIngrediente(i);
-				JOptionPane.showMessageDialog(guiFrame, "Ingrediente modificato");
+				String nomeIngrediente = nome.getText();
+				String quantitaIngrediente = quantita.getText();
+				boolean bloccatoIngrediente = bloccato.isSelected();
+				String tipoIngrediente = tipo.getSelectedItem().toString();
+				try {
+					controller.modificaIngrediente(nomeIngrediente, quantitaIngrediente, bloccatoIngrediente, tipoIngrediente);
+				}catch (IllegalArgumentException e) {
+					JOptionPane.showMessageDialog(null,"Valori inseriti non corretti","Errore",JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		});
 	}
+	
 }

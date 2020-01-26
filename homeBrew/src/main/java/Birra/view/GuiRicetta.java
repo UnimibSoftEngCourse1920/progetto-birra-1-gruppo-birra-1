@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import Birra.controller.*;
 import Birra.model.Attrezzatura;
 import Birra.model.Ingrediente;
@@ -22,8 +21,18 @@ public class GuiRicetta implements Gui {
 	private ControllerIngrediente ci; 
 	private ControllerAttrezzatura ca; 
 	private ControllerRicetta cr;
+	private FacadeController controller; 
 	private ArrayList<Attrezzatura> strumenti = new ArrayList<>();
 	HashMap<Ingrediente, Double> ingredienti = new HashMap<>();
+	
+	public GuiRicetta(FacadeController controller)
+	{
+		this.controller = controller;
+		ci = new ControllerIngrediente();
+		ca = new ControllerAttrezzatura();
+		cr = new ControllerRicetta(ci, ca);
+		draw();
+	}
 	
 	@Override
 	public void draw() 
@@ -225,14 +234,6 @@ public class GuiRicetta implements Gui {
 	}
 
 	
-	public GuiRicetta()
-	{
-		ci = new ControllerIngrediente();
-		ca = new ControllerAttrezzatura();
-		cr = new ControllerRicetta(ci, ca);
-		draw();
-	}
-	
 	//Ascoltatore dell'evento click del bottone mostraRicetta
 	private void clickGetRicetta(JButton getRicetta, final JTextField nome, final JFrame guiFrame)
 	{
@@ -241,10 +242,9 @@ public class GuiRicetta implements Gui {
 			@Override
 			public void actionPerformed(ActionEvent event)
 			{
-				Ricetta ricetta = cr.getRicetta(nome.getText());
+				Ricetta ricetta = controller.getRicetta(nome.getText());
 				JOptionPane.showMessageDialog(guiFrame, "nomeBirra: " + ricetta.getNomeBirra() +
-						" tempo: "+ ricetta.getTempo() + " Procedimento: " + ricetta.getProcedimento());
-				
+						" tempo: "+ ricetta.getTempo() + " Procedimento: " + ricetta.getProcedimento());	
 			}
 		});
 	}
@@ -255,7 +255,8 @@ public class GuiRicetta implements Gui {
 		eliminaRicetta.addActionListener(new ActionListener () {
 			public void actionPerformed(ActionEvent e) 
 			{
-				cr.eliminaRicetta(nome.getText());
+				controller.eliminaRicetta(nome.getText());
+				//cr.eliminaRicetta(nome.getText());
 				JOptionPane.showMessageDialog(guiFrame, "Ricetta eliminata");	
 			}
 		});
