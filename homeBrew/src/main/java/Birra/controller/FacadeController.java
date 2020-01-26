@@ -148,7 +148,8 @@ public class FacadeController {
 	}
 	
 	public Nota getNota(String nomeBirra) {
-		return cr.getRicetta(nomeBirra).getNota();
+		Ricetta ric = cr.getRicetta(nomeBirra);
+		return ric == null ? null : ric.getNota();
 	}
 
 	public boolean aggiungiNota(String nomeBirra, String titolo, String descrizione)
