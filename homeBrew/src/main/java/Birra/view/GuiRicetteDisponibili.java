@@ -11,7 +11,7 @@ import Birra.model.Ricetta;
 
 public class GuiRicetteDisponibili implements Gui 
 {
-	private RicetteDisponibili rd;
+	private FacadeController controller;
 	
 	
 	/*
@@ -40,9 +40,9 @@ public class GuiRicetteDisponibili implements Gui
 		guiFrame.setVisible(true);
 	}
 
-	public GuiRicetteDisponibili()  
+	public GuiRicetteDisponibili(FacadeController controller)  
 	{
-		//this.rd = new RicetteDisponibili();
+		this.controller = controller;
 		draw();
 	}
 	
@@ -53,12 +53,20 @@ public class GuiRicetteDisponibili implements Gui
 			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
-				//Ricetta r = rd.cosaDovreiPreparareOggi();
-				JDialog dialog = new JDialog(guiFrame, "Ricette disponibili");
-				//JLabel label = new JLabel(r.toString());
-				//dialog.add(label);
-				dialog.setSize(500, 500);
-				dialog.setVisible(true);
+				Ricetta r = controller.cosaDovreiPreparareOggi();
+				
+				if(r == null) //Non ci sono ricette disponibili
+					JOptionPane.showMessageDialog(guiFrame, "Non ci sono ricette disponibili al momento");
+				
+				//Se ci sono le mostro
+				else
+				{
+					JDialog dialog = new JDialog(guiFrame, "Ricette disponibili");
+					JLabel label = new JLabel(r.toString());
+					dialog.add(label);
+					dialog.setSize(500, 500);
+					dialog.setVisible(true);
+				}
 			}
 			
 		});
