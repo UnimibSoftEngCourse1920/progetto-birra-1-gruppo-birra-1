@@ -23,8 +23,8 @@ public class Main {
 		//fc.aggiungiRicetta("stout", "3.3", "fare...", strumenti, ingredienti, "nota1", "blablabla...");
 		//fc.aggiungiRicetta("Moretti", "10", "boh", strumenti, ingredienti, "notaMoretti", "buona");
 		//System.out.println(fc.getRicetta("stout"));
-		System.out.println(fc.cosaDovreiPreparareOggi());
-		System.out.println(fc.getQuantitaBirra());
+		//System.out.println(fc.cosaDovreiPreparareOggi());
+		System.out.println(fc.getMaxQuantita("Moretti"));
 		//fc.eliminaRicetta("stout");
 		//DBUtils.update("insert into attrezzatura(nomeAttrezzatura, portata, tipo) values ('tubo1', 10.1, 'TUBO')");
 		//DBUtils.update("delete from attrezzatura");

@@ -1,5 +1,7 @@
 package Birra.controller;
 
+import java.util.Arrays;
+
 public class Simplesso {
 	
 	private double[][] tableau;
@@ -68,5 +70,15 @@ public class Simplesso {
 				return j;
 		
 		return -1;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder(tableau.length * tableau[0].length);
+		
+		for (int i = 0; i < tableau.length; i++)
+			sb.append(Arrays.toString(tableau[i])).append("\n");
+		
+		return sb.toString();
 	}
 }

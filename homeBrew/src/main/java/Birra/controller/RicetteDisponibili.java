@@ -79,7 +79,7 @@ public class RicetteDisponibili {
 		final ArrayList<Entry<Ingrediente, Double>> ingr = new ArrayList<>(ric.getIngredienti().entrySet());
 		
 		final int m = (ingr.size() + 1) << 1; //(funzione obiettivo) + (vincoli quantità) + (vincoli percentuali) + (vincolo birra)
-		final int n = ingr.size() << 1 + 3; //(termine noto) + (var ingredienti) + (slack ingredienti) + (var birra) + (slack birra)
+		final int n = (ingr.size() << 1) + 3; //(termine noto) + (var ingredienti) + (slack ingredienti) + (var birra) + (slack birra)
 		final int jVarBirra = n - 2;
 		final double[][] tab = new double[m][n];
 		
