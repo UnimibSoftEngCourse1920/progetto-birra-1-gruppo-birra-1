@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
+
 import Birra.controller.*;
 import Birra.model.Attrezzatura;
 import Birra.model.Ingrediente;
@@ -19,12 +19,15 @@ import Birra.model.TipoIngrediente;
 
 public class GuiRicetta implements Gui {
 
-	private ControllerIngrediente ci; 
-	private ControllerAttrezzatura ca; 
-	private ControllerRicetta cr;
 	private FacadeController controller;
 	private ArrayList<Attrezzatura> strumenti = new ArrayList<>();
 	HashMap<Ingrediente, Double> ingredienti = new HashMap<>();
+	
+	public GuiRicetta(FacadeController controller)
+	{
+		this.controller = controller;
+		draw();
+	}
 	
 	@Override
 	public void draw() 
@@ -225,16 +228,6 @@ public class GuiRicetta implements Gui {
 		guiFrame.setVisible(true);
 	}
 
-	
-	public GuiRicetta(FacadeController controller)
-	{
-		this.controller = controller;
-		ci = new ControllerIngrediente();
-		ca = new ControllerAttrezzatura();
-		cr = new ControllerRicetta(ci, ca);
-		draw();
-	}
-	
 	//Ascoltatore dell'evento click del bottone mostraRicetta
 	private void clickGetRicetta(JButton getRicetta, final JTextField nome, final JFrame guiFrame)
 	{
