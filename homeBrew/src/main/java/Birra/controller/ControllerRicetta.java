@@ -40,16 +40,18 @@ public class ControllerRicetta {
 		ArrayList<HashMap<String, String>> rows = DBUtils.getRows(sqlGetRicetta(nomeBirra));
 		return rows.isEmpty() ? null : parseRicetta(rows.get(0));
 	}
-	
+
 	/*
-	 * Dato il risultato della query che preleva dal database una ricetta, restituisce un
-	 * oggetto di tipo ricetta
+	 * Dato il risultato della query che preleva dal database una ricetta,
+	 * restituisce un oggetto di tipo ricetta
 	 */
 	private Ricetta parseRicetta(HashMap<String, String> row) {
 		String nomeBirra = row.get("nomeBirra");
+		String titolo = row.get("titoloNota");
+		Nota nota = titolo == null ? null : new Nota(titolo, row.get("descrizioneNota"));
+
 		return new Ricetta(nomeBirra, Double.parseDouble(row.get("tempo")), row.get("procedimento"),
-				controllerAttr.getStrumenti(nomeBirra), controllerIngr.getIngredienti(nomeBirra),
-				new Nota(row.get("titoloNota"), row.get("descrizioneNota")));
+				controllerAttr.getStrumenti(nomeBirra), controllerIngr.getIngredienti(nomeBirra), nota);
 	}
 
 	/*

@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import Birra.model.*;
 
-public class main {
+public class Main {
 
 	public static void main(String[] args) {
 		TipoAttrezzatura tipo = TipoAttrezzatura.TUBO;
@@ -19,9 +19,13 @@ public class main {
 		Nota nota = new Nota("nota1", "blablabla...");
 		Ricetta r = new Ricetta("stout", 3.30, "fare...", strumenti, ingredienti, null);
 		ControllerRicetta cr = new ControllerRicetta(new ControllerIngrediente(), new ControllerAttrezzatura());
-		// System.out.println(cr.getRicetta(r.getNomeBirra()));
+		ControllerIngrediente ci = new ControllerIngrediente();
+		//System.out.println(cr.getRicetta(r.getNomeBirra()));
 		// System.out.println(cr.getNota(r.getNomeBirra()));
-		cr.eliminaRicetta(r.getNomeBirra());
+		//cr.eliminaRicetta(r.getNomeBirra());
+		//cr.aggiungiRicetta(r);
+		//ci.eliminaIngrediente(i.getNome());
+		System.out.println(ci.getIngrediente(i.getNome()));
 	}
 
 }
