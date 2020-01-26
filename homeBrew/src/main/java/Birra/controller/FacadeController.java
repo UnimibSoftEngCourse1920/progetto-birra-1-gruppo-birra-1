@@ -16,6 +16,15 @@ public class FacadeController {
 	private ControllerIngrediente ci;
 	private RicetteDisponibili rd;
 
+	public FacadeController()
+	{
+		ControllerAttrezzatura ca = new ControllerAttrezzatura();
+		ci = new ControllerIngrediente();
+		cr = new ControllerRicetta(ci, ca);
+		rd = new RicetteDisponibili(cr);
+	}
+	
+	
 	// metodi per richiamare ingredienti
 	public Ingrediente creaIngrediente(String nome, String quantita, boolean bloccato, String tipo) {
 		checkString(nome, "Nome dell'ingrediente vuoto");
