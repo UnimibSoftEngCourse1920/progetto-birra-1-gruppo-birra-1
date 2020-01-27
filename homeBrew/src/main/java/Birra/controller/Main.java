@@ -22,12 +22,12 @@ public class Main {
 		
 		//fc.modificaRicetta("stout", "4", "fare...", strumenti, ingredienti, "nota1", "blablabla...");
 		//fc.aggiungiRicetta("Moretti", "10", "boh", strumenti, ingredienti, "notaMoretti", "buona");
-		System.out.println(fc.getRicetta("stout"));
+		//System.out.println(fc.getRicetta("stout"));
 		//System.out.println(fc.cosaDovreiPreparareOggi());
 		//System.out.println(fc.getMaxQuantita("Moretti"));
 		//fc.eliminaRicetta("stout");
 		//fc.modificaIngrediente("luppoli", "5", false, "LUPPOLI");
-		//System.out.println(fc.getIngrediente("luppoli"));
+		System.out.println(fc.getIngrediente("luppoli"));
 		//DBUtils.update("insert into attrezzatura(nomeAttrezzatura, portata, tipo) values ('tubo1', 10.1, 'TUBO')");
 		//DBUtils.update("delete from ingrediente where nomeIngrediente = 'luppoli'");
 	}

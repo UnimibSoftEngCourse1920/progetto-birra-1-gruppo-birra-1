@@ -109,6 +109,6 @@ public class ControllerIngrediente {
 	 */
 	private Ingrediente parseIngrediente(HashMap<String, Object> row) {
 		return new Ingrediente((String) row.get("nomeIngrediente"), (double) row.get("quantita"),
-				(boolean) row.get("bloccato"), TipoIngrediente.valueOf(row.get("tipo").toString()));
+				(boolean) row.get("bloccato"), TipoIngrediente.valueOf((String) row.get("tipo")));
 	}
 }

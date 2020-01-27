@@ -77,6 +77,6 @@ public class ControllerAttrezzatura {
 	 */
 	private Attrezzatura parseAttrezzatura(HashMap<String, Object> row) {
 		return new Attrezzatura((String) row.get("nomeAttrezzatura"), (double) row.get("portata"),
-				TipoAttrezzatura.valueOf(row.get("tipo").toString()));
+				TipoAttrezzatura.valueOf((String) row.get("tipo")));
 	}
 }
