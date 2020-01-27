@@ -25,23 +25,11 @@ public class GuiIngredienti implements Gui
 	public void draw() 
 	{
 		final JFrame guiFrame = new JFrame();
-		//make sure the program exits when the frame closes
+
 		guiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		guiFrame.setTitle("Ingredienti");
 		guiFrame.setSize(500,350);
 		guiFrame.setLocation(630, 100);
-		/*
-		final JPanel panel = new JPanel(new BorderLayout());
-		final JPanel visualizzaIngrediente = new JPanel(new BorderLayout());
-		final JLabel messaggio = new JLabel("Inserisci il nome dell'ingrediente che vuoi visualizzare");
-		JTextField testo = new JTextField(40);
-		JButton getIngrediente = new JButton("Visualizza ingrediente");
-		visualizzaIngrediente.add(messaggio, BorderLayout.NORTH);
-		visualizzaIngrediente.add(testo, BorderLayout.CENTER);
-		visualizzaIngrediente.add(getIngrediente, BorderLayout.SOUTH);
-		panel.add(visualizzaIngrediente, BorderLayout.NORTH);
-		guiFrame.add(panel, BorderLayout.NORTH);
-		*/
 		
 		JPanel campiIngrediente = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -89,7 +77,6 @@ public class GuiIngredienti implements Gui
 		gbc.insets = new Insets(5, 0, 0, 10);
 		gbc.anchor = GridBagConstraints.LINE_END;
 		campiIngrediente.add(nome, gbc);
-		
 		
 		
 		JLabel quantitaLabel = new JLabel("quantità: ");
