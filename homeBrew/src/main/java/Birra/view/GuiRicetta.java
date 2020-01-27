@@ -288,7 +288,6 @@ public class GuiRicetta implements Gui {
 				if(conferma)
 				{
 					controller.eliminaRicetta(nome.getText());
-					JOptionPane.showMessageDialog(guiFrame, "Ricetta eliminata");
 				}	
 				else
 				{
@@ -341,6 +340,12 @@ public class GuiRicetta implements Gui {
 			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
+				//Qui cambia: metto solo un JOption con le ricette salvate nel db 
+				//Poi dato il nome della ricetta, recupero il vero e proprio oggetto con
+				//una get della classe Attrezzatura
+				
+				//Attrezzatura[] a = new Attrezzatura[50];
+				
 				JDialog dialog = new JDialog(guiFrame, "Aggiungi strumento alla ricetta");
 				JPanel elementiGraficiAggiungiStrumento = new JPanel(new GridBagLayout());
 				GridBagConstraints gbc = new GridBagConstraints();
@@ -410,6 +415,8 @@ public class GuiRicetta implements Gui {
 			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
+				
+				
 				JDialog dialog = new JDialog(guiFrame, "Aggiungi ingrediente alla ricetta");
 
 				JPanel campiIngrediente = new JPanel(new GridBagLayout());
@@ -511,6 +518,7 @@ public class GuiRicetta implements Gui {
 	//Ascoltatore del bottone aggiungi strumento
 	private void clickAssociaStrumento(JButton bottone, final JTextField nome, final JTextField portata, final JComboBox tipo, final JDialog dialog)
 	{
+		//Attrezzatura[] a = new 
 		bottone.addActionListener(new ActionListener() 
 		{
 			@Override
@@ -571,7 +579,7 @@ public class GuiRicetta implements Gui {
 				Ingrediente i = new Ingrediente(nomeIngrediente, quantitaIngrediente, bloccatoIngrediente, tipoIngrediente);
 				double percentualeIngrediente = 0.0; 
 				try {
-					percentualeIngrediente = Double.parseDouble(percentuale.getText());
+					percentualeIngrediente = Double.parseDouble(percentuale.getText())/100;
 					ingredienti.put(i, percentualeIngrediente);
 				}catch (Exception e1) {
 					JOptionPane.showMessageDialog(dialog, "Inserire un numero");
@@ -594,6 +602,8 @@ public class GuiRicetta implements Gui {
 				String procedimento = procedimentoText.getText();
 				String titoloNota = notaText.getText();
 				String descrizioneNota = descrizioneNotaText.getText();
+				
+				//Attrezzatura a = new Attrezzatura[]
 				
 				Attrezzatura[] a = strumenti.toArray(new Attrezzatura[strumenti.size()]);
 				try 
