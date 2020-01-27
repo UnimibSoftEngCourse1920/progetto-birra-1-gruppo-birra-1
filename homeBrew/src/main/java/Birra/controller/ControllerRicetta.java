@@ -1,5 +1,6 @@
 package Birra.controller;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -21,13 +22,12 @@ public class ControllerRicetta {
 	/*
 	 * Aggiungo una ricetta nel db
 	 */
-	public void aggiungiRicetta(Ricetta ricetta) {
+	public void aggiungiRicetta(Ricetta ricetta) throws SQLException {
 		DBUtils.update(sqlAggiungiRicetta(ricetta));
 
 		String nomeBirra = ricetta.getNomeBirra();
-		HashMap<Ingrediente, Double> ingredienti = ricetta.getIngredienti();
-
-		controllerIngr.aggiungiIngredienti(ingredienti.keySet());
+		HashMap<String, Double> ingredienti = ricetta.getIngredienti();
+		
 		controllerIngr.associaRicetta(nomeBirra, ingredienti);
 		controllerAttr.associaRicetta(nomeBirra, ricetta.getStrumenti());
 	}
@@ -36,7 +36,7 @@ public class ControllerRicetta {
 	 * Questo metodo dato il nome della birra che una ricetta permette di produrre,
 	 * restituisce l'oggetto Ricetta
 	 */
-	public Ricetta getRicetta(String nomeBirra) {
+	public Ricetta getRicetta(String nomeBirra) throws SQLException {
 		ArrayList<HashMap<String, Object>> rows = DBUtils.getRows(sqlGetRicetta(nomeBirra));
 		return rows.isEmpty() ? null : parseRicetta(rows.get(0));
 	}
@@ -45,19 +45,19 @@ public class ControllerRicetta {
 	 * Dato il risultato della query che preleva dal database una ricetta,
 	 * restituisce un oggetto di tipo ricetta
 	 */
-	private Ricetta parseRicetta(HashMap<String, Object> row) {
+	private Ricetta parseRicetta(HashMap<String, Object> row) throws SQLException {
 		String nomeBirra = (String) row.get("nomeBirra");
 		String titolo = (String) row.get("titoloNota");
 		Nota nota = titolo == null ? null : new Nota(titolo, (String) row.get("descrizioneNota"));
 
 		return new Ricetta(nomeBirra, (double) row.get("tempo"), (String) row.get("procedimento"),
-				controllerAttr.getStrumenti(nomeBirra), controllerIngr.getIngredienti(nomeBirra), nota);
+				controllerAttr.getNomiStrumenti(nomeBirra), controllerIngr.getQuantitaIngredienti(nomeBirra), nota);
 	}
 
 	/*
 	 * Viene eliminata la ricetta identificata dal nome ricevuto in input
 	 */
-	public void eliminaRicetta(String nomeBirra) {
+	public void eliminaRicetta(String nomeBirra) throws SQLException {
 		controllerIngr.disassociaRicetta(nomeBirra);
 		controllerAttr.disassociaRicetta(nomeBirra);
 		DBUtils.update(sqlEliminaRicetta(nomeBirra));
@@ -66,16 +66,7 @@ public class ControllerRicetta {
 	/*
 	 * Viene modificata una ricetta presente nel database
 	 */
-	public void modificaRicetta(Ricetta ricetta) {
-		for (Ingrediente ingr : ricetta.getIngredienti().keySet()) {
-			Ingrediente oldIngr = controllerIngr.getIngrediente(ingr.getNome());
-			
-			if (oldIngr == null)
-				controllerIngr.aggiungiIngrediente(ingr);
-			else if (!ingr.equals(oldIngr))
-				controllerIngr.modificaIngrediente(ingr);
-		}
-		
+	public void modificaRicetta(Ricetta ricetta) throws SQLException {
 		eliminaRicetta(ricetta.getNomeBirra());
 		aggiungiRicetta(ricetta);
 	}
@@ -83,7 +74,7 @@ public class ControllerRicetta {
 	/*
 	 * Viene aggiunta una nota alla ricetta identificata dal parametro nomeBirra
 	 */
-	public void aggiungiNota(String nomeBirra, Nota nota) {
+	public void aggiungiNota(String nomeBirra, Nota nota) throws SQLException {
 		Ricetta ricetta = getRicetta(nomeBirra);
 		modificaRicetta(new Ricetta(nomeBirra, ricetta.getTempo(), ricetta.getProcedimento(), ricetta.getStrumenti(),
 				ricetta.getIngredienti(), nota));

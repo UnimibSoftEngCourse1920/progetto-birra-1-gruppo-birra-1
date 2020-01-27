@@ -1,8 +1,12 @@
 package Birra.controller;
 
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 
 import Birra.model.Attrezzatura;
 import Birra.model.Ingrediente;
@@ -21,17 +25,21 @@ public class FacadeController {
 		ci = new ControllerIngrediente();
 		ca = new ControllerAttrezzatura();
 		cr = new ControllerRicetta(ci, new ControllerAttrezzatura());
-		rd = new RicetteDisponibili(cr);
+		rd = new RicetteDisponibili(cr, ci, ca);
 	}
-	
-	public Attrezzatura getStrumento(String nome) {
+
+	public Attrezzatura getStrumento(String nome) throws SQLException {
 		return ca.getStrumento(nome);
 	}
 	
-	public String[] getNomiStrumenti() {
-		return ca.getNomiStrumenti();
+	public HashSet<String> getNomiStrumenti(String nomeBirra) throws SQLException {
+		return ca.getNomiStrumenti(nomeBirra);
 	}
 	
+	public HashSet<String> getNomiStrumenti() throws SQLException {
+		return ca.getNomiStrumenti();
+	}
+
 	// metodi per richiamare ingredienti
 	public Ingrediente creaIngrediente(String nome, String quantita, boolean bloccato, String tipo) {
 		checkString(nome, "Nome dell'ingrediente vuoto");
@@ -44,7 +52,7 @@ public class FacadeController {
 	}
 
 	public boolean aggiungiIngrediente(String nome, String quantita, boolean bloccato, String tipo)
-			throws IllegalArgumentException {
+			throws IllegalArgumentException, SQLException {
 		Ingrediente ingr = creaIngrediente(nome, quantita, bloccato, tipo);
 
 		if (ci.getIngrediente(nome) != null)
@@ -52,15 +60,14 @@ public class FacadeController {
 
 		ci.aggiungiIngrediente(ingr);
 		return true;
-
 	}
 
-	public void eliminaIngrediente(String nome) {
+	public void eliminaIngrediente(String nome) throws SQLException {
 		ci.eliminaIngrediente(nome);
 	}
 
 	public boolean modificaIngrediente(String nome, String quantita, boolean bloccato, String tipo)
-			throws IllegalArgumentException {
+			throws IllegalArgumentException, SQLException {
 		Ingrediente newIngr = creaIngrediente(nome, quantita, bloccato, tipo);
 		Ingrediente oldIngr = ci.getIngrediente(nome);
 
@@ -71,7 +78,7 @@ public class FacadeController {
 		return true;
 	}
 
-	public Ingrediente getIngrediente(String nome) {
+	public Ingrediente getIngrediente(String nome) throws SQLException {
 		return ci.getIngrediente(nome);
 	}
 
@@ -87,8 +94,8 @@ public class FacadeController {
 		return new Nota(titolo, descrizione);
 	}
 
-	private Ricetta creaRicetta(String nomeBirra, String tempo, String procedimento, Attrezzatura[] strumenti,
-			Map<Ingrediente, Double> percentualiIngredienti, String titoloNota, String descrizioneNota)
+	private Ricetta creaRicetta(String nomeBirra, String tempo, String procedimento, Set<String> strumenti,
+			Map<Ingrediente, Double> ingredienti, String titoloNota, String descrizioneNota)
 			throws IllegalArgumentException, NullPointerException {
 		checkString(nomeBirra, "Nome della birra vuoto");
 		checkString(procedimento, "Procedimento per la ricetta " + nomeBirra + " vuoto");
@@ -97,54 +104,62 @@ public class FacadeController {
 		if (time <= 0)
 			throw new IllegalArgumentException("Tempo per la ricetta " + nomeBirra + " minore o uguale a 0");
 
-		if (strumenti.length == 0)
+		if (strumenti.isEmpty())
 			throw new IllegalArgumentException("Nessuno strumento per la birra " + nomeBirra);
 
-		if (percentualiIngredienti.isEmpty())
+		if (ingredienti.isEmpty())
 			throw new IllegalArgumentException("Nessun ingrediente per la birra " + nomeBirra);
 
+		HashMap<String, Double> percIngredienti = new HashMap<>();
 		double sommaPerc = 0;
 
-		for (Entry<Ingrediente, Double> coppia : percentualiIngredienti.entrySet()) {
+		for (Entry<Ingrediente, Double> coppia : ingredienti.entrySet()) {
+			String nome = coppia.getKey().getNome();
 			double perc = coppia.getValue();
 
 			if (perc <= 0)
 				throw new IllegalArgumentException(
-						"Percentuale dell'ingrediente " + coppia.getKey().getNome() + " minore o uguale a 0");
+						"Percentuale dell'ingrediente " + nome + " minore o uguale a 0");
 
 			sommaPerc += perc;
-			
+
 			if (sommaPerc > 1.001)
 				break;
+
+			percIngredienti.put(nome, coppia.getValue());
 		}
 
 		if (Math.abs(sommaPerc - 1) > 0.001)
-			throw new IllegalArgumentException("Somma delle percentuali della ricetta " + nomeBirra + " diversa da 100");
+			throw new IllegalArgumentException(
+					"Somma delle percentuali della ricetta " + nomeBirra + " diversa da 100");
 
-		return new Ricetta(nomeBirra, time, procedimento, strumenti, percentualiIngredienti,
+		return new Ricetta(nomeBirra, time, procedimento, strumenti, percIngredienti,
 				creaNota(titoloNota, descrizioneNota));
 	}
 
-	public boolean aggiungiRicetta(String nomeBirra, String tempo, String procedimento, Attrezzatura[] strumenti,
-			Map<Ingrediente, Double> percentualiIngredienti, String titoloNota, String descrizioneNota)
-			throws IllegalArgumentException {
-		Ricetta ricetta = creaRicetta(nomeBirra, tempo, procedimento, strumenti, percentualiIngredienti, titoloNota,
+	public boolean aggiungiRicetta(String nomeBirra, String tempo, String procedimento, Set<String> strumenti,
+			Map<Ingrediente, Double> ingredienti, String titoloNota, String descrizioneNota)
+			throws IllegalArgumentException, SQLException {
+		Ricetta ricetta = creaRicetta(nomeBirra, tempo, procedimento, strumenti, ingredienti, titoloNota,
 				descrizioneNota);
 
 		if (cr.getRicetta(nomeBirra) != null)
 			return false;
 
+		for (Ingrediente ingr : ingredienti.keySet())
+			ci.aggiungiIngrediente(ingr);
+
 		cr.aggiungiRicetta(ricetta);
 		return true;
 	}
 
-	public void eliminaRicetta(String nome) {
+	public void eliminaRicetta(String nome) throws SQLException {
 		cr.eliminaRicetta(nome);
 	}
 
-	public boolean modificaRicetta(String nomeBirra, String tempo, String procedimento, Attrezzatura[] strumenti,
+	public boolean modificaRicetta(String nomeBirra, String tempo, String procedimento, Set<String> strumenti,
 			Map<Ingrediente, Double> percentualiIngredienti, String titoloNota, String descrizioneNota)
-			throws IllegalArgumentException {
+			throws IllegalArgumentException, SQLException {
 		Ricetta newRicetta = creaRicetta(nomeBirra, tempo, procedimento, strumenti, percentualiIngredienti, titoloNota,
 				descrizioneNota);
 		Ricetta oldRicetta = cr.getRicetta(nomeBirra);
@@ -152,21 +167,30 @@ public class FacadeController {
 		if (oldRicetta == null || oldRicetta.equals(newRicetta))
 			return false;
 
+		for (Ingrediente ingr : percentualiIngredienti.keySet()) {
+			Ingrediente oldIngr = ci.getIngrediente(ingr.getNome());
+
+			if (oldIngr == null)
+				ci.aggiungiIngrediente(ingr);
+			else if (!ingr.equals(oldIngr))
+				ci.modificaIngrediente(ingr);
+		}
+
 		cr.modificaRicetta(newRicetta);
 		return true;
 	}
-	
-	public Ricetta getRicetta(String nomeBirra) {
+
+	public Ricetta getRicetta(String nomeBirra) throws SQLException {
 		return cr.getRicetta(nomeBirra);
 	}
-	
-	public Nota getNota(String nomeBirra) {
+
+	public Nota getNota(String nomeBirra) throws SQLException {
 		Ricetta ric = cr.getRicetta(nomeBirra);
 		return ric == null ? null : ric.getNota();
 	}
 
 	public boolean aggiungiNota(String nomeBirra, String titolo, String descrizione)
-			throws IllegalArgumentException, NullPointerException {
+			throws IllegalArgumentException, NullPointerException, SQLException {
 		Nota nota = creaNota(titolo, descrizione);
 		Ricetta ricetta = cr.getRicetta(nomeBirra);
 
@@ -178,15 +202,15 @@ public class FacadeController {
 	}
 
 	// creo i metodi di controllo per le ricette disponibili
-	public Ricetta cosaDovreiPreparareOggi() {
+	public Ricetta cosaDovreiPreparareOggi() throws SQLException {
 		return rd.cosaDovreiPreparareOggi();
 	}
-	
+
 	public double getQuantitaBirra() {
 		return rd.getQuantitaBirra();
 	}
-	
-	public double getMaxQuantita(String nomeBirra) {
+
+	public double getMaxQuantita(String nomeBirra) throws SQLException {
 		Ricetta ricetta = cr.getRicetta(nomeBirra);
 		return ricetta == null ? 0 : rd.getMaxQuantita(ricetta);
 	}

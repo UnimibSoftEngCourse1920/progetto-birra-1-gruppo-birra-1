@@ -2,7 +2,9 @@ package Birra.model;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class Ricetta {
 
@@ -10,18 +12,18 @@ public class Ricetta {
 								// una ricetta
 	private double tempo; // Tempo necessario per eseguire la ricetta
 	private String procedimento; // Procedimento della ricetta
-	private Attrezzatura[] strumenti; // Indica l'attrezzatura necessaria per mettere in atto la ricetta
-	private HashMap<Ingrediente, Double> percentualiIngredienti; // é l'insieme di ingredienti necessari per la ricetta
-																	// con le relative percentuali
+	private HashSet<String> nomiStrumenti; // Indica l'attrezzatura necessaria per mettere in atto la ricetta
+	private HashMap<String, Double> ingredienti; // é l'insieme di ingredienti necessari per la ricetta
+															// con le relative percentuali
 	private Nota nota; // Nota a cui c'è scritto appunti sulla ricetta di questa birra
 
-	public Ricetta(String nomeBirra, double tempo, String procedimento, Attrezzatura[] strumenti,
-			Map<Ingrediente, Double> percentualiIngredienti, Nota nota) {
+	public Ricetta(String nomeBirra, double tempo, String procedimento, Set<String> strumenti,
+			Map<String, Double> ingredienti, Nota nota) {
 		this.nomeBirra = nomeBirra;
 		this.tempo = tempo;
 		this.procedimento = procedimento;
-		this.strumenti = strumenti;
-		this.percentualiIngredienti = new HashMap<>(percentualiIngredienti);
+		this.nomiStrumenti = new HashSet<>(strumenti);
+		this.ingredienti = new HashMap<>(ingredienti);
 		this.nota = nota;
 	}
 
@@ -37,12 +39,12 @@ public class Ricetta {
 		return procedimento;
 	}
 
-	public Attrezzatura[] getStrumenti() {
-		return strumenti.clone();
+	public HashSet<String> getStrumenti() {
+		return new HashSet<>(nomiStrumenti);
 	}
 
-	public HashMap<Ingrediente, Double> getIngredienti() {
-		return new HashMap<>(percentualiIngredienti);
+	public HashMap<String, Double> getIngredienti() {
+		return new HashMap<>(ingredienti);
 	}
 
 	public Nota getNota() {
@@ -52,17 +54,17 @@ public class Ricetta {
 	@Override
 	public String toString() {
 		return "[nomeBirra=" + nomeBirra + ", tempo=" + tempo + ", procedimento=" + procedimento + ", strumenti="
-				+ Arrays.toString(strumenti) + ", ingredienti=" + percentualiIngredienti + ", nota=" + nota + "]";
+				+ nomiStrumenti + ", ingredienti=" + ingredienti + ", nota=" + nota + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = prime + percentualiIngredienti.hashCode();
+		int result = prime + ingredienti.hashCode();
 		result = prime * result + nomeBirra.hashCode();
 		result = prime * result + nota.hashCode();
 		result = prime * result + procedimento.hashCode();
-		result = prime * result + Arrays.hashCode(strumenti);
+		result = prime * result + nomiStrumenti.hashCode();
 		result = prime * result + Double.hashCode(tempo);
 		return result;
 	}
@@ -75,8 +77,8 @@ public class Ricetta {
 		if (obj instanceof Ricetta) {
 			Ricetta ric = (Ricetta) obj;
 			return nomeBirra.equals(ric.nomeBirra) && tempo == ric.tempo && procedimento.equals(ric.procedimento)
-					&& Arrays.equals(strumenti, ric.strumenti)
-					&& percentualiIngredienti.equals(ric.percentualiIngredienti) && nota.equals(ric.nota);
+					&& nomiStrumenti.equals(ric.nomiStrumenti)
+					&& ingredienti.equals(ric.ingredienti) && nota.equals(ric.nota);
 		}
 
 		return false;

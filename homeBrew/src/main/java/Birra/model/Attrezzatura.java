@@ -1,6 +1,6 @@
 package Birra.model;
 
-public class Attrezzatura {
+public class Attrezzatura implements Comparable<Attrezzatura> {
 
 	private String nome; // Nome dello strumento
 	private double portata; // Capacità dello strumento
@@ -40,6 +40,11 @@ public class Attrezzatura {
 	@Override
 	public boolean equals(Object obj) {
 		return this == obj || (obj instanceof Attrezzatura && nome.equals(((Attrezzatura) obj).nome));
+	}
+
+	@Override
+	public int compareTo(Attrezzatura o) {
+		return Double.compare(portata, o.portata);
 	}
 
 }

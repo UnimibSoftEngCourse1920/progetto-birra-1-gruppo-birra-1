@@ -1,27 +1,30 @@
 package Birra.controller;
 
+import java.sql.SQLException;
 import java.util.*;
 import java.util.Map.Entry;
 
-import Birra.model.Attrezzatura;
-import Birra.model.Ingrediente;
 import Birra.model.Ricetta;
 
 public class RicetteDisponibili {
 
-	private ControllerRicetta controllerRic;
+	private ControllerRicetta cr;
+	private ControllerIngrediente ci;
+	private ControllerAttrezzatura ca;
 	private double quantitaBirra;
 	
-	public RicetteDisponibili(ControllerRicetta controllerRic) {
+	public RicetteDisponibili(ControllerRicetta cr, ControllerIngrediente ci, ControllerAttrezzatura ca) {
 		quantitaBirra = -1;
-		this.controllerRic = controllerRic;
+		this.cr = cr;
+		this.ci = ci;
+		this.ca = ca;
 	}
 
 	public double getQuantitaBirra() {
 		return quantitaBirra;
 	}
 
-	public Ricetta cosaDovreiPreparareOggi() {
+	public Ricetta cosaDovreiPreparareOggi() throws SQLException {
 		String[] nomiBirre = nomiBirreDisponibili();
 		
 		if (nomiBirre.length == 0) {
@@ -29,11 +32,11 @@ public class RicetteDisponibili {
 			return null;
 		}
 		
-		Ricetta ricDaPrep = controllerRic.getRicetta(nomiBirre[0]);
+		Ricetta ricDaPrep = cr.getRicetta(nomiBirre[0]);
 		quantitaBirra = getMaxQuantita(ricDaPrep);
 		
 		for (int i = 1; i < nomiBirre.length; i++) {
-			Ricetta ric = controllerRic.getRicetta(nomiBirre[i]);
+			Ricetta ric = cr.getRicetta(nomiBirre[i]);
 			double quantita = getMaxQuantita(ric);
 			
 			if (quantita > quantitaBirra) {
@@ -45,7 +48,7 @@ public class RicetteDisponibili {
 		return ricDaPrep;
 	}
 	
-	private String[] nomiBirreDisponibili() {
+	private String[] nomiBirreDisponibili() throws SQLException {
 		ArrayList<HashMap<String, Object>> rows = DBUtils.getRows(sqlNomiBirreDisponibili());
 	String[] nomi = new String[rows.size()];
 		
@@ -64,7 +67,7 @@ public class RicetteDisponibili {
 					+ "where ingr.nomeBirra = ric.nomeBirra AND (bloccato OR quantita = 0))";
 	}
 	
-	public double getMaxQuantita(Ricetta ricetta) {
+	public double getMaxQuantita(Ricetta ricetta) throws SQLException {
 		double[][] tab = creaTableau(ricetta);
 		new Simplesso(tab).esegui();
 		return tab[0][0];
@@ -75,8 +78,8 @@ public class RicetteDisponibili {
 	 * vincoli ingredienti: non eccedere la quantità disponibile, rispettare percentuale ricetta
 	 * vincolo birra: non eccedere la minima tra le capienze dei suoi strumenti
 	 */
-	private double[][] creaTableau(Ricetta ric) {
-		final ArrayList<Entry<Ingrediente, Double>> ingr = new ArrayList<>(ric.getIngredienti().entrySet());
+	private double[][] creaTableau(Ricetta ric) throws SQLException {
+		final ArrayList<Entry<String, Double>> ingr = new ArrayList<>(ric.getIngredienti().entrySet());
 		
 		final int m = (ingr.size() + 1) << 1; //(funzione obiettivo) + (vincoli quantità) + (vincoli percentuali) + (vincolo birra)
 		final int n = (ingr.size() << 1) + 3; //(termine noto) + (var ingredienti) + (slack ingredienti) + (var birra) + (slack birra)
@@ -88,8 +91,8 @@ public class RicetteDisponibili {
 		
 		//righe vincoli quantità (quantità ingrediente + slack ingrediente = quantità disponibile)
 		int i = 1;
-		for (Entry<Ingrediente, Double> coppia : ingr) {
-			tab[i][0] = coppia.getKey().getQuantita(); //termine noto (quantità disponibile)
+		for (Entry<String, Double> coppia : ingr) {
+			tab[i][0] = ci.getIngrediente(coppia.getKey()).getQuantita(); //termine noto (quantità disponibile)
 			tab[i][i] = 1; // coeff var ingrediente
 			tab[i][i + ingr.size()] = 1; //coeff var slack
 			i++;
@@ -97,7 +100,7 @@ public class RicetteDisponibili {
 		
 		//righe vincoli percentuali (percentuale ricetta * quantità birra - quantità ingrediente = 0)
 		int j = 1;
-		for (Entry<Ingrediente, Double> coppia : ingr) {
+		for (Entry<String, Double> coppia : ingr) {
 			tab[i][j] = -1; // sottrarre var ingrediente
 			tab[i][jVarBirra] = coppia.getValue(); //coeff var birra (percentuale ricetta)
 			i++;
@@ -113,7 +116,7 @@ public class RicetteDisponibili {
 		return tab;
 	}
 	
-	private double minCapienza(Ricetta ric) {
-		return Arrays.stream(ric.getStrumenti()).mapToDouble(Attrezzatura::getPortata).min().getAsDouble();
+	private double minCapienza(Ricetta ric) throws SQLException {
+		return Collections.min(ca.getStrumenti(ca.getNomiStrumenti(ric.getNomeBirra()))).getPortata();
 	}
 }

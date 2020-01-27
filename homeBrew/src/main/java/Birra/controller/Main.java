@@ -17,7 +17,7 @@ public class Main {
 		ingredienti.put(new Ingrediente("luppoli", 5, false, LUPPOLI), .4);
 
 		Nota nota = new Nota("nota1", "blablabla...");
-		Ricetta r = new Ricetta("stout", 3.3, "fare...", strumenti, ingredienti, nota);
+		//Ricetta r = new Ricetta("stout", 3.3, "fare...", strumenti, ingredienti, nota);
 		FacadeController fc = new FacadeController();
 		
 		//fc.modificaRicetta("stout", "4", "fare...", strumenti, ingredienti, "nota1", "blablabla...");

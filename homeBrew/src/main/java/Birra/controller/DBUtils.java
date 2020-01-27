@@ -17,46 +17,36 @@ public class DBUtils {
 	/*
 	 * Viene eseguita una query di aggiornamento dati del db
 	 */
-	public static void update(String sql) {
+	public static void update(String sql) throws SQLException {
 		System.out.println(sql);
-
-		try (Connection conn = DBConnection(); Statement st = conn.createStatement();) {
-			st.executeUpdate(sql); // Viene eseguito l'update
-
-		} catch (SQLException e) {
-			printSQLException(e);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
+		
+		Connection conn = DBConnection();
+		Statement st = conn.createStatement();
+		st.executeUpdate(sql); // Viene eseguito l'update
 	}
 
 	/*
 	 * Viene eseguita una query di tipo select
 	 */
-	public static ArrayList<HashMap<String, Object>> getRows(String query) {
-		ArrayList<HashMap<String, Object>> rows = null;
+	public static ArrayList<HashMap<String, Object>> getRows(String query) throws SQLException {
+		System.out.println(query);
+		ArrayList<HashMap<String, Object>> rows = new ArrayList<>();
 
-		try (Connection conn = DBConnection();
-				Statement st = conn.createStatement();
-				ResultSet rs = st.executeQuery(query);) {
-			// Eseguo la query
-			ResultSetMetaData md = rs.getMetaData();
-			int nColumns = md.getColumnCount();
-			rows = new ArrayList<>();
+		Connection conn = DBConnection();
+		Statement st = conn.createStatement();
+		ResultSet rs = st.executeQuery(query);
+		
+		// Eseguo la query
+		ResultSetMetaData md = rs.getMetaData();
+		int nColumns = md.getColumnCount();
+		
+		while (rs.next()) {
+			HashMap<String, Object> row = new HashMap<>(nColumns);
 
-			while (rs.next()) {
-				HashMap<String, Object> row = new HashMap<>(nColumns);
+			for (int i = 1; i <= nColumns; i++)
+				row.put(md.getColumnName(i), rs.getObject(i));
 
-				for (int i = 1; i <= nColumns; i++)
-					row.put(md.getColumnName(i), rs.getObject(i));
-
-				rows.add(row);
-			}
-
-		} catch (SQLException e) {
-			printSQLException(e);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			rows.add(row);
 		}
 
 		printClosingConnection();
@@ -76,13 +66,6 @@ public class DBUtils {
 	 */
 	private static void printClosingConnection() {
 		System.out.println("Closing database connection");
-	}
-
-	/*
-	 * Viene stampata una eccezione
-	 */
-	private static void printSQLException(SQLException e) {
-		System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
 	}
 
 	/*
