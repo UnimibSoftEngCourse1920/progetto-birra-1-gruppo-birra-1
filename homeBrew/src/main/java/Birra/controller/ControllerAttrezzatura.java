@@ -43,15 +43,32 @@ public class ControllerAttrezzatura {
 	 * Vengono prelevati dal database tutti gli strumenti associati alla ricetta identificata dal parametro nomeBirra
 	 */
 	public Attrezzatura[] getStrumenti(String nomeBirra) {
-		String queryStrumenti = "select attrezzatura.* from attrezzatura natural join ricettaAttrezzatura where nomeBirra = '"
+		String sql = "select attrezzatura.* from attrezzatura natural join ricettaAttrezzatura where nomeBirra = '"
 				+ nomeBirra + "'";
-		ArrayList<HashMap<String, Object>> rows = DBUtils.getRows(queryStrumenti);
+		ArrayList<HashMap<String, Object>> rows = DBUtils.getRows(sql);
 		Attrezzatura[] strumenti = new Attrezzatura[rows.size()];
 		
 		for (int i = 0; i < strumenti.length; i++)
 			strumenti[i] = parseAttrezzatura(rows.get(i));
 		
 		return strumenti;
+	}
+	
+	public String[] getNomiStrumenti() {
+		String sql = "select nomeAttrezzatura from attrezzatura";
+		ArrayList<HashMap<String, Object>> rows = DBUtils.getRows(sql);
+		String[] nomi = new String[rows.size()];
+		
+		for (int i = 0; i < nomi.length; i++)
+			nomi[i] = (String) rows.get(i).get("nomeAttrezzatura");
+		
+		return nomi;
+	}
+	
+	public Attrezzatura getStrumento(String nome) {
+		String sql = "select * from attrezzatura where nomeAttrezzatura = " + nome;
+		ArrayList<HashMap<String, Object>> rows = DBUtils.getRows(sql);
+		return rows.isEmpty() ? null : parseAttrezzatura(rows.get(0));
 	}
 	
 	/*

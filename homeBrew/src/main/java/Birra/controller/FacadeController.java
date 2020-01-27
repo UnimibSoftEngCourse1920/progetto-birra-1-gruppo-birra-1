@@ -15,13 +15,23 @@ public class FacadeController {
 	private ControllerRicetta cr;
 	private ControllerIngrediente ci;
 	private RicetteDisponibili rd;
+	private ControllerAttrezzatura ca;
 
 	public FacadeController() {
 		ci = new ControllerIngrediente();
+		ca = new ControllerAttrezzatura();
 		cr = new ControllerRicetta(ci, new ControllerAttrezzatura());
 		rd = new RicetteDisponibili(cr);
 	}
-
+	
+	public Attrezzatura getStrumento(String nome) {
+		return ca.getStrumento(nome);
+	}
+	
+	public String[] getNomiStrumenti() {
+		return ca.getNomiStrumenti();
+	}
+	
 	// metodi per richiamare ingredienti
 	public Ingrediente creaIngrediente(String nome, String quantita, boolean bloccato, String tipo) {
 		checkString(nome, "Nome dell'ingrediente vuoto");
@@ -106,7 +116,7 @@ public class FacadeController {
 		}
 
 		if (Math.abs(sommaPerc - 1) > 0.001)
-			throw new IllegalArgumentException("Somma delle percentuali della ricetta " + nomeBirra + "diversa da 100");
+			throw new IllegalArgumentException("Somma delle percentuali della ricetta " + nomeBirra + " diversa da 100");
 
 		return new Ricetta(nomeBirra, time, procedimento, strumenti, percentualiIngredienti,
 				creaNota(titoloNota, descrizioneNota));

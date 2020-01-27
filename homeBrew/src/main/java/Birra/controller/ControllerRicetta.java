@@ -67,6 +67,15 @@ public class ControllerRicetta {
 	 * Viene modificata una ricetta presente nel database
 	 */
 	public void modificaRicetta(Ricetta ricetta) {
+		for (Ingrediente ingr : ricetta.getIngredienti().keySet()) {
+			Ingrediente oldIngr = controllerIngr.getIngrediente(ingr.getNome());
+			
+			if (oldIngr == null)
+				controllerIngr.aggiungiIngrediente(ingr);
+			else if (!ingr.equals(oldIngr))
+				controllerIngr.modificaIngrediente(ingr);
+		}
+		
 		eliminaRicetta(ricetta.getNomeBirra());
 		aggiungiRicetta(ricetta);
 	}

@@ -24,8 +24,9 @@ public class Main {
 		//fc.aggiungiRicetta("Moretti", "10", "boh", strumenti, ingredienti, "notaMoretti", "buona");
 		//System.out.println(fc.getRicetta("stout"));
 		//System.out.println(fc.cosaDovreiPreparareOggi());
-		System.out.println(fc.getMaxQuantita("Moretti"));
-		//fc.eliminaRicetta("stout");
+		//System.out.println(fc.getMaxQuantita("Moretti"));
+		//fc.eliminaRicetta("Moretti");
+		//fc.modificaIngrediente("luppoli", "5", false, "LUPPOLI");
 		//DBUtils.update("insert into attrezzatura(nomeAttrezzatura, portata, tipo) values ('tubo1', 10.1, 'TUBO')");
 		//DBUtils.update("delete from attrezzatura");
 	}
