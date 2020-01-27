@@ -27,7 +27,7 @@ public class Main {
 		//System.out.println(fc.getMaxQuantita("Moretti"));
 		//fc.eliminaRicetta("stout");
 		//fc.modificaIngrediente("luppoli", "5", false, "LUPPOLI");
-		System.out.println(fc.getIngrediente("luppoli"));
+		//System.out.println(fc.getIngrediente("luppoli"));
 		//DBUtils.update("insert into attrezzatura(nomeAttrezzatura, portata, tipo) values ('tubo1', 10.1, 'TUBO')");
 		//DBUtils.update("delete from ingrediente where nomeIngrediente = 'luppoli'");
 	}
