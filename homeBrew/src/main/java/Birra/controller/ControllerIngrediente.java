@@ -74,8 +74,8 @@ public class ControllerIngrediente {
 	 */
 	public void aggiungiIngrediente(Ingrediente ingr) throws SQLException {
 		String sql = "insert ignore into ingrediente (nomeIngrediente, quantita, tipo, bloccato) values ('"
-				+ ingr.getNome() + "', '" + ingr.getQuantita() + "', '" + ingr.getTipo() + "', '" + ingr.isBloccato()
-				+ "')";
+				+ ingr.getNome() + "', '" + ingr.getQuantita() + "', '" + ingr.getTipo() + "', " + ingr.isBloccato()
+				+ ")";
 		DBUtils.update(sql);
 	}
 	

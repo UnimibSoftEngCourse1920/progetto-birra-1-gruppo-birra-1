@@ -229,9 +229,12 @@ public class GuiIngredienti implements Gui
 				String quantitaIngrediente = quantita.getText();
 				boolean bloccatoIngrediente = bloccato.isSelected();
 				String tipoIngrediente = tipo.getSelectedItem().toString();
+				boolean aggiunto = false;
 				try 
 				{
-					controller.aggiungiIngrediente(nomeIngrediente, quantitaIngrediente, bloccatoIngrediente, tipoIngrediente);
+					aggiunto = controller.aggiungiIngrediente(nomeIngrediente, quantitaIngrediente, bloccatoIngrediente, tipoIngrediente);
+					if(aggiunto)
+						JOptionPane.showMessageDialog(null,"Ingrediente aggiunto correttamente","Ingrediente aggiunto",JOptionPane.INFORMATION_MESSAGE);
 				}catch (IllegalArgumentException | SQLException e) {
 					JOptionPane.showMessageDialog(null,e.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
 				}
