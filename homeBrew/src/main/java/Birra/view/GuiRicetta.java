@@ -520,12 +520,19 @@ public class GuiRicetta implements Gui {
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				Ingrediente i = controller.creaIngrediente(nome.getText(), quantita.getText(), bloccato.isSelected(), tipo.getSelectedItem().toString());
+				Ingrediente i = null;
+				try 
+				{
+					i = controller.creaIngrediente(nome.getText(), quantita.getText(), bloccato.isSelected(), tipo.getSelectedItem().toString());
+				}catch(IllegalArgumentException e2)
+				{
+					JOptionPane.showMessageDialog(null,e2.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
+				}
 				double percentualeIngrediente = 0.0; 
 				try {
 					percentualeIngrediente = Double.parseDouble(percentuale.getText())/100;
 					ingredienti.put(i, percentualeIngrediente);
-				}catch (Exception e1) {
+				}catch (NumberFormatException e1) {
 					JOptionPane.showMessageDialog(dialog, "Inserire un numero nel campo percentuale");
 				}
 			}
@@ -593,7 +600,7 @@ public class GuiRicetta implements Gui {
 					{
 						JOptionPane.showMessageDialog(guiFrame, "Impossibile modificare la ricetta");
 					}
-				}catch (Exception e2) 
+				}catch (IllegalArgumentException | SQLException e2) 
 				{
 					JOptionPane.showMessageDialog(null,e2.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
 				}
