@@ -260,7 +260,7 @@ public class GuiRicetta implements Gui {
 				}
 				else
 				{
-					JOptionPane.showMessageDialog(null,"Nessuna nota da visualizzare","Errore",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,"La ricetta "+ nome.getText()+ " non esiste","Errore",JOptionPane.WARNING_MESSAGE);
 				}
 				
 			}
