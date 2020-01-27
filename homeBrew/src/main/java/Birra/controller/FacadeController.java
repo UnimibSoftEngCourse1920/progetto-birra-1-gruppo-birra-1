@@ -113,6 +113,9 @@ public class FacadeController {
 						"Percentuale dell'ingrediente " + coppia.getKey().getNome() + " minore o uguale a 0");
 
 			sommaPerc += perc;
+			
+			if (sommaPerc > 1.001)
+				break;
 		}
 
 		if (Math.abs(sommaPerc - 1) > 0.001)
