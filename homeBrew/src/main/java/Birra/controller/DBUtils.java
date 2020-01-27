@@ -20,8 +20,7 @@ public class DBUtils {
 	public static void update(String sql) {
 		System.out.println(sql);
 
-		try (Connection conn = DBConnection();
-				Statement st = conn.createStatement();) {
+		try (Connection conn = DBConnection(); Statement st = conn.createStatement();) {
 			st.executeUpdate(sql); // Viene eseguito l'update
 
 		} catch (SQLException e) {
@@ -36,15 +35,15 @@ public class DBUtils {
 	 */
 	public static ArrayList<HashMap<String, Object>> getRows(String query) {
 		ArrayList<HashMap<String, Object>> rows = null;
-		
+
 		try (Connection conn = DBConnection();
 				Statement st = conn.createStatement();
 				ResultSet rs = st.executeQuery(query);) {
-			 // Eseguo la query
+			// Eseguo la query
 			ResultSetMetaData md = rs.getMetaData();
 			int nColumns = md.getColumnCount();
 			rows = new ArrayList<>();
-			
+
 			while (rs.next()) {
 				HashMap<String, Object> row = new HashMap<>(nColumns);
 
@@ -63,34 +62,33 @@ public class DBUtils {
 		printClosingConnection();
 		return rows;
 	}
-	
+
 	/*
 	 * Viene eseguita la connessione con il db
 	 */
 	private static Connection DBConnection() throws SQLException {
 		return DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/homeBrew", "root", getPsw()); // Connessione al
-																									// database
+																										// database
 	}
-	
+
 	/*
-	 * Viene stampato un messaggio di chiusura della connessione con il db 
+	 * Viene stampato un messaggio di chiusura della connessione con il db
 	 */
 	private static void printClosingConnection() {
 		System.out.println("Closing database connection");
 	}
-	
+
 	/*
-	 * Viene stampata una eccezione 
+	 * Viene stampata una eccezione
 	 */
 	private static void printSQLException(SQLException e) {
 		System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
 	}
-	
+
 	/*
-	 * Viene restitiuta la password per l'accesso al database 
+	 * Viene restitiuta la password per l'accesso al database
 	 */
-	private static String getPsw()
-	{
+	private static String getPsw() {
 		return "root";
 	}
 }
