@@ -55,8 +55,8 @@ public class ControllerIngrediente {
 	 * Viene modificato l'ingrediente inserito nel database
 	 */
 	public void modificaIngrediente(Ingrediente ingr) {
-		String sql = "update ingrediente set quantita = " + ingr.getQuantita() + ", tipo = " + ingr.getTipo()
-				+ ", bloccato = " + ingr.isBloccato() + " where nomeIngrediente = " + ingr.getNome();
+		String sql = "update ingrediente set quantita = " + ingr.getQuantita() + ", tipo = " + "'"+ingr.getTipo()+"'"+
+				 ", bloccato = " + ingr.isBloccato() + " where nomeIngrediente = " + "'"+ingr.getNome()+"';";
 		DBUtils.update(sql);
 	}
 
