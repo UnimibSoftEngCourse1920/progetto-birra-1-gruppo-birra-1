@@ -3,25 +3,22 @@ package Birra.view;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.HashMap;
-
+import java.util.HashSet;
 import javax.swing.*;
-
 import Birra.controller.*;
-import Birra.model.Attrezzatura;
 import Birra.model.Ingrediente;
 import Birra.model.Nota;
 import Birra.model.Ricetta;
-import Birra.model.TipoAttrezzatura;
-import Birra.model.TipoIngrediente;
+
 
 
 public class GuiRicetta implements Gui {
 
 	private FacadeController controller;
-	private ArrayList<Attrezzatura> strumenti = new ArrayList<>();
-	HashMap<Ingrediente, Double> ingredienti = new HashMap<>();
+	private HashSet<String> strumenti = new HashSet<>();
+	private HashMap<Ingrediente, Double> ingredienti = new HashMap<>();
 	
 	public GuiRicetta(FacadeController controller)
 	{
@@ -237,7 +234,11 @@ public class GuiRicetta implements Gui {
 			public void actionPerformed(ActionEvent event)
 			{
 				Ricetta r =null;
-				r = controller.getRicetta(nome.getText());
+				try {
+					r = controller.getRicetta(nome.getText());
+				} catch (SQLException e) {
+					JOptionPane.showMessageDialog(null,e.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
+				}
 				Nota nota = null;
 				if(r != null)
 				{
@@ -287,7 +288,11 @@ public class GuiRicetta implements Gui {
 				} 
 				if(conferma)
 				{
-					controller.eliminaRicetta(nome.getText());
+					try {
+						controller.eliminaRicetta(nome.getText());
+					} catch (SQLException e1) {
+						JOptionPane.showMessageDialog(null,e1.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
+					}
 				}	
 				else
 				{
@@ -304,7 +309,12 @@ public class GuiRicetta implements Gui {
 			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
-				Ricetta r = controller.getRicetta(nome.getText());
+				Ricetta r=null;
+				try {
+					r = controller.getRicetta(nome.getText());
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(null,e1.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
+				}
 				Nota nota = null;
 				if(r != null)
 				{
@@ -339,13 +349,7 @@ public class GuiRicetta implements Gui {
 		bottone.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) 
-			{
-				//Qui cambia: metto solo un JOption con le ricette salvate nel db 
-				//Poi dato il nome della ricetta, recupero il vero e proprio oggetto con
-				//una get della classe Attrezzatura
-				
-				//Attrezzatura[] a = new Attrezzatura[50];
-				
+			{				
 				JDialog dialog = new JDialog(guiFrame, "Aggiungi strumento alla ricetta");
 				JPanel elementiGraficiAggiungiStrumento = new JPanel(new GridBagLayout());
 				GridBagConstraints gbc = new GridBagConstraints();
@@ -356,8 +360,14 @@ public class GuiRicetta implements Gui {
 				gbc.anchor = GridBagConstraints.LINE_START;
 				elementiGraficiAggiungiStrumento.add(nomeLabel, gbc);
 				
-				String[] opzioni = controller.getNomiStrumenti();
-				JComboBox strumenti = new JComboBox(opzioni);
+				HashSet<String> opzioni=null;
+				try {
+					opzioni = controller.getNomiStrumenti();//Prendo tutti i nomi degli strumenti salvati nel database
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(null,e1.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
+				}
+				String[] o = opzioni.toArray(new String[50]);
+				JComboBox strumenti = new JComboBox(o);
 				gbc.gridx = 0;
 				gbc.gridy = 1;
 				gbc.insets = new Insets(5, 0, 0, 10);
@@ -370,54 +380,11 @@ public class GuiRicetta implements Gui {
 				gbc.insets = new Insets(5, 0, 0, 10);
 				gbc.anchor = GridBagConstraints.CENTER;
 				elementiGraficiAggiungiStrumento.add(aggiungi, gbc);
-				/*
-				JTextField nomeText = new JTextField(15);
-				gbc.gridx = 1;
-				gbc.gridy = 0;
-				gbc.insets = new Insets(5, 0, 0, 10);
-				gbc.anchor = GridBagConstraints.LINE_START;
-				elementiGraficiAggiungiStrumento.add(nomeText, gbc);
 				
-				JLabel portataLabel = new JLabel("Inserisci la portata dello strumento: ");
-				gbc.gridx = 0;
-				gbc.gridy = 1;
-				gbc.insets = new Insets(5, 0, 0, 10);
-				gbc.anchor = GridBagConstraints.LINE_START;
-				elementiGraficiAggiungiStrumento.add(portataLabel, gbc);
-				
-				JTextField portataText = new JTextField(15);
-				gbc.gridx = 1;
-				gbc.gridy = 1;
-				gbc.insets = new Insets(5, 0, 0, 10);
-				gbc.anchor = GridBagConstraints.LINE_START;
-				elementiGraficiAggiungiStrumento.add(portataText, gbc);
-				
-				JLabel tipoLabel = new JLabel("Scegli il tipo di strumento: ");
-				gbc.gridx = 0;
-				gbc.gridy = 2;
-				gbc.insets = new Insets(5, 0, 0, 10);
-				gbc.anchor = GridBagConstraints.LINE_START;
-				elementiGraficiAggiungiStrumento.add(tipoLabel, gbc);
-				
-				TipoAttrezzatura[] opzioni = {TipoAttrezzatura.CISTERNA, TipoAttrezzatura.FERMENTATORE, TipoAttrezzatura.TUBO};
-				JComboBox tipo = new JComboBox(opzioni);
-				gbc.gridx = 1;
-				gbc.gridy = 2;
-				gbc.insets = new Insets(5, 0, 0, 10);
-				gbc.anchor = GridBagConstraints.LINE_START;
-				elementiGraficiAggiungiStrumento.add(tipo, gbc);
-				
-				JButton aggiungi = new JButton("Aggiungi strumento");
-				gbc.gridx = 1;
-				gbc.gridy = 3;
-				gbc.insets = new Insets(5, 0, 0, 10);
-				gbc.anchor = GridBagConstraints.LINE_START;
-				elementiGraficiAggiungiStrumento.add(aggiungi, gbc);
-				*/
 				dialog.add(elementiGraficiAggiungiStrumento);
 				
 				//Se clicco sul bottone aggiungi
-				//clickAssociaStrumento(aggiungi, nomeText, portataText, tipo, dialog);
+				clickAssociaStrumento(aggiungi, strumenti, dialog);
 				
 				dialog.setSize(500, 500);
 				dialog.setVisible(true);
@@ -531,7 +498,7 @@ public class GuiRicetta implements Gui {
 	}
 	
 	//Ascoltatore del bottone aggiungi strumento
-	private void clickAssociaStrumento(JButton bottone, final JTextField nome, final JTextField portata, final JComboBox tipo, final JDialog dialog)
+	private void clickAssociaStrumento(JButton bottone, final JComboBox attrezzatura, final JDialog dialog)
 	{
 		//Attrezzatura[] a = new 
 		bottone.addActionListener(new ActionListener() 
@@ -539,26 +506,8 @@ public class GuiRicetta implements Gui {
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				String nomeAttrezzatura = nome.getText();
-				double portataAttrezzatura = 0.0;
-				try 
-				{
-					portataAttrezzatura = Double.parseDouble(portata.getText());
-				}catch (Exception e1) 
-				{
-					JOptionPane.showMessageDialog(dialog, "Inserire un numero");
-				}
-				String ta = tipo.getSelectedItem().toString();
-				TipoAttrezzatura tipoAttrezzatura = null;
-				if(ta.equals("CISTERNA"))
-					tipoAttrezzatura = TipoAttrezzatura.CISTERNA;
-				if(ta.equals("TUBO"))
-					tipoAttrezzatura = TipoAttrezzatura.TUBO;
-				if(ta.equals("FERMENTATORE"))
-					tipoAttrezzatura = TipoAttrezzatura.FERMENTATORE;
-				Attrezzatura a = new Attrezzatura(nomeAttrezzatura, portataAttrezzatura, tipoAttrezzatura);
-				strumenti.add(a);
-				System.out.println(strumenti.toString());
+				String strumentoScelto = attrezzatura.getSelectedItem().toString();
+				strumenti.add(strumentoScelto);
 			}
 		});
 	}
@@ -571,33 +520,13 @@ public class GuiRicetta implements Gui {
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				String nomeIngrediente = nome.getText();		
-				double quantitaIngrediente = 0.0;
-				try {
-					quantitaIngrediente = Double.parseDouble(quantita.getText());
-				}catch (Exception e1) {
-					JOptionPane.showMessageDialog(dialog, "Inserire un numero");
-				}
-				String ti = tipo.getSelectedItem().toString();
-				TipoIngrediente tipoIngrediente = null;
-				if(ti.equals("MALTO"))
-					tipoIngrediente = TipoIngrediente.MALTO;
-				if(ti.equals("ACQUA"))
-					tipoIngrediente = TipoIngrediente.ACQUA;
-				if(ti.equals("LIEVITO"))
-					tipoIngrediente = TipoIngrediente.LIEVITO;
-				if(ti.equals("ZUCCHERO"))
-					tipoIngrediente = TipoIngrediente.ZUCCHERO;
-				if(ti.equals("LUPPOLI"))
-					tipoIngrediente = TipoIngrediente.LUPPOLI;
-				boolean bloccatoIngrediente = bloccato.isSelected();
-				Ingrediente i = new Ingrediente(nomeIngrediente, quantitaIngrediente, bloccatoIngrediente, tipoIngrediente);
+				Ingrediente i = controller.creaIngrediente(nome.getText(), quantita.getText(), bloccato.isSelected(), tipo.getSelectedItem().toString());
 				double percentualeIngrediente = 0.0; 
 				try {
 					percentualeIngrediente = Double.parseDouble(percentuale.getText())/100;
 					ingredienti.put(i, percentualeIngrediente);
 				}catch (Exception e1) {
-					JOptionPane.showMessageDialog(dialog, "Inserire un numero");
+					JOptionPane.showMessageDialog(dialog, "Inserire un numero nel campo percentuale");
 				}
 			}
 		});
@@ -622,19 +551,16 @@ public class GuiRicetta implements Gui {
 				if(descrizioneNota.equals(""))
 					descrizioneNota = null;
 				
-				//Attrezzatura a = new Attrezzatura[]
-				
-				Attrezzatura[] a = strumenti.toArray(new Attrezzatura[strumenti.size()]);
 				try 
 				{
-					controller.aggiungiRicetta(nomeBirra, tempo, procedimento, a, ingredienti, titoloNota, descrizioneNota);
-				}catch(IllegalArgumentException error)
+					controller.aggiungiRicetta(nomeBirra, tempo, procedimento, strumenti, ingredienti, titoloNota, descrizioneNota);
+				}catch(IllegalArgumentException | SQLException error)
 				{
 					JOptionPane.showMessageDialog(guiFrame, error.toString());
 				}finally
 				{
 					ingredienti = new HashMap<>();
-					strumenti = new ArrayList<Attrezzatura>();
+					strumenti = new HashSet<String>();
 				}	
 			}
 		});
@@ -654,17 +580,16 @@ public class GuiRicetta implements Gui {
 				String procedimento = procedimentoText.getText();
 				String titoloNota = notaText.getText();
 				String descrizioneNota = descrizioneNotaText.getText();
-				Attrezzatura[] a = strumenti.toArray(new Attrezzatura[strumenti.size()]);
 				try 
 				{
-					boolean risultato = controller.modificaRicetta(nomeBirra, tempo, procedimento, a, ingredienti, titoloNota, descrizioneNota);
-					if (risultato)
+					boolean risultato = controller.modificaRicetta(nomeBirra, tempo, procedimento, strumenti, ingredienti, titoloNota, descrizioneNota);
+					ingredienti = new HashMap<>();
+					strumenti = new HashSet<String>();
+					if (risultato) //Ricetta modificata correttamenete
 					{
 						JOptionPane.showMessageDialog(guiFrame, "Ricetta modificata correttamente");
-						ingredienti = new HashMap<>();
-						strumenti = new ArrayList<Attrezzatura>();
 					}
-					else
+					else //Ricetta non modificata
 					{
 						JOptionPane.showMessageDialog(guiFrame, "Impossibile modificare la ricetta");
 					}
@@ -702,7 +627,7 @@ public class GuiRicetta implements Gui {
 						JOptionPane.showMessageDialog(null,"Impossibile aggiungere la nota","Errore",JOptionPane.WARNING_MESSAGE);
 					}
 				}
-				catch(IllegalArgumentException exception)
+				catch(IllegalArgumentException | NullPointerException | SQLException exception)
 				{
 					JOptionPane.showMessageDialog(null,exception.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
 				}

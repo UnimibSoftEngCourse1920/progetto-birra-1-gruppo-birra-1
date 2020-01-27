@@ -3,6 +3,7 @@ package Birra.view;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -172,7 +173,13 @@ public class GuiIngredienti implements Gui
 			@Override
 			public void actionPerformed(ActionEvent event)
 			{
-				Ingrediente i = controller.getIngrediente(testo.getText());
+				Ingrediente i=null;
+				try 
+				{
+					i = controller.getIngrediente(testo.getText());
+				} catch (SQLException e) {
+					JOptionPane.showMessageDialog(null,"Errore "+testo.getText(),"Errore",JOptionPane.WARNING_MESSAGE);
+				}
 				if(i != null)
 				{
 					String ingrediente = "nome: " + i.getNome() + " quantità: " + i.getQuantita() +
@@ -199,7 +206,13 @@ public class GuiIngredienti implements Gui
 			@Override
 			public void actionPerformed(ActionEvent event)
 			{
-				controller.eliminaIngrediente(testo.getText());
+				try {
+					controller.eliminaIngrediente(testo.getText());
+				} catch (SQLException e) 
+				{
+					//Significa che l'ingrediente non può essere eliminato perchè c'è una ricetta che lo contiene 
+					JOptionPane.showMessageDialog(null,"Errore impossibile eliminare"+testo.getText(),"Errore",JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		});
 	}
@@ -219,7 +232,7 @@ public class GuiIngredienti implements Gui
 				try 
 				{
 					controller.aggiungiIngrediente(nomeIngrediente, quantitaIngrediente, bloccatoIngrediente, tipoIngrediente);
-				}catch (IllegalArgumentException e) {
+				}catch (IllegalArgumentException | SQLException e) {
 					JOptionPane.showMessageDialog(null,e.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
 				}
 			}
@@ -240,7 +253,7 @@ public class GuiIngredienti implements Gui
 				String tipoIngrediente = tipo.getSelectedItem().toString();
 				try {
 					controller.modificaIngrediente(nomeIngrediente, quantitaIngrediente, bloccatoIngrediente, tipoIngrediente);
-				}catch (IllegalArgumentException e) {
+				}catch (IllegalArgumentException | SQLException e) {
 					JOptionPane.showMessageDialog(null,e.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
 				}
 			}

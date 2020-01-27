@@ -3,6 +3,7 @@ import java.awt.BorderLayout;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.*;
 import Birra.controller.*;
@@ -53,7 +54,12 @@ public class GuiRicetteDisponibili implements Gui
 			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
-				Ricetta r = controller.cosaDovreiPreparareOggi();
+				Ricetta r=null;
+				try {
+					r = controller.cosaDovreiPreparareOggi();
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(null,e1.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
+				}
 				
 				if(r == null) //Non ci sono ricette disponibili
 					JOptionPane.showMessageDialog(guiFrame, "Non ci sono ricette disponibili al momento");
