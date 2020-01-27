@@ -601,7 +601,11 @@ public class GuiRicetta implements Gui {
 				String tempo = tempoText.getText();
 				String procedimento = procedimentoText.getText();
 				String titoloNota = notaText.getText();
+				if(titoloNota.equals(""))
+					titoloNota=null;
 				String descrizioneNota = descrizioneNotaText.getText();
+				if(descrizioneNota.equals(""))
+					descrizioneNota = null;
 				
 				//Attrezzatura a = new Attrezzatura[]
 				
