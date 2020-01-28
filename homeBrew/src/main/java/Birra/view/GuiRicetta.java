@@ -1,8 +1,6 @@
 package Birra.view;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,6 +17,7 @@ public class GuiRicetta implements Gui {
 	private FacadeController controller;
 	private HashSet<String> strumenti = new HashSet<>();
 	private HashMap<Ingrediente, Double> ingredienti = new HashMap<>();
+	private static final String ERRORE = "Errore";
 	
 	public GuiRicetta(FacadeController controller)
 	{
@@ -31,7 +30,7 @@ public class GuiRicetta implements Gui {
 	{
 		final JFrame guiFrame = new JFrame();
 		guiFrame.setLocation(30, 100);
-		guiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		guiFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		guiFrame.setTitle("Ricetta");
 		guiFrame.setSize(600,350);
 		JPanel elementiGraficiRicetta = new JPanel(new GridBagLayout());
@@ -219,7 +218,7 @@ public class GuiRicetta implements Gui {
 		clickModificaRicetta(modificaRicetta, nomeText, tempoText, procedimentoText, notaText, descrizioneNotaText, guiFrame);
 		
 		//Se clicco sul bottone aggiungi nota 
-		clickAggiungiNota(aggiungiNota, nomeText, notaText, descrizioneNotaText, guiFrame);
+		clickAggiungiNota(aggiungiNota, nomeText, notaText, descrizioneNotaText);
 		
 		guiFrame.add(elementiGraficiRicetta);
 		guiFrame.setVisible(true);
@@ -228,31 +227,79 @@ public class GuiRicetta implements Gui {
 	//Ascoltatore dell'evento click del bottone mostraRicetta
 	private void clickGetRicetta(JButton getRicetta, final JTextField nome, final JFrame guiFrame)
 	{
-		getRicetta.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent event)
+		getRicetta.addActionListener(e -> {
+			Ricetta r =null;
+			try {
+				r = controller.getRicetta(nome.getText());
+			} catch (SQLException e1) {
+				JOptionPane.showMessageDialog(null,e1.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
+			}
+			String output="";
+			if(r != null)
 			{
-				Ricetta r =null;
+				output = r.toString();
+				JDialog dialog = new JDialog(guiFrame, "Nota");
+				JTextArea text = new JTextArea(output);
+				text.setLineWrap(true);
+				text.setWrapStyleWord(true);
+				dialog.add(text);
+				dialog.setSize(500, 500);
+				dialog.setVisible(true);
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null,"La ricetta "+ nome.getText()+ " non esiste",ERRORE,JOptionPane.WARNING_MESSAGE);
+			}
+			nome.setText("");
+		});
+	}
+
+	//Ascoltatore dell'evento click del bottone elimina ricetta
+	private void clickEliminaRicetta(JButton eliminaRicetta, final JTextField nome, final JFrame guiFrame)
+	{
+		eliminaRicetta.addActionListener(e -> {
+			
+			JDialog.setDefaultLookAndFeelDecorated(true); //Chiedo conferma che voglia davvero eliminare l'ingrediente 
+			int response = JOptionPane.showConfirmDialog(null, "Vuoi davvero eliminare la ricetta?", "Conferma",
+			JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			boolean conferma = false;
+			if (response == JOptionPane.YES_OPTION) 
+			{
+				conferma = true;
+			} 
+			if(conferma)
+			{
 				try {
-					r = controller.getRicetta(nome.getText());
-				} catch (SQLException e) {
-					JOptionPane.showMessageDialog(null,e.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
+					controller.eliminaRicetta(nome.getText());
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(null,e1.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 				}
-				Nota nota = null;
-				if(r != null)
+			}	
+			else
+			{
+				JOptionPane.showMessageDialog(guiFrame, "Non elimino la ricetta");
+			}
+			nome.setText("");
+		});
+	}
+	
+	//Ascoltatore dell'evento click del bottone visualizza nota
+	private void clickGetNota(JButton getNota, final JTextField nome, final JFrame guiFrame)
+	{
+		getNota.addActionListener(e -> {
+			Ricetta r=null;
+			try {
+				r = controller.getRicetta(nome.getText());
+			} catch (SQLException e1) {
+				JOptionPane.showMessageDialog(null,e1.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
+			}
+			Nota nota = null;
+			if(r != null)
+			{
+				nota = r.getNota();
+				if (nota != null)
 				{
-					nota = r.getNota();
-					String n ="";
-					if(nota != null)
-					{
-						n = "nomeBirra: " + r.getNomeBirra() +
-								" titolo nota: "+ nota.getTitolo() + " Descrizione: " + nota.getDescrizione();
-					}
-					else
-					{
-						n = "nomeBirra: " + r.getNomeBirra();
-					}
+					String n = "titolo nota: "+ nota.getTitolo() + " Descrizione: " + nota.getDescrizione();
 					JDialog dialog = new JDialog(guiFrame, "Nota");
 					JLabel label = new JLabel(n);
 					dialog.add(label);
@@ -261,280 +308,188 @@ public class GuiRicetta implements Gui {
 				}
 				else
 				{
-					JOptionPane.showMessageDialog(null,"La ricetta "+ nome.getText()+ " non esiste","Errore",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,"Nessuna nota da visualizzare",ERRORE,JOptionPane.WARNING_MESSAGE);
 				}
 				
 			}
-		});
-	}
-
-	//Ascoltatore dell'evento click del bottone elimina ricetta
-	private void clickEliminaRicetta(JButton eliminaRicetta, final JTextField nome, final JFrame guiFrame)
-	{
-		eliminaRicetta.addActionListener(new ActionListener () {
-			public void actionPerformed(ActionEvent e) 
+			else
 			{
-				JDialog.setDefaultLookAndFeelDecorated(true); //Chiedo conferma che voglia davvero eliminare l'ingrediente 
-				int response = JOptionPane.showConfirmDialog(null, "Vuoi davvero eliminare la ricetta?", "Conferma",
-				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-				boolean conferma = false;
-				if (response == JOptionPane.NO_OPTION)
-				{
-					conferma = false;
-				} 
-				else if (response == JOptionPane.YES_OPTION) 
-				{
-					conferma = true;
-				} 
-				if(conferma)
-				{
-					try {
-						controller.eliminaRicetta(nome.getText());
-					} catch (SQLException e1) {
-						JOptionPane.showMessageDialog(null,e1.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
-					}
-				}	
-				else
-				{
-					JOptionPane.showMessageDialog(guiFrame, "Non elimino la ricetta");
-				}
+				JOptionPane.showMessageDialog(null,"La ricetta "+ nome.getText()+ " non esiste",ERRORE,JOptionPane.WARNING_MESSAGE);
 			}
-		});
-	}
-	
-	//Ascoltatore dell'evento click del bottone visualizza nota
-	private void clickGetNota(JButton getNota, final JTextField nome, final JFrame guiFrame)
-	{
-		getNota.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) 
-			{
-				Ricetta r=null;
-				try {
-					r = controller.getRicetta(nome.getText());
-				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(null,e1.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
-				}
-				Nota nota = null;
-				if(r != null)
-				{
-					nota = r.getNota();
-					if (nota != null)
-					{
-						String n = "titolo nota: "+ nota.getTitolo() + " Descrizione: " + nota.getDescrizione();
-						JDialog dialog = new JDialog(guiFrame, "Nota");
-						JLabel label = new JLabel(n);
-						dialog.add(label);
-						dialog.setSize(500, 500);
-						dialog.setVisible(true);
-					}
-					else
-					{
-						JOptionPane.showMessageDialog(null,"Nessuna nota da visualizzare","Errore",JOptionPane.WARNING_MESSAGE);
-					}
-					
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null,"La ricetta "+ nome.getText()+ " non esiste","Errore",JOptionPane.WARNING_MESSAGE);
-				}
-			}
-			
+			nome.setText("");
 		});
 	}
 	
 	//Ascoltatore per il bottone aggiungiStrumenti
 	private void clickAggiungiStrumento(JButton bottone, final JFrame guiFrame)
 	{
-		bottone.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) 
-			{				
-				JDialog dialog = new JDialog(guiFrame, "Aggiungi strumento alla ricetta");
-				JPanel elementiGraficiAggiungiStrumento = new JPanel(new GridBagLayout());
-				GridBagConstraints gbc = new GridBagConstraints();
-				JLabel nomeLabel = new JLabel("Scegli lo strumento da associare alla ricetta tra quelli disponibili ");
-				gbc.gridx = 0;
-				gbc.gridy = 0;
-				gbc.insets = new Insets(5, 0, 0, 10);
-				gbc.anchor = GridBagConstraints.LINE_START;
-				elementiGraficiAggiungiStrumento.add(nomeLabel, gbc);
-				
-				HashSet<String> opzioni=null;
-				try {
-					opzioni = controller.getNomiStrumenti();//Prendo tutti i nomi degli strumenti salvati nel database
-				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(null,e1.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
-				}
-				String[] o = opzioni.toArray(new String[50]);
-				JComboBox strumenti = new JComboBox(o);
-				gbc.gridx = 0;
-				gbc.gridy = 1;
-				gbc.insets = new Insets(5, 0, 0, 10);
-				gbc.anchor = GridBagConstraints.CENTER;
-				elementiGraficiAggiungiStrumento.add(strumenti, gbc);
-				
-				JButton aggiungi = new JButton("Aggiungi strumento");
-				gbc.gridx = 0;
-				gbc.gridy = 2;
-				gbc.insets = new Insets(5, 0, 0, 10);
-				gbc.anchor = GridBagConstraints.CENTER;
-				elementiGraficiAggiungiStrumento.add(aggiungi, gbc);
-				
-				dialog.add(elementiGraficiAggiungiStrumento);
-				
-				//Se clicco sul bottone aggiungi
-				clickAssociaStrumento(aggiungi, strumenti, dialog);
-				
-				dialog.setSize(500, 500);
-				dialog.setVisible(true);
+		bottone.addActionListener(e -> {				
+			JDialog dialog = new JDialog(guiFrame, "Aggiungi strumento alla ricetta");
+			JPanel elementiGraficiAggiungiStrumento = new JPanel(new GridBagLayout());
+			GridBagConstraints gbc = new GridBagConstraints();
+			JLabel nomeLabel = new JLabel("Scegli lo strumento da associare alla ricetta tra quelli disponibili ");
+			gbc.gridx = 0;
+			gbc.gridy = 0;
+			gbc.insets = new Insets(5, 0, 0, 10);
+			gbc.anchor = GridBagConstraints.LINE_START;
+			elementiGraficiAggiungiStrumento.add(nomeLabel, gbc);
+			
+			HashSet<String> opzioni=new HashSet<>();
+			try {
+				opzioni = controller.getNomiStrumenti();//Prendo tutti i nomi degli strumenti salvati nel database
+			} catch (SQLException e1) {
+				JOptionPane.showMessageDialog(null,e1.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 			}
+			String[] o = opzioni.toArray(new String[50]);
+			JComboBox s = new JComboBox(o);
+			gbc.gridx = 0;
+			gbc.gridy = 1;
+			gbc.insets = new Insets(5, 0, 0, 10);
+			gbc.anchor = GridBagConstraints.CENTER;
+			elementiGraficiAggiungiStrumento.add(s, gbc);
+			
+			JButton aggiungi = new JButton("Aggiungi strumento");
+			gbc.gridx = 0;
+			gbc.gridy = 2;
+			gbc.insets = new Insets(5, 0, 0, 10);
+			gbc.anchor = GridBagConstraints.CENTER;
+			elementiGraficiAggiungiStrumento.add(aggiungi, gbc);
+			
+			dialog.add(elementiGraficiAggiungiStrumento);
+				
+			//Se clicco sul bottone aggiungi
+			clickAssociaStrumento(aggiungi, s);
+				
+			dialog.setSize(500, 500);
+			dialog.setVisible(true);
 		});
 	}
 	private void clickAggiungiIngrediente(JButton bottone, final JFrame guiFrame)
 	{
-		bottone.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) 
-			{
+		bottone.addActionListener(e -> {
+				
+			JDialog dialog = new JDialog(guiFrame, "Aggiungi ingrediente alla ricetta");
+			JPanel campiIngrediente = new JPanel(new GridBagLayout());
+			GridBagConstraints gbc = new GridBagConstraints();
+			JLabel nomeLabel = new JLabel("Inserisci il nome dell'ingrediente: ");
+			gbc.gridx = 0;
+			gbc.gridy = 0;
+			gbc.insets = new Insets(5, 0, 0, 10);
+			gbc.anchor = GridBagConstraints.LINE_END;
+			campiIngrediente.add(nomeLabel, gbc);
+			JTextField nome = new JTextField(15);
+			gbc.gridx = 1;
+			gbc.gridy = 0;
+			gbc.insets = new Insets(5, 0, 0, 10);
+			gbc.anchor = GridBagConstraints.LINE_END;
+			campiIngrediente.add(nome, gbc);
 				
 				
-				JDialog dialog = new JDialog(guiFrame, "Aggiungi ingrediente alla ricetta");
-
-				JPanel campiIngrediente = new JPanel(new GridBagLayout());
-				GridBagConstraints gbc = new GridBagConstraints();
+			JLabel quantitaLabel = new JLabel("quantità: ");
+			gbc.gridx = 0;
+			gbc.gridy = 1;
+			gbc.insets = new Insets(5, 0, 0, 10);
+			gbc.anchor = GridBagConstraints.LINE_END;
+			campiIngrediente.add(quantitaLabel, gbc);
 				
-				JLabel nomeLabel = new JLabel("Inserisci il nome dell'ingrediente: ");
-				gbc.gridx = 0;
-				gbc.gridy = 0;
-				gbc.insets = new Insets(5, 0, 0, 10);
-				gbc.anchor = GridBagConstraints.LINE_END;
-				campiIngrediente.add(nomeLabel, gbc);
+			JTextField quantita = new JTextField(15);
+			gbc.gridx = 1;
+			gbc.gridy = 1;
+			gbc.insets = new Insets(5, 0, 0, 10);
+			gbc.anchor = GridBagConstraints.LINE_END;
+			campiIngrediente.add(quantita, gbc);
+			
 				
-				JTextField nome = new JTextField(15);
-				gbc.gridx = 1;
-				gbc.gridy = 0;
-				gbc.insets = new Insets(5, 0, 0, 10);
-				gbc.anchor = GridBagConstraints.LINE_END;
-				campiIngrediente.add(nome, gbc);
+			JLabel tipoLabel = new JLabel("tipo: ");
+			gbc.gridx = 0;
+			gbc.gridy = 2;
+			gbc.insets = new Insets(5, 0, 0, 10);
+			gbc.anchor = GridBagConstraints.LINE_END;
+			campiIngrediente.add(tipoLabel, gbc);
 				
+			String[] opzioni = {"MALTO", "LUPPOLI", "ZUCCHERO", "ACQUA", "LIEVITO"};
+			JComboBox tipo = new JComboBox(opzioni);
+			gbc.gridx = 1;
+			gbc.gridy = 2;
+			gbc.insets = new Insets(5, 0, 0, 10);
+			gbc.anchor = GridBagConstraints.LINE_END;
+			campiIngrediente.add(tipo, gbc);
+		
 				
-				JLabel quantitaLabel = new JLabel("quantità: ");
-				gbc.gridx = 0;
-				gbc.gridy = 1;
-				gbc.insets = new Insets(5, 0, 0, 10);
-				gbc.anchor = GridBagConstraints.LINE_END;
-				campiIngrediente.add(quantitaLabel, gbc);
+			JLabel bloccatoLabel = new JLabel("Bloccato: ");
+			gbc.gridx = 0;
+			gbc.gridy = 3;
+			gbc.insets = new Insets(5, 0, 0, 10);
+			gbc.anchor = GridBagConstraints.LINE_END;
+			campiIngrediente.add(bloccatoLabel, gbc);
 				
-				JTextField quantita = new JTextField(15);
-				gbc.gridx = 1;
-				gbc.gridy = 1;
-				gbc.insets = new Insets(5, 0, 0, 10);
-				gbc.anchor = GridBagConstraints.LINE_END;
-				campiIngrediente.add(quantita, gbc);
+			JCheckBox bloccato = new JCheckBox();
+			gbc.gridx = 1;
+			gbc.gridy = 3;
+			gbc.insets = new Insets(5, 0, 0, 10);
+			gbc.anchor = GridBagConstraints.LINE_END;
+			campiIngrediente.add(bloccato, gbc);
+			
+			JLabel percentualeIngrediente = new JLabel("quantità assoluta (percentuale): ");
+			gbc.gridx = 0;
+			gbc.gridy = 4;
+			gbc.insets = new Insets(5, 0, 0, 10);
+			gbc.anchor = GridBagConstraints.LINE_END;
+			campiIngrediente.add(percentualeIngrediente, gbc);
+			
+			JTextField percentuale = new JTextField(15);
+			gbc.gridx = 1;
+			gbc.gridy = 4;
+			gbc.insets = new Insets(5, 0, 0, 10);
+			gbc.anchor = GridBagConstraints.LINE_END;
+			campiIngrediente.add(percentuale, gbc);
+			
+			
+			JButton aggiungiIngrediente = new JButton("Aggiungi ingrediente");
+			gbc.gridx = 0;
+			gbc.gridy = 5;
+			gbc.insets = new Insets(5, 0, 0, 10);
+			gbc.anchor = GridBagConstraints.CENTER;
+			campiIngrediente.add(aggiungiIngrediente, gbc);
 				
+			dialog.add(campiIngrediente);
+			dialog.setSize(500, 500);
 				
-				JLabel tipoLabel = new JLabel("tipo: ");
-				gbc.gridx = 0;
-				gbc.gridy = 2;
-				gbc.insets = new Insets(5, 0, 0, 10);
-				gbc.anchor = GridBagConstraints.LINE_END;
-				campiIngrediente.add(tipoLabel, gbc);
+			//Se clicco su aggiungi ingrediente
+			clickAssociaIngrediente(aggiungiIngrediente, nome, quantita, tipo, bloccato, percentuale, dialog);
 				
-				String[] opzioni = {"MALTO", "LUPPOLI", "ZUCCHERO", "ACQUA", "LIEVITO"};
-				JComboBox tipo = new JComboBox(opzioni);
-				gbc.gridx = 1;
-				gbc.gridy = 2;
-				gbc.insets = new Insets(5, 0, 0, 10);
-				gbc.anchor = GridBagConstraints.LINE_END;
-				campiIngrediente.add(tipo, gbc);
-				
-				
-				JLabel bloccatoLabel = new JLabel("Bloccato: ");
-				gbc.gridx = 0;
-				gbc.gridy = 3;
-				gbc.insets = new Insets(5, 0, 0, 10);
-				gbc.anchor = GridBagConstraints.LINE_END;
-				campiIngrediente.add(bloccatoLabel, gbc);
-				
-				JCheckBox bloccato = new JCheckBox();
-				gbc.gridx = 1;
-				gbc.gridy = 3;
-				gbc.insets = new Insets(5, 0, 0, 10);
-				gbc.anchor = GridBagConstraints.LINE_END;
-				campiIngrediente.add(bloccato, gbc);
-				
-				JLabel percentualeIngrediente = new JLabel("quantità assoluta (percentuale): ");
-				gbc.gridx = 0;
-				gbc.gridy = 4;
-				gbc.insets = new Insets(5, 0, 0, 10);
-				gbc.anchor = GridBagConstraints.LINE_END;
-				campiIngrediente.add(percentualeIngrediente, gbc);
-				
-				JTextField percentuale = new JTextField(15);
-				gbc.gridx = 1;
-				gbc.gridy = 4;
-				gbc.insets = new Insets(5, 0, 0, 10);
-				gbc.anchor = GridBagConstraints.LINE_END;
-				campiIngrediente.add(percentuale, gbc);
-				
-				
-				JButton aggiungiIngrediente = new JButton("Aggiungi ingrediente");
-				gbc.gridx = 0;
-				gbc.gridy = 5;
-				gbc.insets = new Insets(5, 0, 0, 10);
-				gbc.anchor = GridBagConstraints.CENTER;
-				campiIngrediente.add(aggiungiIngrediente, gbc);
-				
-				dialog.add(campiIngrediente);
-				dialog.setSize(500, 500);
-				
-				//Se clicco su aggiungi ingrediente
-				clickAssociaIngrediente(aggiungiIngrediente, nome, quantita, tipo, bloccato, percentuale, dialog);
-				
-				dialog.setVisible(true);
-			}
+			dialog.setVisible(true);
 		});
 	}
 	
 	//Ascoltatore del bottone aggiungi strumento
-	private void clickAssociaStrumento(JButton bottone, final JComboBox attrezzatura, final JDialog dialog)
+	private void clickAssociaStrumento(JButton bottone, final JComboBox attrezzatura)
 	{
 		//Attrezzatura[] a = new 
-		bottone.addActionListener(new ActionListener() 
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				String strumentoScelto = attrezzatura.getSelectedItem().toString();
-				strumenti.add(strumentoScelto);
-			}
+		bottone.addActionListener(e -> {
+			String strumentoScelto = attrezzatura.getSelectedItem().toString();
+			strumenti.add(strumentoScelto);
 		});
 	}
 	
 	//Ascoltatore bottone aggiungiIngrediente della ricetta
 	private void clickAssociaIngrediente(JButton bottone, final JTextField nome, final JTextField quantita, final JComboBox tipo, final JCheckBox bloccato, final JTextField percentuale, final JDialog dialog)
 	{
-		bottone.addActionListener(new ActionListener() 
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
+		bottone.addActionListener(e -> {
+			Ingrediente i = null;
+			try 
 			{
-				Ingrediente i = null;
-				try 
-				{
-					i = controller.creaIngrediente(nome.getText(), quantita.getText(), bloccato.isSelected(), tipo.getSelectedItem().toString());
-				}catch(IllegalArgumentException e2)
-				{
-					JOptionPane.showMessageDialog(null,e2.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
-				}
-				double percentualeIngrediente = 0.0; 
-				try {
-					percentualeIngrediente = Double.parseDouble(percentuale.getText())/100;
-					ingredienti.put(i, percentualeIngrediente);
-				}catch (NumberFormatException e1) {
-					JOptionPane.showMessageDialog(dialog, "Inserire un numero nel campo percentuale");
-				}
+				i = controller.creaIngrediente(nome.getText(), quantita.getText(), bloccato.isSelected(), tipo.getSelectedItem().toString());
+			}catch(IllegalArgumentException e2)
+			{
+				JOptionPane.showMessageDialog(null,e2.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
+			}
+			double percentualeIngrediente = 0.0; 
+			try {
+				percentualeIngrediente = Double.parseDouble(percentuale.getText())/100;
+				ingredienti.put(i, percentualeIngrediente);
+			}catch (NumberFormatException e1) {
+				JOptionPane.showMessageDialog(dialog, "Inserire un numero nel campo percentuale");
 			}
 		});
 	}
@@ -543,33 +498,28 @@ public class GuiRicetta implements Gui {
 	private void clickAggiungiRicetta(JButton aggiungiRicetta, final JTextField nomeText, final JTextField tempoText, final JTextField procedimentoText, 
 			final JTextField notaText, final JTextField descrizioneNotaText, final JFrame guiFrame)
 	{
-		aggiungiRicetta.addActionListener(new ActionListener() 
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
+		aggiungiRicetta.addActionListener(e -> {
+			String nomeBirra = nomeText.getText();
+			String tempo = tempoText.getText();
+			String procedimento = procedimentoText.getText();
+			String titoloNota = notaText.getText();
+			if(titoloNota.equals(""))
+				titoloNota=null;
+			String descrizioneNota = descrizioneNotaText.getText();
+			if(descrizioneNota.equals(""))
+				descrizioneNota = null;	
+			try 
 			{
-				String nomeBirra = nomeText.getText();
-				String tempo = tempoText.getText();
-				String procedimento = procedimentoText.getText();
-				String titoloNota = notaText.getText();
-				if(titoloNota.equals(""))
-					titoloNota=null;
-				String descrizioneNota = descrizioneNotaText.getText();
-				if(descrizioneNota.equals(""))
-					descrizioneNota = null;
-				
-				try 
-				{
-					controller.aggiungiRicetta(nomeBirra, tempo, procedimento, strumenti, ingredienti, titoloNota, descrizioneNota);
-				}catch(IllegalArgumentException | SQLException error)
-				{
-					JOptionPane.showMessageDialog(guiFrame, error.toString());
-				}finally
-				{
-					ingredienti = new HashMap<>();
-					strumenti = new HashSet<String>();
-				}	
+				controller.aggiungiRicetta(nomeBirra, tempo, procedimento, strumenti, ingredienti, titoloNota, descrizioneNota);
+			}catch(IllegalArgumentException | SQLException error)
+			{
+				JOptionPane.showMessageDialog(guiFrame, error.toString());
+			}finally
+			{
+				ingredienti = new HashMap<>();
+				strumenti = new HashSet<>();
 			}
+			pulisciCampiInput(nomeText, tempoText, procedimentoText, notaText, descrizioneNotaText);
 		});
 	}
 	
@@ -577,68 +527,70 @@ public class GuiRicetta implements Gui {
 	private void clickModificaRicetta(JButton modificaRicetta, final JTextField nomeText, final JTextField tempoText, final JTextField procedimentoText, 
 			final JTextField notaText, final JTextField descrizioneNotaText, final JFrame guiFrame)
 	{
-		modificaRicetta.addActionListener(new ActionListener() 
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
+		modificaRicetta.addActionListener(e -> {
+			String nomeBirra = nomeText.getText();
+			String tempo = tempoText.getText();
+			String procedimento = procedimentoText.getText();
+			String titoloNota = notaText.getText();
+			String descrizioneNota = descrizioneNotaText.getText();
+			try 
 			{
-				String nomeBirra = nomeText.getText();
-				String tempo = tempoText.getText();
-				String procedimento = procedimentoText.getText();
-				String titoloNota = notaText.getText();
-				String descrizioneNota = descrizioneNotaText.getText();
-				try 
+				boolean risultato = controller.modificaRicetta(nomeBirra, tempo, procedimento, strumenti, ingredienti, titoloNota, descrizioneNota);
+				ingredienti = new HashMap<>();
+				strumenti = new HashSet<>();
+				if (risultato) //Ricetta modificata correttamenete
 				{
-					boolean risultato = controller.modificaRicetta(nomeBirra, tempo, procedimento, strumenti, ingredienti, titoloNota, descrizioneNota);
-					ingredienti = new HashMap<>();
-					strumenti = new HashSet<String>();
-					if (risultato) //Ricetta modificata correttamenete
-					{
-						JOptionPane.showMessageDialog(guiFrame, "Ricetta modificata correttamente");
-					}
-					else //Ricetta non modificata
-					{
-						JOptionPane.showMessageDialog(guiFrame, "Impossibile modificare la ricetta");
-					}
-				}catch (IllegalArgumentException | SQLException e2) 
-				{
-					JOptionPane.showMessageDialog(null,e2.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(guiFrame, "Ricetta modificata correttamente");
 				}
+				else //Ricetta non modificata
+				{
+					JOptionPane.showMessageDialog(guiFrame, "Impossibile modificare la ricetta");
+				}
+			}catch (IllegalArgumentException | SQLException e2) 
+			{
+				JOptionPane.showMessageDialog(null,e2.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 			}
+			pulisciCampiInput(nomeText, tempoText, procedimentoText, notaText, descrizioneNotaText);
 		});
 	}
 	
 	//Ascoltatore del bottone aggiungi nota 
 	private void clickAggiungiNota(JButton aggiungiNota, final JTextField nomeText,	final JTextField notaText, 
-			final JTextField descrizioneNotaText, final JFrame guiFrame)
+			final JTextField descrizioneNotaText)
 	{
-		aggiungiNota.addActionListener(new ActionListener() 
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
+		aggiungiNota.addActionListener(e -> {
+			String titoloNota = notaText.getText();
+			String descrizioneNota = descrizioneNotaText.getText();
+			String nomeBirra = nomeText.getText();
+			boolean risultato = false;
+			try 
 			{
-				String titoloNota = notaText.getText();
-				String descrizioneNota = descrizioneNotaText.getText();
-				Nota nota = new Nota(titoloNota, descrizioneNota);
-				String nomeBirra = nomeText.getText();
-				boolean risultato = false;
-				try 
+				risultato = controller.aggiungiNota(nomeBirra, titoloNota, descrizioneNota);
+				if(risultato)
 				{
-					risultato = controller.aggiungiNota(nomeBirra, titoloNota, descrizioneNota);
-					if(risultato)
-					{
-						JOptionPane.showMessageDialog(null,"nota modificata correttamenete");
-					}
-					else
-					{
-						JOptionPane.showMessageDialog(null,"Impossibile aggiungere la nota","Errore",JOptionPane.WARNING_MESSAGE);
-					}
+					JOptionPane.showMessageDialog(null,"nota modificata correttamenete");
 				}
-				catch(IllegalArgumentException | NullPointerException | SQLException exception)
+				else
 				{
-					JOptionPane.showMessageDialog(null,exception.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,"Impossibile aggiungere la nota",ERRORE,JOptionPane.WARNING_MESSAGE);
 				}
 			}
+			catch(IllegalArgumentException | NullPointerException | SQLException exception)
+			{
+				JOptionPane.showMessageDialog(null,exception.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
+			}
+			nomeText.setText("");
+			notaText.setText("");
+			descrizioneNotaText.setText("");
 		});
+	}
+	private void pulisciCampiInput(JTextField nomeText, final JTextField tempoText, final JTextField procedimentoText, 
+			final JTextField notaText, final JTextField descrizioneNotaText)
+	{
+		nomeText.setText("");
+		tempoText.setText("");
+		procedimentoText.setText("");
+		notaText.setText("");
+		descrizioneNotaText.setText("");
 	}
 }
