@@ -40,6 +40,7 @@ public class DBUtils {
 		try (Connection conn = DBConnection();
 				Statement st = conn.createStatement();
 				ResultSet rs = st.executeQuery(query)) {
+			
 			ResultSetMetaData md = rs.getMetaData();
 			int nColumns = md.getColumnCount();
 
