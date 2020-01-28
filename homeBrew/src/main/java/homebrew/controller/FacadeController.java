@@ -207,7 +207,7 @@ public class FacadeController {
 		return rd.cosaDovreiPreparareOggi();
 	}
 	
-	public QuantitaRicetta getQuantita(String nomeBirra) throws SQLException {
+	public QuantitaRicetta getQuantitaRicetta(String nomeBirra) throws SQLException {
 		Ricetta ricetta = cr.getRicetta(nomeBirra);
 		return ricetta == null ? null : new QuantitaRicetta(ricetta, rd.getQuantita(ricetta));
 	}
