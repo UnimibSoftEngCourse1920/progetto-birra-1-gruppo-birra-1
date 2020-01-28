@@ -26,11 +26,11 @@ public class RicetteDisponibili {
 			return null;
 		
 		Ricetta ricettaDaPrep = cr.getRicetta(nomiBirre[0]);
-		double quantitaBirra = getMaxQuantita(ricettaDaPrep);
+		double quantitaBirra = getQuantita(ricettaDaPrep);
 		
 		for (int i = 1; i < nomiBirre.length; i++) {
 			Ricetta ric = cr.getRicetta(nomiBirre[i]);
-			double quantita = getMaxQuantita(ric);
+			double quantita = getQuantita(ric);
 			
 			if (quantita > quantitaBirra) {
 				ricettaDaPrep = ric;
@@ -60,7 +60,7 @@ public class RicetteDisponibili {
 					+ "where ingr.nomeBirra = ric.nomeBirra AND (bloccato OR quantita = 0))";
 	}
 	
-	public double getMaxQuantita(Ricetta ricetta) throws SQLException {
+	public double getQuantita(Ricetta ricetta) throws SQLException {
 		double[][] tab = creaTableau(ricetta);
 		new Simplesso(tab).esegui();
 		return tab[0][0];

@@ -207,9 +207,9 @@ public class FacadeController {
 		return rd.cosaDovreiPreparareOggi();
 	}
 	
-	public double getMaxQuantita(String nomeBirra) throws SQLException {
+	public QuantitaRicetta getQuantita(String nomeBirra) throws SQLException {
 		Ricetta ricetta = cr.getRicetta(nomeBirra);
-		return ricetta == null ? 0 : rd.getMaxQuantita(ricetta);
+		return ricetta == null ? null : new QuantitaRicetta(ricetta, rd.getQuantita(ricetta));
 	}
 
 	private void checkString(String str, String messaggio) {
