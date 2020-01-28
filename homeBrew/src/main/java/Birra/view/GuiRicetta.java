@@ -239,23 +239,15 @@ public class GuiRicetta implements Gui {
 				} catch (SQLException e) {
 					JOptionPane.showMessageDialog(null,e.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
 				}
-				Nota nota = null;
+				String output="";
 				if(r != null)
 				{
-					nota = r.getNota();
-					String n ="";
-					if(nota != null)
-					{
-						n = "nomeBirra: " + r.getNomeBirra() +
-								" titolo nota: "+ nota.getTitolo() + " Descrizione: " + nota.getDescrizione();
-					}
-					else
-					{
-						n = "nomeBirra: " + r.getNomeBirra();
-					}
+					output = r.toString();
 					JDialog dialog = new JDialog(guiFrame, "Nota");
-					JLabel label = new JLabel(n);
-					dialog.add(label);
+					JTextArea text = new JTextArea(output);
+					text.setLineWrap(true);
+					text.setWrapStyleWord(true);
+					dialog.add(text);
 					dialog.setSize(500, 500);
 					dialog.setVisible(true);
 				}
