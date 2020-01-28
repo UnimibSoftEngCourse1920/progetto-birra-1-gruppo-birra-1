@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 /*
  * La classe DBUtils permette di eseguire le query di aggiornamento e select
  */
@@ -22,8 +23,6 @@ public class DBUtils {
 	 * Viene eseguita una query di aggiornamento dati del db
 	 */
 	public static void update(String sql) throws SQLException {
-		System.out.println(sql);
-
 		try (Connection conn = dbConnection(); Statement st = conn.createStatement()) {
 			st.executeUpdate(sql); // Viene eseguito l'update
 		} catch (SQLException e) {
@@ -37,7 +36,6 @@ public class DBUtils {
 	 * Viene eseguita una query di tipo select
 	 */
 	public static ArrayList<HashMap<String, Object>> getRows(String query) throws SQLException {
-		System.out.println(query);
 		ArrayList<HashMap<String, Object>> rows = new ArrayList<>();
 
 		// Eseguo la query
