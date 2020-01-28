@@ -17,13 +17,20 @@ public class DBUtils {
 	/*
 	 * Viene eseguita una query di aggiornamento dati del db
 	 */
-	public static void update(String sql) throws SQLException {
+	public static void update(String sql) throws SQLException  {
 		System.out.println(sql);
 		
 		Connection conn = DBConnection();
 		Statement st = conn.createStatement();
 		st.executeUpdate(sql); // Viene eseguito l'update
+		
 		printClosingConnection();
+		try {
+			conn.close();
+			st.close();
+		} catch (SQLException e) {
+			throw e;
+		}
 	}
 
 	/*
@@ -51,6 +58,14 @@ public class DBUtils {
 		}
 
 		printClosingConnection();
+		try {
+			conn.close();
+			st.close();
+			rs.close();
+		} catch (SQLException e) {
+			throw e;
+		}
+		
 		return rows;
 	}
 
