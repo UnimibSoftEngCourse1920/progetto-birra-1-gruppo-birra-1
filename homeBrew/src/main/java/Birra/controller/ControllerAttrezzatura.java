@@ -80,7 +80,7 @@ public class ControllerAttrezzatura {
 	}
 
 	public Attrezzatura getStrumento(String nome) throws SQLException {
-		String sql = "select * from attrezzatura where nomeAttrezzatura = " + nome;
+		String sql = "select * from attrezzatura where nomeAttrezzatura = '" + nome +"';";
 		ArrayList<HashMap<String, Object>> rows = DBUtils.getRows(sql);
 		return rows.isEmpty() ? null : parseAttrezzatura(rows.get(0));
 	}
