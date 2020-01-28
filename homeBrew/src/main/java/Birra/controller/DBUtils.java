@@ -17,20 +17,16 @@ public class DBUtils {
 	/*
 	 * Viene eseguita una query di aggiornamento dati del db
 	 */
-	public static void update(String sql) throws SQLException  {
+	public static void update(String sql) throws SQLException {
 		System.out.println(sql);
-		
-		Connection conn = DBConnection();
-		Statement st = conn.createStatement();
-		st.executeUpdate(sql); // Viene eseguito l'update
-		
-		printClosingConnection();
-		try {
-			conn.close();
-			st.close();
+
+		try (Connection conn = DBConnection(); Statement st = conn.createStatement()) {
+			st.executeUpdate(sql); // Viene eseguito l'update
 		} catch (SQLException e) {
 			throw e;
 		}
+
+		printClosingConnection();
 	}
 
 	/*
@@ -40,32 +36,25 @@ public class DBUtils {
 		System.out.println(query);
 		ArrayList<HashMap<String, Object>> rows = new ArrayList<>();
 
-		Connection conn = DBConnection();
-		Statement st = conn.createStatement();
-		ResultSet rs = st.executeQuery(query);
-		
-		// Eseguo la query
-		ResultSetMetaData md = rs.getMetaData();
-		int nColumns = md.getColumnCount();
-		
-		while (rs.next()) {
-			HashMap<String, Object> row = new HashMap<>(nColumns);
+		try (Connection conn = DBConnection(); Statement st = conn.createStatement()) {
+			// Eseguo la query
+			ResultSet rs = st.executeQuery(query);
+			ResultSetMetaData md = rs.getMetaData();
+			int nColumns = md.getColumnCount();
 
-			for (int i = 1; i <= nColumns; i++)
-				row.put(md.getColumnName(i), rs.getObject(i));
+			while (rs.next()) {
+				HashMap<String, Object> row = new HashMap<>(nColumns);
 
-			rows.add(row);
-		}
+				for (int i = 1; i <= nColumns; i++)
+					row.put(md.getColumnName(i), rs.getObject(i));
 
-		printClosingConnection();
-		try {
-			conn.close();
-			st.close();
-			rs.close();
+				rows.add(row);
+			}
 		} catch (SQLException e) {
 			throw e;
 		}
-		
+
+		printClosingConnection();
 		return rows;
 	}
 
