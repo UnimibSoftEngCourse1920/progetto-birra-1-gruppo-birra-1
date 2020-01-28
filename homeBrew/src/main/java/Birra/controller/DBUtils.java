@@ -36,9 +36,10 @@ public class DBUtils {
 		System.out.println(query);
 		ArrayList<HashMap<String, Object>> rows = new ArrayList<>();
 
-		try (Connection conn = DBConnection(); Statement st = conn.createStatement()) {
-			// Eseguo la query
-			ResultSet rs = st.executeQuery(query);
+		// Eseguo la query
+		try (Connection conn = DBConnection();
+				Statement st = conn.createStatement();
+				ResultSet rs = st.executeQuery(query)) {
 			ResultSetMetaData md = rs.getMetaData();
 			int nColumns = md.getColumnCount();
 
