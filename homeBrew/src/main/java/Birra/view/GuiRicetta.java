@@ -351,7 +351,7 @@ public class GuiRicetta implements Gui {
 				gbc.anchor = GridBagConstraints.LINE_START;
 				elementiGraficiAggiungiStrumento.add(nomeLabel, gbc);
 				
-				HashSet<String> opzioni=new HashSet<String>();
+				HashSet<String> opzioni=new HashSet<>();
 				try {
 					opzioni = controller.getNomiStrumenti();//Prendo tutti i nomi degli strumenti salvati nel database
 				} catch (SQLException e1) {
@@ -558,7 +558,7 @@ public class GuiRicetta implements Gui {
 				}finally
 				{
 					ingredienti = new HashMap<>();
-					strumenti = new HashSet<String>();
+					strumenti = new HashSet<>();
 				}
 				pulisciCampiInput(nomeText, tempoText, procedimentoText, notaText, descrizioneNotaText);
 			}
@@ -583,7 +583,7 @@ public class GuiRicetta implements Gui {
 				{
 					boolean risultato = controller.modificaRicetta(nomeBirra, tempo, procedimento, strumenti, ingredienti, titoloNota, descrizioneNota);
 					ingredienti = new HashMap<>();
-					strumenti = new HashSet<String>();
+					strumenti = new HashSet<>();
 					if (risultato) //Ricetta modificata correttamenete
 					{
 						JOptionPane.showMessageDialog(guiFrame, "Ricetta modificata correttamente");
