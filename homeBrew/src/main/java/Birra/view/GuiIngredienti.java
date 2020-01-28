@@ -23,7 +23,7 @@ import Birra.model.Ingrediente;
 public class GuiIngredienti implements Gui 
 {
 	private FacadeController controller;
-	private final String errore = "errore";
+	private static final String ERRORE = "errore";
 	
 	@Override
 	public void draw() 
@@ -149,13 +149,13 @@ public class GuiIngredienti implements Gui
 		clickGetIngrediente(getIngrediente, testo, guiFrame);
 		
 		//Se clicco su elimina ingrediente
-		clickEliminaIngrediente(eliminaIngrediente, testo, guiFrame);
+		clickEliminaIngrediente(eliminaIngrediente, testo);
 		
 		//Se clicco su aggiungi ingrediente 
-		clickAggiungiIngrediente(aggiungiIngrediente, nome, quantita, tipo, bloccato, guiFrame); 
+		clickAggiungiIngrediente(aggiungiIngrediente, nome, quantita, tipo, bloccato); 
 		
 		//Se clicco su modifica ingrediente
-		clickModificaIngrediente(modificaIngrediente, nome, quantita, tipo, bloccato, guiFrame);
+		clickModificaIngrediente(modificaIngrediente, nome, quantita, tipo, bloccato);
 		
 		
 		guiFrame.setVisible(true);
@@ -181,7 +181,7 @@ public class GuiIngredienti implements Gui
 				{
 					i = controller.getIngrediente(testo.getText());
 				} catch (SQLException e) {
-					JOptionPane.showMessageDialog(null,"Errore "+testo.getText(),errore,JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,"Errore "+testo.getText(),ERRORE,JOptionPane.WARNING_MESSAGE);
 				}
 				if(i != null)
 				{
@@ -195,7 +195,7 @@ public class GuiIngredienti implements Gui
 				}
 				else
 				{
-					JOptionPane.showMessageDialog(null,"Non c'è nessun ingrediente che si chiama "+testo.getText(),errore,JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,"Non c'è nessun ingrediente che si chiama "+testo.getText(),ERRORE,JOptionPane.WARNING_MESSAGE);
 				}
 				testo.setText("");
 			}
@@ -203,7 +203,7 @@ public class GuiIngredienti implements Gui
 	}
 	
 	//Ascoltatore dell'evento elimina ingrediente
-	private void clickEliminaIngrediente(JButton eliminaIngrediente, final JTextField testo, final JFrame guiFrame)
+	private void clickEliminaIngrediente(JButton eliminaIngrediente, final JTextField testo)
 	{
 		eliminaIngrediente.addActionListener(new ActionListener()
 		{
@@ -217,7 +217,7 @@ public class GuiIngredienti implements Gui
 					if(e.getMessage().contains("foreign key"))
 					{
 						//Significa che l'ingrediente non può essere eliminato perchè c'è una ricetta che lo contiene 
-						JOptionPane.showMessageDialog(null,"Impossibile eliminare  "+testo.getText()+ " perchè c'è almeno una ricetta che lo contiene",errore,JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null,"Impossibile eliminare  "+testo.getText()+ " perchè c'è almeno una ricetta che lo contiene",ERRORE,JOptionPane.WARNING_MESSAGE);
 					}
 				}
 				testo.setText("");
@@ -226,7 +226,7 @@ public class GuiIngredienti implements Gui
 	}
 	
 	//Ascoltatore dell'evento click sul bottone aggiungiIngrediente
-	private void clickAggiungiIngrediente(JButton aggiungiIngrediente, final JTextField nome, final JTextField quantita, final JComboBox tipo, final JCheckBox bloccato, final JFrame guiFrame)
+	private void clickAggiungiIngrediente(JButton aggiungiIngrediente, final JTextField nome, final JTextField quantita, final JComboBox tipo, final JCheckBox bloccato)
 	{
 		aggiungiIngrediente.addActionListener(new ActionListener()
 		{
@@ -244,7 +244,7 @@ public class GuiIngredienti implements Gui
 					if(aggiunto)
 						JOptionPane.showMessageDialog(null,"Ingrediente aggiunto correttamente","Ingrediente aggiunto",JOptionPane.INFORMATION_MESSAGE);
 				}catch (IllegalArgumentException | SQLException e) {
-					JOptionPane.showMessageDialog(null,e.getMessage(),errore,JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,e.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 				}
 				pulisciCampiInput(nome, quantita);
 			}
@@ -252,7 +252,7 @@ public class GuiIngredienti implements Gui
 	}
 	
 	//Ascoltatore del bottone modifica ingrediente
-	private void clickModificaIngrediente(JButton modificaIngrediente, final JTextField nome, final JTextField quantita, final JComboBox tipo, final JCheckBox bloccato, final JFrame guiFrame)
+	private void clickModificaIngrediente(JButton modificaIngrediente, final JTextField nome, final JTextField quantita, final JComboBox tipo, final JCheckBox bloccato)
 	{
 		modificaIngrediente.addActionListener(new ActionListener()
 		{
@@ -266,7 +266,7 @@ public class GuiIngredienti implements Gui
 				try {
 					controller.modificaIngrediente(nomeIngrediente, quantitaIngrediente, bloccatoIngrediente, tipoIngrediente);
 				}catch (IllegalArgumentException | SQLException e) {
-					JOptionPane.showMessageDialog(null,e.getMessage(),errore,JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,e.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 				}
 				pulisciCampiInput(nome, quantita);
 			}

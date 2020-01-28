@@ -19,7 +19,7 @@ public class GuiRicetta implements Gui {
 	private FacadeController controller;
 	private HashSet<String> strumenti = new HashSet<>();
 	private HashMap<Ingrediente, Double> ingredienti = new HashMap<>();
-	private final String errore = "Errore";
+	private static final String ERRORE = "Errore";
 	
 	public GuiRicetta(FacadeController controller)
 	{
@@ -220,7 +220,7 @@ public class GuiRicetta implements Gui {
 		clickModificaRicetta(modificaRicetta, nomeText, tempoText, procedimentoText, notaText, descrizioneNotaText, guiFrame);
 		
 		//Se clicco sul bottone aggiungi nota 
-		clickAggiungiNota(aggiungiNota, nomeText, notaText, descrizioneNotaText, guiFrame);
+		clickAggiungiNota(aggiungiNota, nomeText, notaText, descrizioneNotaText);
 		
 		guiFrame.add(elementiGraficiRicetta);
 		guiFrame.setVisible(true);
@@ -238,7 +238,7 @@ public class GuiRicetta implements Gui {
 				try {
 					r = controller.getRicetta(nome.getText());
 				} catch (SQLException e) {
-					JOptionPane.showMessageDialog(null,e.getMessage(),errore,JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,e.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 				}
 				String output="";
 				if(r != null)
@@ -254,7 +254,7 @@ public class GuiRicetta implements Gui {
 				}
 				else
 				{
-					JOptionPane.showMessageDialog(null,"La ricetta "+ nome.getText()+ " non esiste",errore,JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,"La ricetta "+ nome.getText()+ " non esiste",ERRORE,JOptionPane.WARNING_MESSAGE);
 				}
 				nome.setText("");
 			}
@@ -271,11 +271,7 @@ public class GuiRicetta implements Gui {
 				int response = JOptionPane.showConfirmDialog(null, "Vuoi davvero eliminare la ricetta?", "Conferma",
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				boolean conferma = false;
-				if (response == JOptionPane.NO_OPTION)
-				{
-					conferma = false;
-				} 
-				else if (response == JOptionPane.YES_OPTION) 
+				if (response == JOptionPane.YES_OPTION) 
 				{
 					conferma = true;
 				} 
@@ -284,7 +280,7 @@ public class GuiRicetta implements Gui {
 					try {
 						controller.eliminaRicetta(nome.getText());
 					} catch (SQLException e1) {
-						JOptionPane.showMessageDialog(null,e1.getMessage(),errore,JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null,e1.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 					}
 				}	
 				else
@@ -307,7 +303,7 @@ public class GuiRicetta implements Gui {
 				try {
 					r = controller.getRicetta(nome.getText());
 				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(null,e1.getMessage(),errore,JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,e1.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 				}
 				Nota nota = null;
 				if(r != null)
@@ -324,13 +320,13 @@ public class GuiRicetta implements Gui {
 					}
 					else
 					{
-						JOptionPane.showMessageDialog(null,"Nessuna nota da visualizzare",errore,JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null,"Nessuna nota da visualizzare",ERRORE,JOptionPane.WARNING_MESSAGE);
 					}
 					
 				}
 				else
 				{
-					JOptionPane.showMessageDialog(null,"La ricetta "+ nome.getText()+ " non esiste",errore,JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,"La ricetta "+ nome.getText()+ " non esiste",ERRORE,JOptionPane.WARNING_MESSAGE);
 				}
 				nome.setText("");
 			}
@@ -359,15 +355,15 @@ public class GuiRicetta implements Gui {
 				try {
 					opzioni = controller.getNomiStrumenti();//Prendo tutti i nomi degli strumenti salvati nel database
 				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(null,e1.getMessage(),errore,JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,e1.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 				}
 				String[] o = opzioni.toArray(new String[50]);
-				JComboBox strumenti = new JComboBox(o);
+				JComboBox s = new JComboBox(o);
 				gbc.gridx = 0;
 				gbc.gridy = 1;
 				gbc.insets = new Insets(5, 0, 0, 10);
 				gbc.anchor = GridBagConstraints.CENTER;
-				elementiGraficiAggiungiStrumento.add(strumenti, gbc);
+				elementiGraficiAggiungiStrumento.add(s, gbc);
 				
 				JButton aggiungi = new JButton("Aggiungi strumento");
 				gbc.gridx = 0;
@@ -379,7 +375,7 @@ public class GuiRicetta implements Gui {
 				dialog.add(elementiGraficiAggiungiStrumento);
 				
 				//Se clicco sul bottone aggiungi
-				clickAssociaStrumento(aggiungi, strumenti, dialog);
+				clickAssociaStrumento(aggiungi, s);
 				
 				dialog.setSize(500, 500);
 				dialog.setVisible(true);
@@ -493,7 +489,7 @@ public class GuiRicetta implements Gui {
 	}
 	
 	//Ascoltatore del bottone aggiungi strumento
-	private void clickAssociaStrumento(JButton bottone, final JComboBox attrezzatura, final JDialog dialog)
+	private void clickAssociaStrumento(JButton bottone, final JComboBox attrezzatura)
 	{
 		//Attrezzatura[] a = new 
 		bottone.addActionListener(new ActionListener() 
@@ -521,7 +517,7 @@ public class GuiRicetta implements Gui {
 					i = controller.creaIngrediente(nome.getText(), quantita.getText(), bloccato.isSelected(), tipo.getSelectedItem().toString());
 				}catch(IllegalArgumentException e2)
 				{
-					JOptionPane.showMessageDialog(null,e2.getMessage(),errore,JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,e2.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 				}
 				double percentualeIngrediente = 0.0; 
 				try {
@@ -598,7 +594,7 @@ public class GuiRicetta implements Gui {
 					}
 				}catch (IllegalArgumentException | SQLException e2) 
 				{
-					JOptionPane.showMessageDialog(null,e2.getMessage(),errore,JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,e2.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 				}
 				pulisciCampiInput(nomeText, tempoText, procedimentoText, notaText, descrizioneNotaText);
 			}
@@ -607,7 +603,7 @@ public class GuiRicetta implements Gui {
 	
 	//Ascoltatore del bottone aggiungi nota 
 	private void clickAggiungiNota(JButton aggiungiNota, final JTextField nomeText,	final JTextField notaText, 
-			final JTextField descrizioneNotaText, final JFrame guiFrame)
+			final JTextField descrizioneNotaText)
 	{
 		aggiungiNota.addActionListener(new ActionListener() 
 		{
@@ -616,7 +612,6 @@ public class GuiRicetta implements Gui {
 			{
 				String titoloNota = notaText.getText();
 				String descrizioneNota = descrizioneNotaText.getText();
-				Nota nota = new Nota(titoloNota, descrizioneNota);
 				String nomeBirra = nomeText.getText();
 				boolean risultato = false;
 				try 
@@ -628,12 +623,12 @@ public class GuiRicetta implements Gui {
 					}
 					else
 					{
-						JOptionPane.showMessageDialog(null,"Impossibile aggiungere la nota",errore,JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null,"Impossibile aggiungere la nota",ERRORE,JOptionPane.WARNING_MESSAGE);
 					}
 				}
 				catch(IllegalArgumentException | NullPointerException | SQLException exception)
 				{
-					JOptionPane.showMessageDialog(null,exception.getMessage(),errore,JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,exception.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 				}
 				nomeText.setText("");
 				notaText.setText("");

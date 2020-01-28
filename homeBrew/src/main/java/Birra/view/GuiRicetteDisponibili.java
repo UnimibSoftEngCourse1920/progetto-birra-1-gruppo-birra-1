@@ -1,13 +1,11 @@
 package Birra.view;
 import java.awt.BorderLayout;
-import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
 import javax.swing.*;
 import Birra.controller.*;
-import Birra.model.Nota;
 import Birra.model.Ricetta;
 
 public class GuiRicetteDisponibili implements Gui 
@@ -35,7 +33,7 @@ public class GuiRicetteDisponibili implements Gui
 		panel.add(b, BorderLayout.NORTH);
 		
 		//Quando clicco sul bottone "Mostra ricette disponibili"
-		clickRicetteDisponibili(b, testo, guiFrame);
+		clickRicetteDisponibili(b, guiFrame);
 		
 		guiFrame.add(panel);
 		guiFrame.setVisible(true);
@@ -48,7 +46,7 @@ public class GuiRicetteDisponibili implements Gui
 	}
 	
 	//Ascoltatore dell'evento click del bottone mostra ricette disponibili
-	private void clickRicetteDisponibili(JButton button, JTextArea testo, final JFrame guiFrame)
+	private void clickRicetteDisponibili(JButton button, final JFrame guiFrame)
 	{
 		button.addActionListener(new ActionListener() {
 			@Override
