@@ -11,6 +11,7 @@ import java.util.Set;
 import homebrew.model.Attrezzatura;
 import homebrew.model.Ingrediente;
 import homebrew.model.Nota;
+import homebrew.model.QuantitaRicetta;
 import homebrew.model.Ricetta;
 import homebrew.model.TipoIngrediente;
 
@@ -202,14 +203,10 @@ public class FacadeController {
 	}
 
 	// creo i metodi di controllo per le ricette disponibili
-	public Ricetta cosaDovreiPreparareOggi() throws SQLException {
+	public QuantitaRicetta cosaDovreiPreparareOggi() throws SQLException {
 		return rd.cosaDovreiPreparareOggi();
 	}
-
-	public double getQuantitaBirra() {
-		return rd.getQuantitaBirra();
-	}
-
+	
 	public double getMaxQuantita(String nomeBirra) throws SQLException {
 		Ricetta ricetta = cr.getRicetta(nomeBirra);
 		return ricetta == null ? 0 : rd.getMaxQuantita(ricetta);

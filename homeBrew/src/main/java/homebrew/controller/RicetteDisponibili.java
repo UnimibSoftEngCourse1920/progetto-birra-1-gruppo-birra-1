@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.Map.Entry;
 
+import homebrew.model.QuantitaRicetta;
 import homebrew.model.Ricetta;
 
 public class RicetteDisponibili {
@@ -11,41 +12,33 @@ public class RicetteDisponibili {
 	private ControllerRicetta cr;
 	private ControllerIngrediente ci;
 	private ControllerAttrezzatura ca;
-	private double quantitaBirra;
 	
 	public RicetteDisponibili(ControllerRicetta cr, ControllerIngrediente ci, ControllerAttrezzatura ca) {
-		quantitaBirra = -1;
 		this.cr = cr;
 		this.ci = ci;
 		this.ca = ca;
 	}
 
-	public double getQuantitaBirra() {
-		return quantitaBirra;
-	}
-
-	public Ricetta cosaDovreiPreparareOggi() throws SQLException {
+	public QuantitaRicetta cosaDovreiPreparareOggi() throws SQLException {
 		String[] nomiBirre = nomiBirreDisponibili();
 		
-		if (nomiBirre.length == 0) {
-			quantitaBirra = 0;
+		if (nomiBirre.length == 0)
 			return null;
-		}
 		
-		Ricetta ricDaPrep = cr.getRicetta(nomiBirre[0]);
-		quantitaBirra = getMaxQuantita(ricDaPrep);
+		Ricetta ricettaDaPrep = cr.getRicetta(nomiBirre[0]);
+		double quantitaBirra = getMaxQuantita(ricettaDaPrep);
 		
 		for (int i = 1; i < nomiBirre.length; i++) {
 			Ricetta ric = cr.getRicetta(nomiBirre[i]);
 			double quantita = getMaxQuantita(ric);
 			
 			if (quantita > quantitaBirra) {
-				ricDaPrep = ric;
+				ricettaDaPrep = ric;
 				quantitaBirra = quantita;
 			}
 		}
 		
-		return ricDaPrep;
+		return new QuantitaRicetta(ricettaDaPrep, quantitaBirra);
 	}
 	
 	private String[] nomiBirreDisponibili() throws SQLException {
