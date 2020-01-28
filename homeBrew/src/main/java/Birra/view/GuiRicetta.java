@@ -255,7 +255,7 @@ public class GuiRicetta implements Gui {
 				{
 					JOptionPane.showMessageDialog(null,"La ricetta "+ nome.getText()+ " non esiste","Errore",JOptionPane.WARNING_MESSAGE);
 				}
-				
+				nome.setText("");
 			}
 		});
 	}
@@ -290,6 +290,7 @@ public class GuiRicetta implements Gui {
 				{
 					JOptionPane.showMessageDialog(guiFrame, "Non elimino la ricetta");
 				}
+				nome.setText("");
 			}
 		});
 	}
@@ -330,6 +331,7 @@ public class GuiRicetta implements Gui {
 				{
 					JOptionPane.showMessageDialog(null,"La ricetta "+ nome.getText()+ " non esiste","Errore",JOptionPane.WARNING_MESSAGE);
 				}
+				nome.setText("");
 			}
 			
 		});
@@ -560,7 +562,8 @@ public class GuiRicetta implements Gui {
 				{
 					ingredienti = new HashMap<>();
 					strumenti = new HashSet<String>();
-				}	
+				}
+				pulisciCampiInput(nomeText, tempoText, procedimentoText, notaText, descrizioneNotaText);
 			}
 		});
 	}
@@ -596,6 +599,7 @@ public class GuiRicetta implements Gui {
 				{
 					JOptionPane.showMessageDialog(null,e2.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
 				}
+				pulisciCampiInput(nomeText, tempoText, procedimentoText, notaText, descrizioneNotaText);
 			}
 		});
 	}
@@ -630,7 +634,19 @@ public class GuiRicetta implements Gui {
 				{
 					JOptionPane.showMessageDialog(null,exception.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
 				}
+				nomeText.setText("");
+				notaText.setText("");
+				descrizioneNotaText.setText("");
 			}
 		});
+	}
+	private void pulisciCampiInput(JTextField nomeText, final JTextField tempoText, final JTextField procedimentoText, 
+			final JTextField notaText, final JTextField descrizioneNotaText)
+	{
+		nomeText.setText("");
+		tempoText.setText("");
+		procedimentoText.setText("");
+		notaText.setText("");
+		descrizioneNotaText.setText("");
 	}
 }

@@ -194,6 +194,7 @@ public class GuiIngredienti implements Gui
 				{
 					JOptionPane.showMessageDialog(null,"Non c'è nessun ingrediente che si chiama "+testo.getText(),"Errore",JOptionPane.WARNING_MESSAGE);
 				}
+				testo.setText("");
 			}
 		});
 	}
@@ -216,6 +217,7 @@ public class GuiIngredienti implements Gui
 						JOptionPane.showMessageDialog(null,"Impossibile eliminare  "+testo.getText()+ " perchè c'è almeno una ricetta che lo contiene","Errore",JOptionPane.WARNING_MESSAGE);
 					}
 				}
+				testo.setText("");
 			}
 		});
 	}
@@ -241,6 +243,7 @@ public class GuiIngredienti implements Gui
 				}catch (IllegalArgumentException | SQLException e) {
 					JOptionPane.showMessageDialog(null,e.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
 				}
+				pulisciCampiInput(nome, quantita);
 			}
 		});
 	}
@@ -262,8 +265,14 @@ public class GuiIngredienti implements Gui
 				}catch (IllegalArgumentException | SQLException e) {
 					JOptionPane.showMessageDialog(null,e.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
 				}
+				pulisciCampiInput(nome, quantita);
 			}
 		});
 	}
 	
+	private void pulisciCampiInput(final JTextField testo0, final JTextField testo1)
+	{
+		testo0.setText("");
+		testo1.setText("");
+	}
 }
