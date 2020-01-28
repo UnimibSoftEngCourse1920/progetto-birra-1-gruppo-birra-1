@@ -14,6 +14,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
+
 import Birra.controller.FacadeController;
 import Birra.model.Ingrediente;
 
@@ -21,13 +23,14 @@ import Birra.model.Ingrediente;
 public class GuiIngredienti implements Gui 
 {
 	private FacadeController controller;
+	private final String errore = "errore";
 	
 	@Override
 	public void draw() 
 	{
 		final JFrame guiFrame = new JFrame();
 
-		guiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		guiFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		guiFrame.setTitle("Ingredienti");
 		guiFrame.setSize(500,350);
 		guiFrame.setLocation(630, 100);
@@ -178,7 +181,7 @@ public class GuiIngredienti implements Gui
 				{
 					i = controller.getIngrediente(testo.getText());
 				} catch (SQLException e) {
-					JOptionPane.showMessageDialog(null,"Errore "+testo.getText(),"Errore",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,"Errore "+testo.getText(),errore,JOptionPane.WARNING_MESSAGE);
 				}
 				if(i != null)
 				{
@@ -192,7 +195,7 @@ public class GuiIngredienti implements Gui
 				}
 				else
 				{
-					JOptionPane.showMessageDialog(null,"Non c'è nessun ingrediente che si chiama "+testo.getText(),"Errore",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,"Non c'è nessun ingrediente che si chiama "+testo.getText(),errore,JOptionPane.WARNING_MESSAGE);
 				}
 				testo.setText("");
 			}
@@ -214,7 +217,7 @@ public class GuiIngredienti implements Gui
 					if(e.getMessage().contains("foreign key"))
 					{
 						//Significa che l'ingrediente non può essere eliminato perchè c'è una ricetta che lo contiene 
-						JOptionPane.showMessageDialog(null,"Impossibile eliminare  "+testo.getText()+ " perchè c'è almeno una ricetta che lo contiene","Errore",JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null,"Impossibile eliminare  "+testo.getText()+ " perchè c'è almeno una ricetta che lo contiene",errore,JOptionPane.WARNING_MESSAGE);
 					}
 				}
 				testo.setText("");
@@ -241,7 +244,7 @@ public class GuiIngredienti implements Gui
 					if(aggiunto)
 						JOptionPane.showMessageDialog(null,"Ingrediente aggiunto correttamente","Ingrediente aggiunto",JOptionPane.INFORMATION_MESSAGE);
 				}catch (IllegalArgumentException | SQLException e) {
-					JOptionPane.showMessageDialog(null,e.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,e.getMessage(),errore,JOptionPane.WARNING_MESSAGE);
 				}
 				pulisciCampiInput(nome, quantita);
 			}
@@ -263,7 +266,7 @@ public class GuiIngredienti implements Gui
 				try {
 					controller.modificaIngrediente(nomeIngrediente, quantitaIngrediente, bloccatoIngrediente, tipoIngrediente);
 				}catch (IllegalArgumentException | SQLException e) {
-					JOptionPane.showMessageDialog(null,e.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,e.getMessage(),errore,JOptionPane.WARNING_MESSAGE);
 				}
 				pulisciCampiInput(nome, quantita);
 			}

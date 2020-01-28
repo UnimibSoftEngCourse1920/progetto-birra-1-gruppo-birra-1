@@ -19,6 +19,7 @@ public class GuiRicetta implements Gui {
 	private FacadeController controller;
 	private HashSet<String> strumenti = new HashSet<>();
 	private HashMap<Ingrediente, Double> ingredienti = new HashMap<>();
+	private final String errore = "Errore";
 	
 	public GuiRicetta(FacadeController controller)
 	{
@@ -31,7 +32,7 @@ public class GuiRicetta implements Gui {
 	{
 		final JFrame guiFrame = new JFrame();
 		guiFrame.setLocation(30, 100);
-		guiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		guiFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		guiFrame.setTitle("Ricetta");
 		guiFrame.setSize(600,350);
 		JPanel elementiGraficiRicetta = new JPanel(new GridBagLayout());
@@ -237,7 +238,7 @@ public class GuiRicetta implements Gui {
 				try {
 					r = controller.getRicetta(nome.getText());
 				} catch (SQLException e) {
-					JOptionPane.showMessageDialog(null,e.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,e.getMessage(),errore,JOptionPane.WARNING_MESSAGE);
 				}
 				String output="";
 				if(r != null)
@@ -253,7 +254,7 @@ public class GuiRicetta implements Gui {
 				}
 				else
 				{
-					JOptionPane.showMessageDialog(null,"La ricetta "+ nome.getText()+ " non esiste","Errore",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,"La ricetta "+ nome.getText()+ " non esiste",errore,JOptionPane.WARNING_MESSAGE);
 				}
 				nome.setText("");
 			}
@@ -283,7 +284,7 @@ public class GuiRicetta implements Gui {
 					try {
 						controller.eliminaRicetta(nome.getText());
 					} catch (SQLException e1) {
-						JOptionPane.showMessageDialog(null,e1.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null,e1.getMessage(),errore,JOptionPane.WARNING_MESSAGE);
 					}
 				}	
 				else
@@ -306,7 +307,7 @@ public class GuiRicetta implements Gui {
 				try {
 					r = controller.getRicetta(nome.getText());
 				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(null,e1.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,e1.getMessage(),errore,JOptionPane.WARNING_MESSAGE);
 				}
 				Nota nota = null;
 				if(r != null)
@@ -323,13 +324,13 @@ public class GuiRicetta implements Gui {
 					}
 					else
 					{
-						JOptionPane.showMessageDialog(null,"Nessuna nota da visualizzare","Errore",JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null,"Nessuna nota da visualizzare",errore,JOptionPane.WARNING_MESSAGE);
 					}
 					
 				}
 				else
 				{
-					JOptionPane.showMessageDialog(null,"La ricetta "+ nome.getText()+ " non esiste","Errore",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,"La ricetta "+ nome.getText()+ " non esiste",errore,JOptionPane.WARNING_MESSAGE);
 				}
 				nome.setText("");
 			}
@@ -358,7 +359,7 @@ public class GuiRicetta implements Gui {
 				try {
 					opzioni = controller.getNomiStrumenti();//Prendo tutti i nomi degli strumenti salvati nel database
 				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(null,e1.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,e1.getMessage(),errore,JOptionPane.WARNING_MESSAGE);
 				}
 				String[] o = opzioni.toArray(new String[50]);
 				JComboBox strumenti = new JComboBox(o);
@@ -520,7 +521,7 @@ public class GuiRicetta implements Gui {
 					i = controller.creaIngrediente(nome.getText(), quantita.getText(), bloccato.isSelected(), tipo.getSelectedItem().toString());
 				}catch(IllegalArgumentException e2)
 				{
-					JOptionPane.showMessageDialog(null,e2.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,e2.getMessage(),errore,JOptionPane.WARNING_MESSAGE);
 				}
 				double percentualeIngrediente = 0.0; 
 				try {
@@ -597,7 +598,7 @@ public class GuiRicetta implements Gui {
 					}
 				}catch (IllegalArgumentException | SQLException e2) 
 				{
-					JOptionPane.showMessageDialog(null,e2.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,e2.getMessage(),errore,JOptionPane.WARNING_MESSAGE);
 				}
 				pulisciCampiInput(nomeText, tempoText, procedimentoText, notaText, descrizioneNotaText);
 			}
@@ -627,12 +628,12 @@ public class GuiRicetta implements Gui {
 					}
 					else
 					{
-						JOptionPane.showMessageDialog(null,"Impossibile aggiungere la nota","Errore",JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null,"Impossibile aggiungere la nota",errore,JOptionPane.WARNING_MESSAGE);
 					}
 				}
 				catch(IllegalArgumentException | NullPointerException | SQLException exception)
 				{
-					JOptionPane.showMessageDialog(null,exception.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,exception.getMessage(),errore,JOptionPane.WARNING_MESSAGE);
 				}
 				nomeText.setText("");
 				notaText.setText("");
