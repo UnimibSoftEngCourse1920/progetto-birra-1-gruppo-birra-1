@@ -1,7 +1,5 @@
 package Birra.view;
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
 import javax.swing.*;
@@ -48,31 +46,24 @@ public class GuiRicetteDisponibili implements Gui
 	//Ascoltatore dell'evento click del bottone mostra ricette disponibili
 	private void clickRicetteDisponibili(JButton button, final JFrame guiFrame)
 	{
-		button.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) 
-			{
-				Ricetta r=null;
-				try {
-					r = controller.cosaDovreiPreparareOggi();
-				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(null,e1.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
-				}
-				
-				if(r == null) //Non ci sono ricette disponibili
-					JOptionPane.showMessageDialog(guiFrame, "Non ci sono ricette disponibili al momento");
-				
-				//Se ci sono le mostro
-				else
-				{
-					JDialog dialog = new JDialog(guiFrame, "Ricette disponibili");
-					JLabel label = new JLabel(r.toString());
-					dialog.add(label);
-					dialog.setSize(500, 500);
-					dialog.setVisible(true);
-				}
+		button.addActionListener(e -> {
+			Ricetta r=null;
+			try {
+				r = controller.cosaDovreiPreparareOggi();
+			} catch (SQLException e1) {
+				JOptionPane.showMessageDialog(null,e1.getMessage(),"Errore",JOptionPane.WARNING_MESSAGE);
 			}
-			
+			if(r == null) //Non ci sono ricette disponibili
+				JOptionPane.showMessageDialog(guiFrame, "Non ci sono ricette disponibili al momento");
+			//Se ci sono le mostro
+			else
+			{
+				JDialog dialog = new JDialog(guiFrame, "Ricette disponibili");
+				JLabel label = new JLabel(r.toString());
+				dialog.add(label);
+				dialog.setSize(500, 500);
+				dialog.setVisible(true);
+			}
 		});
 	}
 }

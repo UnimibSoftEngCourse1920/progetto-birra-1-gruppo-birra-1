@@ -1,8 +1,6 @@
 package Birra.view;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
 import javax.swing.JButton;
@@ -171,105 +169,85 @@ public class GuiIngredienti implements Gui
 	//Ascoltatore dell' evento click sul bottone getIngrediente
 	private void clickGetIngrediente(JButton getIngrediente, final JTextField testo, final JFrame guiFrame)
 	{
-		getIngrediente.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent event)
+		getIngrediente.addActionListener(e -> {
+			Ingrediente i=null;
+			try 
 			{
-				Ingrediente i=null;
-				try 
-				{
-					i = controller.getIngrediente(testo.getText());
-				} catch (SQLException e) {
-					JOptionPane.showMessageDialog(null,"Errore "+testo.getText(),ERRORE,JOptionPane.WARNING_MESSAGE);
-				}
-				if(i != null)
-				{
-					String ingrediente = "nome: " + i.getNome() + " quantità: " + i.getQuantita() +
-							" tipo: " + i.getTipo() + " bloccato: " + i.isBloccato();
-					JDialog dialog = new JDialog(guiFrame, "Dettagli ingrediente");
-					JLabel label = new JLabel(ingrediente);
-					dialog.add(label);
-					dialog.setSize(500, 500);
-					dialog.setVisible(true);
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null,"Non c'è nessun ingrediente che si chiama "+testo.getText(),ERRORE,JOptionPane.WARNING_MESSAGE);
-				}
-				testo.setText("");
+				i = controller.getIngrediente(testo.getText());
+			} catch (SQLException e1) {
+				JOptionPane.showMessageDialog(null,"Errore "+testo.getText(),ERRORE,JOptionPane.WARNING_MESSAGE);
 			}
+			if(i != null)
+			{
+				String ingrediente = "nome: " + i.getNome() + " quantità: " + i.getQuantita() +
+						" tipo: " + i.getTipo() + " bloccato: " + i.isBloccato();
+				JDialog dialog = new JDialog(guiFrame, "Dettagli ingrediente");
+				JLabel label = new JLabel(ingrediente);
+				dialog.add(label);
+				dialog.setSize(500, 500);
+				dialog.setVisible(true);
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null,"Non c'è nessun ingrediente che si chiama "+testo.getText(),ERRORE,JOptionPane.WARNING_MESSAGE);
+			}
+			testo.setText("");
 		});
 	}
 	
 	//Ascoltatore dell'evento elimina ingrediente
 	private void clickEliminaIngrediente(JButton eliminaIngrediente, final JTextField testo)
 	{
-		eliminaIngrediente.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent event)
+		eliminaIngrediente.addActionListener(e -> {
+			try {
+				controller.eliminaIngrediente(testo.getText());
+			} catch (SQLException e1) 
 			{
-				try {
-					controller.eliminaIngrediente(testo.getText());
-				} catch (SQLException e) 
+				if(e1.getMessage().contains("foreign key"))
 				{
-					if(e.getMessage().contains("foreign key"))
-					{
-						//Significa che l'ingrediente non può essere eliminato perchè c'è una ricetta che lo contiene 
-						JOptionPane.showMessageDialog(null,"Impossibile eliminare  "+testo.getText()+ " perchè c'è almeno una ricetta che lo contiene",ERRORE,JOptionPane.WARNING_MESSAGE);
-					}
+					//Significa che l'ingrediente non può essere eliminato perchè c'è una ricetta che lo contiene 
+					JOptionPane.showMessageDialog(null,"Impossibile eliminare  "+testo.getText()+ " perchè c'è almeno una ricetta che lo contiene",ERRORE,JOptionPane.WARNING_MESSAGE);
 				}
-				testo.setText("");
 			}
+			testo.setText("");
 		});
 	}
 	
 	//Ascoltatore dell'evento click sul bottone aggiungiIngrediente
 	private void clickAggiungiIngrediente(JButton aggiungiIngrediente, final JTextField nome, final JTextField quantita, final JComboBox tipo, final JCheckBox bloccato)
 	{
-		aggiungiIngrediente.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent event)
+		aggiungiIngrediente.addActionListener(e -> {
+			String nomeIngrediente = nome.getText();
+			String quantitaIngrediente = quantita.getText();
+			boolean bloccatoIngrediente = bloccato.isSelected();
+			String tipoIngrediente = tipo.getSelectedItem().toString();
+			boolean aggiunto = false;
+			try 
 			{
-				String nomeIngrediente = nome.getText();
-				String quantitaIngrediente = quantita.getText();
-				boolean bloccatoIngrediente = bloccato.isSelected();
-				String tipoIngrediente = tipo.getSelectedItem().toString();
-				boolean aggiunto = false;
-				try 
-				{
-					aggiunto = controller.aggiungiIngrediente(nomeIngrediente, quantitaIngrediente, bloccatoIngrediente, tipoIngrediente);
-					if(aggiunto)
-						JOptionPane.showMessageDialog(null,"Ingrediente aggiunto correttamente","Ingrediente aggiunto",JOptionPane.INFORMATION_MESSAGE);
-				}catch (IllegalArgumentException | SQLException e) {
-					JOptionPane.showMessageDialog(null,e.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
-				}
-				pulisciCampiInput(nome, quantita);
+				aggiunto = controller.aggiungiIngrediente(nomeIngrediente, quantitaIngrediente, bloccatoIngrediente, tipoIngrediente);
+				if(aggiunto)
+					JOptionPane.showMessageDialog(null,"Ingrediente aggiunto correttamente","Ingrediente aggiunto",JOptionPane.INFORMATION_MESSAGE);
+			}catch (IllegalArgumentException | SQLException e1) {
+				JOptionPane.showMessageDialog(null,e1.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 			}
+			pulisciCampiInput(nome, quantita);
 		});
 	}
 	
 	//Ascoltatore del bottone modifica ingrediente
 	private void clickModificaIngrediente(JButton modificaIngrediente, final JTextField nome, final JTextField quantita, final JComboBox tipo, final JCheckBox bloccato)
 	{
-		modificaIngrediente.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent event)
-			{
-				String nomeIngrediente = nome.getText();
-				String quantitaIngrediente = quantita.getText();
-				boolean bloccatoIngrediente = bloccato.isSelected();
-				String tipoIngrediente = tipo.getSelectedItem().toString();
-				try {
-					controller.modificaIngrediente(nomeIngrediente, quantitaIngrediente, bloccatoIngrediente, tipoIngrediente);
-				}catch (IllegalArgumentException | SQLException e) {
-					JOptionPane.showMessageDialog(null,e.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
-				}
-				pulisciCampiInput(nome, quantita);
+		modificaIngrediente.addActionListener(e -> {
+			String nomeIngrediente = nome.getText();
+			String quantitaIngrediente = quantita.getText();
+			boolean bloccatoIngrediente = bloccato.isSelected();
+			String tipoIngrediente = tipo.getSelectedItem().toString();
+			try {
+				controller.modificaIngrediente(nomeIngrediente, quantitaIngrediente, bloccatoIngrediente, tipoIngrediente);
+			}catch (IllegalArgumentException | SQLException e1) {
+				JOptionPane.showMessageDialog(null,e1.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 			}
+			pulisciCampiInput(nome, quantita);
 		});
 	}
 	
