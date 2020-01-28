@@ -11,7 +11,8 @@ public class Simplesso {
 	}
 	
 	public void esegui() {
-		final int n = tableau[0].length, m = tableau.length;
+		final int n = tableau[0].length;
+		final int m = tableau.length;
 		
 		int jPivot;
 		while ((jPivot = colonnaPivot()) != -1) {

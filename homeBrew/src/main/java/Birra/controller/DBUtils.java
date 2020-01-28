@@ -14,6 +14,10 @@ import java.util.HashMap;
  */
 public class DBUtils {
 
+	private DBUtils ()
+	{
+	}
+	
 	/*
 	 * Viene eseguita una query di aggiornamento dati del db
 	 */

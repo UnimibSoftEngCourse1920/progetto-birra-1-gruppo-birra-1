@@ -14,8 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
-import Birra.controller.FacadeController;
 import Birra.model.Ingrediente;
+import Birra.controller.FacadeController;
 
 
 public class GuiIngredienti implements Gui 

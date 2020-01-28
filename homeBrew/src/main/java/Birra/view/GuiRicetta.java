@@ -5,10 +5,11 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import javax.swing.*;
-import Birra.controller.*;
+
 import Birra.model.Ingrediente;
 import Birra.model.Nota;
 import Birra.model.Ricetta;
+import Birra.controller.*;
 
 
 

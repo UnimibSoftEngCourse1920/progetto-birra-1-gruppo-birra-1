@@ -2,7 +2,8 @@ package Birra.model;
 
 public class Nota {
 	
-	private String titolo, descrizione; //vengono definiti i campi che compongono l'oggetto Nota
+	private String titolo;		//Titolo della nota
+	private String descrizione; //Testo della nota
 	
 	//viene creato il costruttore di Nota
 	public Nota(String titolo, String descrizione) {

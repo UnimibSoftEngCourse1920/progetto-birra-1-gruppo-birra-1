@@ -3,8 +3,9 @@ import java.awt.BorderLayout;
 import java.sql.SQLException;
 
 import javax.swing.*;
-import Birra.controller.*;
+
 import Birra.model.Ricetta;
+import Birra.controller.*;
 
 public class GuiRicetteDisponibili implements Gui 
 {
