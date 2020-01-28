@@ -1,4 +1,4 @@
-package Birra.controller;
+package homebrew.controller;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import Birra.model.Attrezzatura;
-import Birra.model.TipoAttrezzatura;
+import homebrew.model.Attrezzatura;
+import homebrew.model.TipoAttrezzatura;
 
 /**
  * La classe ControllerAttrezzatura si occupa della gestione delle attrezzature

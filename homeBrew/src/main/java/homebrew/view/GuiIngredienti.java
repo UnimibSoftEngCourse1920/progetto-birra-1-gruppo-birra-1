@@ -1,4 +1,4 @@
-package Birra.view;
+package homebrew.view;
 
 import java.awt.*;
 import java.sql.SQLException;
@@ -14,8 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
-import Birra.model.Ingrediente;
-import Birra.controller.FacadeController;
+import homebrew.model.Ingrediente;
+import homebrew.controller.FacadeController;
 
 
 public class GuiIngredienti implements Gui 

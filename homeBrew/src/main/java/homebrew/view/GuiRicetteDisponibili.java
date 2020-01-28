@@ -1,11 +1,11 @@
-package Birra.view;
+package homebrew.view;
 import java.awt.BorderLayout;
 import java.sql.SQLException;
 
 import javax.swing.*;
 
-import Birra.model.Ricetta;
-import Birra.controller.*;
+import homebrew.model.Ricetta;
+import homebrew.controller.*;
 
 public class GuiRicetteDisponibili implements Gui 
 {

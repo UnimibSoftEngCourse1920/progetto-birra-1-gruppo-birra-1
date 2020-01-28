@@ -1,6 +1,6 @@
-package Birra.view;
+package homebrew.view;
 
-import Birra.controller.FacadeController;
+import homebrew.controller.FacadeController;
 
 public class BirraApplication 
 {

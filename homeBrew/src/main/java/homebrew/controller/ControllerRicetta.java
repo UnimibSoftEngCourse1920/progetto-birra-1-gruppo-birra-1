@@ -1,10 +1,10 @@
-package Birra.controller;
+package homebrew.controller;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import Birra.model.*;
+import homebrew.model.*;
 
 /*
  * La classe ControllerRicetta gestisce le ricette nel database

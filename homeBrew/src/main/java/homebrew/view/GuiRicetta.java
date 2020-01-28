@@ -1,4 +1,4 @@
-package Birra.view;
+package homebrew.view;
 
 import java.awt.*;
 import java.sql.SQLException;
@@ -6,10 +6,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import javax.swing.*;
 
-import Birra.model.Ingrediente;
-import Birra.model.Nota;
-import Birra.model.Ricetta;
-import Birra.controller.*;
+import homebrew.model.Ingrediente;
+import homebrew.model.Nota;
+import homebrew.model.Ricetta;
+import homebrew.controller.*;
 
 
 

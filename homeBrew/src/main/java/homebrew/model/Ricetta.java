@@ -1,4 +1,4 @@
-package Birra.model;
+package homebrew.model;
 
 import java.util.HashMap;
 import java.util.HashSet;

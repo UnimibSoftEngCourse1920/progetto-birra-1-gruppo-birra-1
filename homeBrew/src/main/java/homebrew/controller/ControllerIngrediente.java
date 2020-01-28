@@ -1,11 +1,11 @@
-package Birra.controller;
+package homebrew.controller;
 
 import java.sql.SQLException;
 import java.util.*;
 import java.util.Map.Entry;
 
-import Birra.model.Ingrediente;
-import Birra.model.TipoIngrediente;
+import homebrew.model.Ingrediente;
+import homebrew.model.TipoIngrediente;
 
 /*
  * La classe controller ingrediente si occupa della gestione degli ingredienti memorizzati nel 

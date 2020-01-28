@@ -1,10 +1,10 @@
-package Birra.controller;
+package homebrew.controller;
 
 import java.sql.SQLException;
 import java.util.*;
 import java.util.Map.Entry;
 
-import Birra.model.Ricetta;
+import homebrew.model.Ricetta;
 
 public class RicetteDisponibili {
 

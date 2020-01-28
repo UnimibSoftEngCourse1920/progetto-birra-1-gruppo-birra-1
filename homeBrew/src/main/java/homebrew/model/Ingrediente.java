@@ -1,4 +1,4 @@
-package Birra.model;
+package homebrew.model;
 
 public class Ingrediente {
 

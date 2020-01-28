@@ -1,4 +1,4 @@
-package Birra.controller;
+package homebrew.controller;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -8,11 +8,11 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
-import Birra.model.Attrezzatura;
-import Birra.model.Ingrediente;
-import Birra.model.Nota;
-import Birra.model.Ricetta;
-import Birra.model.TipoIngrediente;
+import homebrew.model.Attrezzatura;
+import homebrew.model.Ingrediente;
+import homebrew.model.Nota;
+import homebrew.model.Ricetta;
+import homebrew.model.TipoIngrediente;
 
 public class FacadeController {
 
