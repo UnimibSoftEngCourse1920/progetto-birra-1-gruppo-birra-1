@@ -25,10 +25,8 @@ public class GuiRicetteDisponibili implements Gui
 		guiFrame.setLocation(1130, 100);
 		final JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
-		JTextArea testo = new JTextArea();
-		panel.add(testo, BorderLayout.CENTER);
 		JButton b = new JButton("Mostra ricette disponibili");
-		panel.add(b, BorderLayout.NORTH);
+		panel.add(b, BorderLayout.CENTER);
 		
 		//Quando clicco sul bottone "Mostra ricette disponibili"
 		clickRicetteDisponibili(b, guiFrame);
@@ -59,8 +57,10 @@ public class GuiRicetteDisponibili implements Gui
 			else
 			{
 				JDialog dialog = new JDialog(guiFrame, "Ricette disponibili");
-				JLabel label = new JLabel(r.toString());
-				dialog.add(label);
+				JTextArea text = new JTextArea(r.toString());
+				text.setLineWrap(true);
+				text.setWrapStyleWord(true);
+				dialog.add(text);
 				dialog.setSize(500, 500);
 				dialog.setVisible(true);
 			}
