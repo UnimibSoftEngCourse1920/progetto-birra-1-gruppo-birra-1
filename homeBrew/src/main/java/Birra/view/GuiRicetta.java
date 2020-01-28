@@ -354,7 +354,7 @@ public class GuiRicetta implements Gui {
 				gbc.anchor = GridBagConstraints.LINE_START;
 				elementiGraficiAggiungiStrumento.add(nomeLabel, gbc);
 				
-				HashSet<String> opzioni=null;
+				HashSet<String> opzioni=new HashSet<String>();
 				try {
 					opzioni = controller.getNomiStrumenti();//Prendo tutti i nomi degli strumenti salvati nel database
 				} catch (SQLException e1) {
