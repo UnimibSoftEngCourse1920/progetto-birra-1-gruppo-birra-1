@@ -23,6 +23,7 @@ public class DBUtils {
 		Connection conn = DBConnection();
 		Statement st = conn.createStatement();
 		st.executeUpdate(sql); // Viene eseguito l'update
+		printClosingConnection();
 	}
 
 	/*

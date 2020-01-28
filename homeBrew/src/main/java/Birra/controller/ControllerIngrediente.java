@@ -78,13 +78,13 @@ public class ControllerIngrediente {
 				+ ")";
 		DBUtils.update(sql);
 	}
-	
+
 	/*
 	 * Vengono prelevati tuttti gli ingredienti associati alla ricetta identificata
 	 * dal parametro nomeBirra
 	 */
 	public HashMap<String, Double> getQuantitaIngredienti(String nomeBirra) throws SQLException {
-		String queryIngredienti = "select nomeIngrediente, percentuale from ingrediente natural join ricettaIngrediente where nomeBirra = '"
+		String queryIngredienti = "select nomeIngrediente, percentuale from ricettaIngrediente where nomeBirra = '"
 				+ nomeBirra + "'";
 		ArrayList<HashMap<String, Object>> rows = DBUtils.getRows(queryIngredienti);
 		HashMap<String, Double> ingredienti = new HashMap<>(rows.size());
@@ -94,7 +94,7 @@ public class ControllerIngrediente {
 
 		return ingredienti;
 	}
-	
+
 	/*
 	 * Viene prelevato dal database l'ingrediente identificato dal suo nome
 	 */
