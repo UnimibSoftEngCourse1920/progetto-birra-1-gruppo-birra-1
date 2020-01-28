@@ -24,7 +24,7 @@ public class DBUtils {
 	public static void update(String sql) throws SQLException {
 		System.out.println(sql);
 
-		try (Connection conn = dBConnection(); Statement st = conn.createStatement()) {
+		try (Connection conn = dbConnection(); Statement st = conn.createStatement()) {
 			st.executeUpdate(sql); // Viene eseguito l'update
 		} catch (SQLException e) {
 			throw e;
@@ -41,7 +41,7 @@ public class DBUtils {
 		ArrayList<HashMap<String, Object>> rows = new ArrayList<>();
 
 		// Eseguo la query
-		try (Connection conn = dBConnection();
+		try (Connection conn = dbConnection();
 				Statement st = conn.createStatement();
 				ResultSet rs = st.executeQuery(query)) {
 			
@@ -67,7 +67,7 @@ public class DBUtils {
 	/*
 	 * Viene eseguita la connessione con il db
 	 */
-	private static Connection dBConnection() throws SQLException {
+	private static Connection dbConnection() throws SQLException {
 		return DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/homeBrew", "root", getPsw()); // Connessione al
 																										// database
 	}

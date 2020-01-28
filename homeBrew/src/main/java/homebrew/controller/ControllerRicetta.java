@@ -104,10 +104,10 @@ public class ControllerRicetta {
 
 		if (nota == null)
 			query = "insert into ricetta (nomeBirra, tempo, procedimento) values ('" + ricetta.getNomeBirra()
-					+ "', '" + ricetta.getTempo() + "', '" + ricetta.getProcedimento() + "')";
+					+ "', " + ricetta.getTempo() + ", '" + ricetta.getProcedimento() + "')";
 		else
 			query = "insert into ricetta (nomeBirra, tempo, procedimento, titoloNota, descrizioneNota) values ('"
-					+ ricetta.getNomeBirra() + "', '" + ricetta.getTempo() + "', '" + ricetta.getProcedimento() + "', '"
+					+ ricetta.getNomeBirra() + "', " + ricetta.getTempo() + ", '" + ricetta.getProcedimento() + "', '"
 					+ nota.getTitolo() + "', '" + nota.getDescrizione() + "')";
 
 		return query;
