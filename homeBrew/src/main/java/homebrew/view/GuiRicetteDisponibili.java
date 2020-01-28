@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import javax.swing.*;
 
+import homebrew.model.QuantitaRicetta;
 import homebrew.model.Ricetta;
 import homebrew.controller.*;
 
@@ -26,7 +27,7 @@ public class GuiRicetteDisponibili implements Gui
 		guiFrame.setLocation(1130, 100);
 		final JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
-		JButton b = new JButton("Mostra ricette disponibili");
+		JButton b = new JButton("Consigliami una ricetta");
 		panel.add(b, BorderLayout.CENTER);
 		
 		//Quando clicco sul bottone "Mostra ricette disponibili"
@@ -46,7 +47,7 @@ public class GuiRicetteDisponibili implements Gui
 	private void clickRicetteDisponibili(JButton button, final JFrame guiFrame)
 	{
 		button.addActionListener(e -> {
-			Ricetta r=null;
+			QuantitaRicetta r=null;
 			try {
 				r = controller.cosaDovreiPreparareOggi();
 			} catch (SQLException e1) {
@@ -57,7 +58,7 @@ public class GuiRicetteDisponibili implements Gui
 			//Se ci sono le mostro
 			else
 			{
-				JDialog dialog = new JDialog(guiFrame, "Ricette disponibili");
+				JDialog dialog = new JDialog(guiFrame, "Ricetta consigliata");
 				JTextArea text = new JTextArea(r.toString());
 				text.setLineWrap(true);
 				text.setWrapStyleWord(true);
