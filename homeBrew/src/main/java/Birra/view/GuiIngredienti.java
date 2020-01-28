@@ -210,8 +210,11 @@ public class GuiIngredienti implements Gui
 					controller.eliminaIngrediente(testo.getText());
 				} catch (SQLException e) 
 				{
-					//Significa che l'ingrediente non può essere eliminato perchè c'è una ricetta che lo contiene 
-					JOptionPane.showMessageDialog(null,"Errore impossibile eliminare"+testo.getText(),"Errore",JOptionPane.WARNING_MESSAGE);
+					if(e.getMessage().contains("foreign key"))
+					{
+						//Significa che l'ingrediente non può essere eliminato perchè c'è una ricetta che lo contiene 
+						JOptionPane.showMessageDialog(null,"Impossibile eliminare  "+testo.getText()+ " perchè c'è almeno una ricetta che lo contiene","Errore",JOptionPane.WARNING_MESSAGE);
+					}
 				}
 			}
 		});
