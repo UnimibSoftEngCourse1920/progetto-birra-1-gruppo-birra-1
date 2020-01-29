@@ -16,6 +16,7 @@ public class ControllerIngrediente {
 	/*
 	 * Viene eliminata la ricetta identificata dal parametro nomeBirra dalla tabella
 	 * ricettaIngrediente.
+	 * Può lanciare SQLException se la query non dovesse andare a buon fine.
 	 */
 	public void disassociaRicetta(String nomeBirra) throws SQLException {
 		String sql = "delete from ricettaIngrediente where nomeBirra = '" + nomeBirra + "'";
@@ -24,7 +25,8 @@ public class ControllerIngrediente {
 
 	/*
 	 * Per ogni ingrediente contenuto nella HashMap ingredienti viene associato alla
-	 * ricetta identificata dal parametro nomeBirra
+	 * ricetta identificata dal parametro nomeBirra.
+	 * Può lanciare SQLException se la query non dovesse andare a buon fine.
 	 */
 	public void associaRicetta(String nomeBirra, HashMap<String, Double> ingredienti) throws SQLException {
 		for (Entry<String, Double> coppia : ingredienti.entrySet())
@@ -33,9 +35,10 @@ public class ControllerIngrediente {
 
 	/*
 	 * Vengono inseriti la ricetta (identificata dal parametro nomeBirra) e
-	 * l'ingrediente identificato dal parametro nomeIngrediente nella tabella
+	 * l'ingrediente (identificato dal parametro nomeIngrediente) nella tabella
 	 * ricettaIngrediente, in modo tale da associare alla ricetta l'ingrediente
 	 * necessario.
+	 * Può lanciare SQLException se la query non dovesse andare a buon fine.
 	 */
 	public void associaRicetta(String nomeBirra, String nomeIngrediente, double percentuale) throws SQLException {
 		String sql = "insert into ricettaIngrediente (nomeBirra, nomeIngrediente, percentuale) values ('" + nomeBirra
@@ -45,7 +48,8 @@ public class ControllerIngrediente {
 
 	/*
 	 * Viene eliminato l'ingrediente (identificato dal parametro nomeingrediente)
-	 * dalla tabella ingrediente
+	 * dalla tabella ingrediente.
+	 * Può lanciare SQLException se la query non dovesse andare a buon fine.
 	 */
 	public void eliminaIngrediente(String nomeIngrediente) throws SQLException {
 		String sql = "delete from ingrediente where nomeIngrediente = '" + nomeIngrediente + "'";
@@ -53,7 +57,8 @@ public class ControllerIngrediente {
 	}
 
 	/*
-	 * Viene modificato l'ingrediente inserito nel database
+	 * Viene modificato l'ingrediente inserito nel database.
+	 * Può lanciare SQLException se la query non dovesse andare a buon fine.
 	 */
 	public void modificaIngrediente(Ingrediente ingr) throws SQLException {
 		String sql = "update ingrediente set quantita = " + ingr.getQuantita() + ", tipo = '" + ingr.getTipo()
@@ -62,7 +67,8 @@ public class ControllerIngrediente {
 	}
 
 	/*
-	 * Dato un insieme di ingredienti, vengono aggiunti al database
+	 * Dato un insieme di ingredienti, vengono aggiunti al database.
+	 * Può lanciare SQLException se la query non dovesse andare a buon fine.
 	 */
 	public void aggiungiIngredienti(Set<Ingrediente> ingredienti) throws SQLException {
 		for (Ingrediente ingr : ingredienti)
@@ -70,7 +76,8 @@ public class ControllerIngrediente {
 	}
 
 	/*
-	 * Viene aggiunto l'ingrediente nel database
+	 * Viene aggiunto l'ingrediente nel database.
+	 * Può lanciare SQLException se la query non dovesse andare a buon fine.
 	 */
 	public void aggiungiIngrediente(Ingrediente ingr) throws SQLException {
 		String sql = "insert ignore into ingrediente (nomeIngrediente, quantita, tipo, bloccato) values ('"
@@ -81,7 +88,8 @@ public class ControllerIngrediente {
 
 	/*
 	 * Vengono prelevati tuttti gli ingredienti associati alla ricetta identificata
-	 * dal parametro nomeBirra
+	 * dal parametro nomeBirra.
+	 * Può lanciare SQLException se la query non dovesse andare a buon fine.
 	 */
 	public HashMap<String, Double> getQuantitaIngredienti(String nomeBirra) throws SQLException {
 		String queryIngredienti = "select nomeIngrediente, percentuale from ricettaIngrediente where nomeBirra = '"
@@ -96,7 +104,8 @@ public class ControllerIngrediente {
 	}
 
 	/*
-	 * Viene prelevato dal database l'ingrediente identificato dal suo nome
+	 * Viene prelevato dal database l'ingrediente identificato dal suo nome.
+	 * Può lanciare SQLException se la query non dovesse andare a buon fine.
 	 */
 	public Ingrediente getIngrediente(String nomeIngrediente) throws SQLException {
 		String query = "select * from ingrediente where nomeIngrediente = '" + nomeIngrediente + "'";

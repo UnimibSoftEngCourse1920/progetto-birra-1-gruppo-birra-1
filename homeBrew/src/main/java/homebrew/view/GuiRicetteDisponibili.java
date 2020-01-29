@@ -8,6 +8,12 @@ import homebrew.model.QuantitaRicetta;
 import homebrew.model.Ricetta;
 import homebrew.controller.*;
 
+/*
+ * La classe GuiRicetteDisponibili fornisce una interfaccia grafica all'utente,
+ * composta esclusivamente da un bottone, che, se cliccato, permette di mostrare i 
+ * dettagli relativi alla ricetta che massimizza la quanttità di birra producibile, tra quelle
+ * inserite nel database
+ */
 public class GuiRicetteDisponibili implements Gui 
 {
 	private FacadeController controller;
@@ -43,7 +49,9 @@ public class GuiRicetteDisponibili implements Gui
 		draw();
 	}
 	
-	//Ascoltatore dell'evento click del bottone mostra ricette disponibili
+	/*
+	 * Ascoltatore dell'evento click del bottone mostra ricette disponibili
+	 */
 	private void clickRicetteDisponibili(JButton button, final JFrame guiFrame)
 	{
 		button.addActionListener(e -> {

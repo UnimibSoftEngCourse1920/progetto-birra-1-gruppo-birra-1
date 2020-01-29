@@ -17,12 +17,19 @@ import javax.swing.WindowConstants;
 import homebrew.model.Ingrediente;
 import homebrew.controller.FacadeController;
 
+/**
+ * La classe GuiIngredienti fornisce al birraio la possibilità di 
+ * aggiungere un ingrediente, eliminarlo, visualizzarlo oppure modificarlo.
 
+ */
 public class GuiIngredienti implements Gui 
 {
 	private FacadeController controller;
 	private static final String ERRORE = "errore";
 	
+	/*
+	 * Viene disegnata l'interfaccia grafica
+	 */
 	@Override
 	public void draw() 
 	{
@@ -143,6 +150,8 @@ public class GuiIngredienti implements Gui
 		
 		guiFrame.add(campiIngrediente);
 		
+		//Ascoltatori degli eventi click sui vari bottoni
+	
 		//Se clicco su visualizza ingrediente
 		clickGetIngrediente(getIngrediente, testo, guiFrame);
 		
@@ -155,7 +164,6 @@ public class GuiIngredienti implements Gui
 		//Se clicco su modifica ingrediente
 		clickModificaIngrediente(modificaIngrediente, nome, quantita, tipo, bloccato);
 		
-		
 		guiFrame.setVisible(true);
 	}
 	
@@ -165,8 +173,9 @@ public class GuiIngredienti implements Gui
 		draw();
 	}
 	
-	
-	//Ascoltatore dell' evento click sul bottone getIngrediente
+	/*
+	 * Ascoltatore dell' evento click sul bottone getIngrediente
+	 */
 	private void clickGetIngrediente(JButton getIngrediente, final JTextField testo, final JFrame guiFrame)
 	{
 		getIngrediente.addActionListener(e -> {
@@ -195,7 +204,9 @@ public class GuiIngredienti implements Gui
 		});
 	}
 	
-	//Ascoltatore dell'evento elimina ingrediente
+	/*
+	 * Ascoltatore dell'evento elimina ingrediente
+	 */
 	private void clickEliminaIngrediente(JButton eliminaIngrediente, final JTextField testo)
 	{
 		eliminaIngrediente.addActionListener(e -> {
@@ -213,7 +224,9 @@ public class GuiIngredienti implements Gui
 		});
 	}
 	
-	//Ascoltatore dell'evento click sul bottone aggiungiIngrediente
+	/*
+	 * Ascoltatore dell'evento click sul bottone aggiungiIngrediente
+	 */
 	private void clickAggiungiIngrediente(JButton aggiungiIngrediente, final JTextField nome, final JTextField quantita, final JComboBox tipo, final JCheckBox bloccato)
 	{
 		aggiungiIngrediente.addActionListener(e -> {
@@ -234,7 +247,9 @@ public class GuiIngredienti implements Gui
 		});
 	}
 	
-	//Ascoltatore del bottone modifica ingrediente
+	/*
+	 * Ascoltatore del bottone modifica ingrediente
+	 */
 	private void clickModificaIngrediente(JButton modificaIngrediente, final JTextField nome, final JTextField quantita, final JComboBox tipo, final JCheckBox bloccato)
 	{
 		modificaIngrediente.addActionListener(e -> {
@@ -251,6 +266,9 @@ public class GuiIngredienti implements Gui
 		});
 	}
 	
+	/*
+	 * Permette di eliminare l'input inserito dall'utente, una volta che esso ha cliccato su un qualsiasi bottone
+	 */
 	private void pulisciCampiInput(final JTextField testo0, final JTextField testo1)
 	{
 		testo0.setText("");

@@ -11,10 +11,14 @@ import java.util.HashMap;
 
 
 /*
- * La classe DBUtils permette di eseguire le query di aggiornamento e select
+ * La classe DBUtils permette di eseguire le query necessarie per l'interazione con 
+ * il database
  */
 public class DBUtils {
 
+	/*
+	 * Costruttore provato, utile per nascondere quello implicito
+	 */
 	private DBUtils ()
 	{
 	}

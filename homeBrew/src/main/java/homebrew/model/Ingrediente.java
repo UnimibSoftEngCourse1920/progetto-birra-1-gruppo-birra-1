@@ -14,6 +14,7 @@ public class Ingrediente {
 		this.bloccato = bloccato;
 		this.tipo = tipo;
 	}
+	
 	//definisco i metodi per ottenere le informazioni delle variabili private 
 	public String getNome() {
 		return nome;

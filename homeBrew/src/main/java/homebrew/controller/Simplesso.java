@@ -2,6 +2,11 @@ package homebrew.controller;
 
 import java.util.Arrays;
 
+/*
+ * La classe simplesso permette di eseguire il meotodo del simplesso,
+ * al fine di determinare, tra quelle salvate nel db, la ricetta che massimizza
+ * la quantità di birra prodotta.
+ */
 public class Simplesso {
 	
 	private double[][] tableau;

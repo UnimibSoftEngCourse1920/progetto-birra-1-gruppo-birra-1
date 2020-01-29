@@ -56,11 +56,17 @@ public class ControllerAttrezzatura {
 		return parseNomiStrumenti(DBUtils.getRows(sql));
 	}
 
+	/*
+	 * Vengono prelevati dal database i nomi di tutti gli strumenti memorizzati
+	 */
 	public HashSet<String> getNomiStrumenti() throws SQLException {
 		String sql = "select nomeAttrezzatura from attrezzatura";
 		return parseNomiStrumenti(DBUtils.getRows(sql));
 	}
-
+	
+	/*
+	 * Venogono restituiti i nomi degli strumenti 
+	 */
 	private HashSet<String> parseNomiStrumenti(ArrayList<HashMap<String, Object>> rows) {
 		HashSet<String> nomi = new HashSet<>(rows.size());
 

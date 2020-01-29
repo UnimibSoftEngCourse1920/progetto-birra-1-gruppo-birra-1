@@ -7,6 +7,10 @@ import java.util.Map.Entry;
 import homebrew.model.QuantitaRicetta;
 import homebrew.model.Ricetta;
 
+/*
+ * La classe ricette disponibili permette di consigliare al birraio la ricetta 
+ * che, date le ricette inserite nel db, massimizza la quantità di birra producibile.
+ */
 public class RicetteDisponibili {
 
 	private ControllerRicetta cr;
@@ -19,6 +23,12 @@ public class RicetteDisponibili {
 		this.ca = ca;
 	}
 
+	/*
+	 * Viene restituito un oggetto di tipo QuantitaRicetta, che indica tutti i campi della ricetta e 
+	 * la quantità di birra che essa permette di produrre, relativo alla ricetta che massimizza la quantità di birra producibile 
+	 * tra quelle inserite nel database.
+	 * Può lanciare SQLException se le query che esegue non dovessero andare a buon fine.
+	 */
 	public QuantitaRicetta cosaDovreiPreparareOggi() throws SQLException {
 		String[] nomiBirre = nomiBirreDisponibili();
 		
@@ -41,6 +51,10 @@ public class RicetteDisponibili {
 		return new QuantitaRicetta(ricettaDaPrep, quantitaBirra);
 	}
 	
+	/*
+	 * Restituisce un array di stringhe, contenente tutti i nomi delle birre disponibili.
+	 * Può lanciare SQLException se la query non dovesse andare a buon fine.
+	 */
 	private String[] nomiBirreDisponibili() throws SQLException {
 		ArrayList<HashMap<String, Object>> rows = DBUtils.getRows(sqlNomiBirreDisponibili());
 	String[] nomi = new String[rows.size()];
@@ -51,6 +65,9 @@ public class RicetteDisponibili {
 		return nomi;
 	}
 	
+	/*
+	 * Restituisce la query necessaria per prelevare dal db i nomi delle ricette disponibili 
+	 */
 	private String sqlNomiBirreDisponibili() {
 		return "select nomeBirra "
 				+ "from ricetta as ric "
@@ -60,6 +77,10 @@ public class RicetteDisponibili {
 					+ "where ingr.nomeBirra = ric.nomeBirra AND (bloccato OR quantita = 0))";
 	}
 	
+	/*
+	 * Restituisce la quantità di birra prodotta dalla ricetta passata in input.
+	 * Può lanciare una SQLException
+	 */
 	public double getQuantita(Ricetta ricetta) throws SQLException {
 		double[][] tab = creaTableau(ricetta);
 		new Simplesso(tab).esegui();
@@ -67,6 +88,7 @@ public class RicetteDisponibili {
 	}
 	
 	/*
+	 * Viene eseguito il simplesso:
 	 * funzione obiettivo: quantita di birra da produrre
 	 * vincoli ingredienti: non eccedere la quantità disponibile, rispettare percentuale ricetta
 	 * vincolo birra: non eccedere la minima tra le capienze dei suoi strumenti

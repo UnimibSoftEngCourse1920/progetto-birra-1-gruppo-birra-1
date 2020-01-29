@@ -1,5 +1,5 @@
 package homebrew.model;
 
 public enum TipoIngrediente {
-	MALTO, LUPPOLI, ZUCCHERO, ACQUA, LIEVITO; //vengono definiti gli ingredienti delle ricette per fare la birra
-}
+	MALTO, LUPPOLI, ZUCCHERO, ACQUA, LIEVITO; //vengono definiti tutti i possibili tipi di ingrediente 
+	}

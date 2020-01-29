@@ -20,7 +20,8 @@ public class ControllerRicetta {
 	}
 
 	/*
-	 * Aggiungo una ricetta nel db
+	 * Aggiungo una ricetta nel db.
+	 * Può lanciare SQLException se la query non dovesse andare a buon fine.
 	 */
 	public void aggiungiRicetta(Ricetta ricetta) throws SQLException {
 		DBUtils.update(sqlAggiungiRicetta(ricetta));
@@ -33,8 +34,9 @@ public class ControllerRicetta {
 	}
 
 	/*
-	 * Questo metodo dato il nome della birra che una ricetta permette di produrre,
-	 * restituisce l'oggetto Ricetta
+	 * Dato il nome della birra che una ricetta permette di produrre, viene restituito
+	 * l'oggetto Ricetta corrispondente.
+	 * Può lanciare SQLException se la query non dovesse andare a buon fine.
 	 */
 	public Ricetta getRicetta(String nomeBirra) throws SQLException {
 		ArrayList<HashMap<String, Object>> rows = DBUtils.getRows(sqlGetRicetta(nomeBirra));
@@ -43,7 +45,8 @@ public class ControllerRicetta {
 
 	/*
 	 * Dato il risultato della query che preleva dal database una ricetta,
-	 * restituisce un oggetto di tipo ricetta
+	 * restituisce un oggetto di tipo ricetta.
+	 * Può lanciare SQLException se la query non dovesse andare a buon fine.
 	 */
 	private Ricetta parseRicetta(HashMap<String, Object> row) throws SQLException {
 		String nomeBirra = (String) row.get("nomeBirra");
@@ -55,7 +58,8 @@ public class ControllerRicetta {
 	}
 
 	/*
-	 * Viene eliminata la ricetta identificata dal nome ricevuto in input
+	 * Viene eliminata la ricetta identificata dal nome ricevuto in input.
+	 * Può lanciare SQLException se la query non dovesse andare a buon fine.
 	 */
 	public void eliminaRicetta(String nomeBirra) throws SQLException {
 		controllerIngr.disassociaRicetta(nomeBirra);
@@ -64,7 +68,8 @@ public class ControllerRicetta {
 	}
 
 	/*
-	 * Viene modificata una ricetta presente nel database
+	 * Viene modificata una ricetta presente nel database.
+	 * Può lanciare SQLException se la query non dovesse andare a buon fine.
 	 */
 	public void modificaRicetta(Ricetta ricetta) throws SQLException {
 		eliminaRicetta(ricetta.getNomeBirra());
@@ -72,7 +77,8 @@ public class ControllerRicetta {
 	}
 
 	/*
-	 * Viene aggiunta una nota alla ricetta identificata dal parametro nomeBirra
+	 * Viene aggiunta una nota alla ricetta identificata dal parametro nomeBirra.
+	 * Può lanciare SQLException se la query non dovesse andare a buon fine.
 	 */
 	public void aggiungiNota(String nomeBirra, Nota nota) throws SQLException {
 		Ricetta ricetta = getRicetta(nomeBirra);
@@ -81,7 +87,7 @@ public class ControllerRicetta {
 	}
 
 	/*
-	 * Metodo che crea la query necessaria per eliminare la ricetta dal db
+	 * Metodo che crea la query necessaria per eliminare la ricetta dal db.
 	 */
 	private String sqlEliminaRicetta(String nomeBirra) {
 		return "delete from ricetta where nomeBirra = '" + nomeBirra + "'";

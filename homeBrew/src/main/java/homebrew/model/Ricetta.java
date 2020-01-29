@@ -14,8 +14,8 @@ public class Ricetta {
 	private HashSet<String> nomiStrumenti; // Indica l'attrezzatura necessaria per mettere in atto la ricetta
 	private HashMap<String, Double> ingredienti; // é l'insieme di ingredienti necessari per la ricetta
 															// con le relative percentuali
-	private Nota nota; // Nota a cui c'è scritto appunti sulla ricetta di questa birra
-
+	private Nota nota; // Nota in cui sono indicati appunti raltivi alla ricetta
+	
 	public Ricetta(String nomeBirra, double tempo, String procedimento, Set<String> strumenti,
 			Map<String, Double> ingredienti, Nota nota) {
 		this.nomeBirra = nomeBirra;
@@ -26,6 +26,8 @@ public class Ricetta {
 		this.nota = nota;
 	}
 
+	//Getter e setter 
+	
 	public String getNomeBirra() {
 		return nomeBirra;
 	}

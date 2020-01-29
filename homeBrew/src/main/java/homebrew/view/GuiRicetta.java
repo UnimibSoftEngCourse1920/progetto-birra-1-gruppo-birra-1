@@ -12,7 +12,11 @@ import homebrew.model.Ricetta;
 import homebrew.controller.*;
 
 
-
+/**
+ * La classe GuiRicetta firnisce una interfaccia grafica, mediante la quale l'utente può 
+ * visualizzare i dati di una ricetta, eliminare la ricetta, visualizzare l'eventuale nota ad essa associata,
+ * modificare la ricetta, aggiungere una nota, oppure aggiungere una ricetta 
+ */
 public class GuiRicetta implements Gui {
 
 	private FacadeController controller;
@@ -26,6 +30,9 @@ public class GuiRicetta implements Gui {
 		draw();
 	}
 	
+	/*
+	 * Viene disegnata l'interfaccia grafica
+	 */
 	@Override
 	public void draw() 
 	{
@@ -193,9 +200,7 @@ public class GuiRicetta implements Gui {
 		gbc.anchor = GridBagConstraints.LINE_START;
 		elementiGraficiRicetta.add(aggiungiNota, gbc);
 		
-		
-		
-		//Ascoltatori
+		//Ascoltatori relativi agli eventi click sui vari bottoni
 		
 		//Se clicco sul bottone visualizza ricetta
 		clickGetRicetta(getRicetta, nome, guiFrame);
@@ -225,7 +230,9 @@ public class GuiRicetta implements Gui {
 		guiFrame.setVisible(true);
 	}
 
-	//Ascoltatore dell'evento click del bottone mostraRicetta
+	/*
+	 * Ascoltatore dell'evento click del bottone mostraRicetta
+	 */
 	private void clickGetRicetta(JButton getRicetta, final JTextField nome, final JFrame guiFrame)
 	{
 		getRicetta.addActionListener(e -> {
@@ -255,7 +262,9 @@ public class GuiRicetta implements Gui {
 		});
 	}
 
-	//Ascoltatore dell'evento click del bottone elimina ricetta
+	/*
+	 * Ascoltatore dell'evento click del bottone elimina ricetta
+	 */
 	private void clickEliminaRicetta(JButton eliminaRicetta, final JTextField nome, final JFrame guiFrame)
 	{
 		eliminaRicetta.addActionListener(e -> {
@@ -284,7 +293,9 @@ public class GuiRicetta implements Gui {
 		});
 	}
 	
-	//Ascoltatore dell'evento click del bottone visualizza nota
+	/*
+	 * Ascoltatore dell'evento click del bottone visualizza nota
+	 */
 	private void clickGetNota(JButton getNota, final JTextField nome, final JFrame guiFrame)
 	{
 		getNota.addActionListener(e -> {
@@ -321,7 +332,9 @@ public class GuiRicetta implements Gui {
 		});
 	}
 	
-	//Ascoltatore per il bottone aggiungiStrumenti
+	/*
+	 * Ascoltatore per il bottone aggiungiStrumenti
+	 */
 	private void clickAggiungiStrumento(JButton bottone, final JFrame guiFrame)
 	{
 		bottone.addActionListener(e -> {				
@@ -365,6 +378,10 @@ public class GuiRicetta implements Gui {
 			dialog.setVisible(true);
 		});
 	}
+	
+	/*
+	 * Ascoltatore dell'evento click sul bottone aggiungiIngrediente  
+	 */
 	private void clickAggiungiIngrediente(JButton bottone, final JFrame guiFrame)
 	{
 		bottone.addActionListener(e -> {
@@ -445,7 +462,8 @@ public class GuiRicetta implements Gui {
 			gbc.anchor = GridBagConstraints.LINE_END;
 			campiIngrediente.add(percentuale, gbc);
 			
-			
+			//Il bottone aggiungiIngrediente permette di associare l'ingrediete, i cui parametri,
+			//sono stati inseriti dall'utente, alla ricetta che si sta creando
 			JButton aggiungiIngrediente = new JButton("Aggiungi ingrediente");
 			gbc.gridx = 0;
 			gbc.gridy = 5;
@@ -463,7 +481,9 @@ public class GuiRicetta implements Gui {
 		});
 	}
 	
-	//Ascoltatore del bottone aggiungi strumento
+	/*
+	 * Ascoltatore del bottone aggiungi strumento
+	 */
 	private void clickAssociaStrumento(JButton bottone, final JComboBox attrezzatura)
 	{
 		//Attrezzatura[] a = new 
@@ -473,7 +493,9 @@ public class GuiRicetta implements Gui {
 		});
 	}
 	
-	//Ascoltatore bottone aggiungiIngrediente della ricetta
+	/*
+	 * Ascoltatore bottone aggiungiIngrediente della ricetta
+	 */
 	private void clickAssociaIngrediente(JButton bottone, final JTextField nome, final JTextField quantita, final JComboBox tipo, final JCheckBox bloccato, final JTextField percentuale, final JDialog dialog)
 	{
 		bottone.addActionListener(e -> {
@@ -495,7 +517,9 @@ public class GuiRicetta implements Gui {
 		});
 	}
 	
-	//Ascoltatore del bottone aggiungiRicetta
+	/*
+	 * Ascoltatore del bottone aggiungiRicetta
+	 */
 	private void clickAggiungiRicetta(JButton aggiungiRicetta, final JTextField nomeText, final JTextField tempoText, final JTextField procedimentoText, 
 			final JTextField notaText, final JTextField descrizioneNotaText, final JFrame guiFrame)
 	{
@@ -520,11 +544,14 @@ public class GuiRicetta implements Gui {
 				ingredienti = new HashMap<>();
 				strumenti = new HashSet<>();
 			}
+			//Elimino il testo inserito dall'utente
 			pulisciCampiInput(nomeText, tempoText, procedimentoText, notaText, descrizioneNotaText);
 		});
 	}
 	
-	//Ascoltatore dell'evento click sul bottone modifica ricetta
+	/*
+	 * Ascoltatore dell'evento click sul bottone modifica ricetta
+	 */
 	private void clickModificaRicetta(JButton modificaRicetta, final JTextField nomeText, final JTextField tempoText, final JTextField procedimentoText, 
 			final JTextField notaText, final JTextField descrizioneNotaText, final JFrame guiFrame)
 	{
@@ -555,7 +582,9 @@ public class GuiRicetta implements Gui {
 		});
 	}
 	
-	//Ascoltatore del bottone aggiungi nota 
+	/*
+	 * Ascoltatore del bottone aggiungi nota 
+	 */
 	private void clickAggiungiNota(JButton aggiungiNota, final JTextField nomeText,	final JTextField notaText, 
 			final JTextField descrizioneNotaText)
 	{
@@ -585,6 +614,10 @@ public class GuiRicetta implements Gui {
 			descrizioneNotaText.setText("");
 		});
 	}
+	
+	/*
+	 * Permette di eliminare il testo che è stato inserito dall'utente 
+	 */
 	private void pulisciCampiInput(JTextField nomeText, final JTextField tempoText, final JTextField procedimentoText, 
 			final JTextField notaText, final JTextField descrizioneNotaText)
 	{

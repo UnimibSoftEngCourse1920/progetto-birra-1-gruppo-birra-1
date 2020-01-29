@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 public class QuantitaRicetta {
 	
 	private Ricetta ricetta;
-	private HashMap<String, Double> quantitaIngredienti;
+	private HashMap<String, Double> quantitaIngredienti; //Per ogni ingrediente presente nella ricetta, tengo traccia della quantità
 	
 	public QuantitaRicetta(Ricetta ricetta, double quantitaBirra) {
 		this.ricetta = ricetta;

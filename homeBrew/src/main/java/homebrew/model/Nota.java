@@ -10,7 +10,8 @@ public class Nota {
 		this.titolo = titolo;
 		this.descrizione = descrizione;
 	}
-	//Vengono aggiunti i metodi per ottenere i vari valori delle variabili provate
+	
+	//Vengono aggiunti i metodi per ottenere i vari valori delle variabili private
 	public String getTitolo() {
 		return titolo;
 	}
