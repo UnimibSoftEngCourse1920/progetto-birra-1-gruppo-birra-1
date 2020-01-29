@@ -528,6 +528,7 @@ public class GuiRicetta implements Gui {
 			String tempo = tempoText.getText();
 			String procedimento = procedimentoText.getText();
 			String titoloNota = notaText.getText();
+			boolean aggiunta = false;
 			if(titoloNota.equals(""))
 				titoloNota=null;
 			String descrizioneNota = descrizioneNotaText.getText();
@@ -535,7 +536,11 @@ public class GuiRicetta implements Gui {
 				descrizioneNota = null;	
 			try 
 			{
-				controller.aggiungiRicetta(nomeBirra, tempo, procedimento, strumenti, ingredienti, titoloNota, descrizioneNota);
+				aggiunta = controller.aggiungiRicetta(nomeBirra, tempo, procedimento, strumenti, ingredienti, titoloNota, descrizioneNota);
+				if(aggiunta)
+					JOptionPane.showMessageDialog(null,"Ricetta aggiunta correttamente","Ricetta aggiunta",JOptionPane.INFORMATION_MESSAGE);
+				else
+					JOptionPane.showMessageDialog(null,"Non è stato possibile aggiungere la ricetta","Ricetta non aggiunta",JOptionPane.WARNING_MESSAGE);
 			}catch(IllegalArgumentException | SQLException error)
 			{
 				JOptionPane.showMessageDialog(guiFrame, error.toString());
@@ -560,7 +565,11 @@ public class GuiRicetta implements Gui {
 			String tempo = tempoText.getText();
 			String procedimento = procedimentoText.getText();
 			String titoloNota = notaText.getText();
+			if(titoloNota.equals(""))
+				titoloNota=null;
 			String descrizioneNota = descrizioneNotaText.getText();
+			if(descrizioneNota.equals(""))
+				descrizioneNota = null;	
 			try 
 			{
 				boolean risultato = controller.modificaRicetta(nomeBirra, tempo, procedimento, strumenti, ingredienti, titoloNota, descrizioneNota);

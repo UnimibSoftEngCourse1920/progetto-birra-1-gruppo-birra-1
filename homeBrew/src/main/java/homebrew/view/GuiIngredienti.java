@@ -240,10 +240,12 @@ public class GuiIngredienti implements Gui
 				aggiunto = controller.aggiungiIngrediente(nomeIngrediente, quantitaIngrediente, bloccatoIngrediente, tipoIngrediente);
 				if(aggiunto)
 					JOptionPane.showMessageDialog(null,"Ingrediente aggiunto correttamente","Ingrediente aggiunto",JOptionPane.INFORMATION_MESSAGE);
+				else
+					JOptionPane.showMessageDialog(null,"Impossibile aggiungere l'ingrediente ","Ingrediente non aggiunto",JOptionPane.WARNING_MESSAGE);
 			}catch (IllegalArgumentException | SQLException e1) {
 				JOptionPane.showMessageDialog(null,e1.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 			}
-			pulisciCampiInput(nome, quantita);
+			pulisciCampiInput(nome, quantita, bloccato);
 		});
 	}
 	
@@ -257,21 +259,27 @@ public class GuiIngredienti implements Gui
 			String quantitaIngrediente = quantita.getText();
 			boolean bloccatoIngrediente = bloccato.isSelected();
 			String tipoIngrediente = tipo.getSelectedItem().toString();
+			boolean modificato = false;
 			try {
-				controller.modificaIngrediente(nomeIngrediente, quantitaIngrediente, bloccatoIngrediente, tipoIngrediente);
+				modificato = controller.modificaIngrediente(nomeIngrediente, quantitaIngrediente, bloccatoIngrediente, tipoIngrediente);
+				if(modificato)
+					JOptionPane.showMessageDialog(null,"Ingrediente modificato correttamente","Ingrediente modificato",JOptionPane.INFORMATION_MESSAGE);
+				else
+					JOptionPane.showMessageDialog(null,"Impossibile modificare l'ingrediente","Ingrediente non modificato",JOptionPane.WARNING_MESSAGE);
 			}catch (IllegalArgumentException | SQLException e1) {
 				JOptionPane.showMessageDialog(null,e1.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 			}
-			pulisciCampiInput(nome, quantita);
+			pulisciCampiInput(nome, quantita, bloccato);
 		});
 	}
 	
 	/*
 	 * Permette di eliminare l'input inserito dall'utente, una volta che esso ha cliccato su un qualsiasi bottone
 	 */
-	private void pulisciCampiInput(final JTextField testo0, final JTextField testo1)
+	private void pulisciCampiInput(final JTextField testo0, final JTextField testo1, final JCheckBox bloccato)
 	{
 		testo0.setText("");
 		testo1.setText("");
+		bloccato.setSelected(false);
 	}
 }
