@@ -541,10 +541,14 @@ public class GuiRicetta implements Gui {
 					JOptionPane.showMessageDialog(null,"Ricetta aggiunta correttamente","Ricetta aggiunta",JOptionPane.INFORMATION_MESSAGE);
 				else
 					JOptionPane.showMessageDialog(null,"Non è stato possibile aggiungere la ricetta","Ricetta non aggiunta",JOptionPane.WARNING_MESSAGE);
-			}catch(IllegalArgumentException | NullPointerException | SQLException error)
+			}catch(IllegalArgumentException | SQLException error)
 			{
 				JOptionPane.showMessageDialog(guiFrame, error.toString());
-			}finally
+			}catch(NullPointerException error2)
+			{
+				JOptionPane.showMessageDialog(guiFrame, "Impossibile aggiungere la ricetta, dopo aver ottenuto un errore reinserire tutti i campi di ricetta da aggiungere");
+			}
+			finally
 			{
 				ingredienti = new HashMap<>();
 				strumenti = new HashSet<>();
@@ -583,9 +587,12 @@ public class GuiRicetta implements Gui {
 				{
 					JOptionPane.showMessageDialog(guiFrame, "Impossibile modificare la ricetta");
 				}
-			}catch (IllegalArgumentException | SQLException | NullPointerException e2) 
+			}catch (IllegalArgumentException | SQLException e2) 
 			{
 				JOptionPane.showMessageDialog(null,e2.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
+			}catch(NullPointerException error)
+			{
+				JOptionPane.showMessageDialog(null,"Impossibile modificare la ricetta, dopo che si ottiene un errore reinserire tutti i campi della ricetta",ERRORE,JOptionPane.WARNING_MESSAGE);
 			}
 			pulisciCampiInput(nomeText, tempoText, procedimentoText, notaText, descrizioneNotaText);
 		});
