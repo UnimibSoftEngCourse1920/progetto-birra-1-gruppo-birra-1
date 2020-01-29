@@ -239,7 +239,7 @@ public class GuiRicetta implements Gui {
 			Ricetta r =null;
 			try {
 				r = controller.getRicetta(nome.getText());
-			} catch (SQLException e1) {
+			} catch (SQLException | NullPointerException | IllegalArgumentException e1) {
 				JOptionPane.showMessageDialog(null,e1.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 			}
 			String output="";
@@ -281,7 +281,7 @@ public class GuiRicetta implements Gui {
 			{
 				try {
 					controller.eliminaRicetta(nome.getText());
-				} catch (SQLException e1) {
+				} catch (SQLException | NullPointerException | IllegalArgumentException e1) {
 					JOptionPane.showMessageDialog(null,e1.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 				}
 			}	
@@ -302,7 +302,7 @@ public class GuiRicetta implements Gui {
 			Ricetta r=null;
 			try {
 				r = controller.getRicetta(nome.getText());
-			} catch (SQLException e1) {
+			} catch (SQLException | NullPointerException | IllegalArgumentException e1) {
 				JOptionPane.showMessageDialog(null,e1.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 			}
 			Nota nota = null;
@@ -351,7 +351,7 @@ public class GuiRicetta implements Gui {
 			HashSet<String> opzioni=new HashSet<>();
 			try {
 				opzioni = controller.getNomiStrumenti();//Prendo tutti i nomi degli strumenti salvati nel database
-			} catch (SQLException e1) {
+			} catch (SQLException | NullPointerException | IllegalArgumentException e1) {
 				JOptionPane.showMessageDialog(null,e1.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 			}
 			String[] o = opzioni.toArray(new String[50]);
@@ -503,7 +503,7 @@ public class GuiRicetta implements Gui {
 			try 
 			{
 				i = controller.creaIngrediente(nome.getText(), quantita.getText(), bloccato.isSelected(), tipo.getSelectedItem().toString());
-			}catch(IllegalArgumentException e2)
+			}catch(IllegalArgumentException | NullPointerException e2)
 			{
 				JOptionPane.showMessageDialog(null,e2.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 			}
@@ -541,7 +541,7 @@ public class GuiRicetta implements Gui {
 					JOptionPane.showMessageDialog(null,"Ricetta aggiunta correttamente","Ricetta aggiunta",JOptionPane.INFORMATION_MESSAGE);
 				else
 					JOptionPane.showMessageDialog(null,"Non è stato possibile aggiungere la ricetta","Ricetta non aggiunta",JOptionPane.WARNING_MESSAGE);
-			}catch(IllegalArgumentException | SQLException error)
+			}catch(IllegalArgumentException | NullPointerException | SQLException error)
 			{
 				JOptionPane.showMessageDialog(guiFrame, error.toString());
 			}finally
@@ -583,7 +583,7 @@ public class GuiRicetta implements Gui {
 				{
 					JOptionPane.showMessageDialog(guiFrame, "Impossibile modificare la ricetta");
 				}
-			}catch (IllegalArgumentException | SQLException e2) 
+			}catch (IllegalArgumentException | SQLException | NullPointerException e2) 
 			{
 				JOptionPane.showMessageDialog(null,e2.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 			}
@@ -614,7 +614,7 @@ public class GuiRicetta implements Gui {
 					JOptionPane.showMessageDialog(null,"Impossibile aggiungere la nota",ERRORE,JOptionPane.WARNING_MESSAGE);
 				}
 			}
-			catch(IllegalArgumentException | NullPointerException | SQLException exception)
+			catch(IllegalArgumentException | NullPointerException | SQLException  exception)
 			{
 				JOptionPane.showMessageDialog(null,exception.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 			}

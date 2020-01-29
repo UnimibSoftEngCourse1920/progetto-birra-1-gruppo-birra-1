@@ -183,7 +183,7 @@ public class GuiIngredienti implements Gui
 			try 
 			{
 				i = controller.getIngrediente(testo.getText());
-			} catch (SQLException e1) {
+			} catch (SQLException | IllegalArgumentException | NullPointerException e1) {
 				JOptionPane.showMessageDialog(null,"Errore "+testo.getText(),ERRORE,JOptionPane.WARNING_MESSAGE);
 			}
 			if(i != null)
@@ -212,7 +212,7 @@ public class GuiIngredienti implements Gui
 		eliminaIngrediente.addActionListener(e -> {
 			try {
 				controller.eliminaIngrediente(testo.getText());
-			} catch (SQLException e1) 
+			} catch (SQLException | NullPointerException | IllegalArgumentException  e1) 
 			{
 				if(e1.getMessage().contains("foreign key"))
 				{
@@ -242,7 +242,7 @@ public class GuiIngredienti implements Gui
 					JOptionPane.showMessageDialog(null,"Ingrediente aggiunto correttamente","Ingrediente aggiunto",JOptionPane.INFORMATION_MESSAGE);
 				else
 					JOptionPane.showMessageDialog(null,"Impossibile aggiungere l'ingrediente ","Ingrediente non aggiunto",JOptionPane.WARNING_MESSAGE);
-			}catch (IllegalArgumentException | SQLException e1) {
+			}catch (IllegalArgumentException | SQLException | NullPointerException e1) {
 				JOptionPane.showMessageDialog(null,e1.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 			}
 			pulisciCampiInput(nome, quantita, bloccato);
@@ -266,7 +266,7 @@ public class GuiIngredienti implements Gui
 					JOptionPane.showMessageDialog(null,"Ingrediente modificato correttamente","Ingrediente modificato",JOptionPane.INFORMATION_MESSAGE);
 				else
 					JOptionPane.showMessageDialog(null,"Impossibile modificare l'ingrediente","Ingrediente non modificato",JOptionPane.WARNING_MESSAGE);
-			}catch (IllegalArgumentException | SQLException e1) {
+			}catch (IllegalArgumentException | SQLException | NullPointerException e1) {
 				JOptionPane.showMessageDialog(null,e1.getMessage(),ERRORE,JOptionPane.WARNING_MESSAGE);
 			}
 			pulisciCampiInput(nome, quantita, bloccato);
