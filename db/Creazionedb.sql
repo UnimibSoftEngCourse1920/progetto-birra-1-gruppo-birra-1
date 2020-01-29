@@ -38,3 +38,29 @@ create table ricettaAttrezzatura(
      FOREIGN KEY (nomeBirra) REFERENCES ricetta (nomeBirra),
      FOREIGN KEY (nomeAttrezzatura) REFERENCES attrezzatura (nomeAttrezzatura))
      Engine=Innodb;
+
+insert into attrezzatura (nomeAttrezzatura, portata, tipo) values('tubo1', 5.0, 'TUBO');
+
+
+insert into attrezzatura (nomeAttrezzatura, portata, tipo) values('tubo2', 10.0, 'TUBO');
+
+
+insert into attrezzatura (nomeAttrezzatura, portata, tipo) values('tubo3', 12.0, 'TUBO');
+
+
+insert into attrezzatura (nomeAttrezzatura, portata, tipo) values('cisterna1', 3.0, 'CISTERNA');
+
+
+insert into attrezzatura (nomeAttrezzatura, portata, tipo) values('cisterna2', 9.0, 'CISTERNA');
+
+
+insert into attrezzatura (nomeAttrezzatura, portata, tipo) values('cisterna3', 15.0, 'CISTERNA');
+
+
+insert into attrezzatura (nomeAttrezzatura, portata, tipo) values('fermentatore1', 5.0, 'FERMENTATORE');
+
+
+insert into attrezzatura (nomeAttrezzatura, portata, tipo) values('fermentatore2', 9.0, 'FERMENTATORE');
+
+
+insert into attrezzatura (nomeAttrezzatura, portata, tipo) values('fermentatore3', 12.0, 'FERMENTATORE');
