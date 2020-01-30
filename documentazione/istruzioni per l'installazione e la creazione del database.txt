@@ -1,0 +1,39 @@
+Per il corretto funzionamento dell'applicazione è necessario
+avere installato il programma MySQL Command Line per poter
+creare il database associato all'applicazione HomeBrew.
+E' possibile scaricare il programma MySQL Command Line
+dal seguente link http://www.professionalcipher.com/p/downloads_22.html.
+Si scelga la versione del programma adatta al dispositivo
+su cui verrà installata l'applicazione HomeBrew.
+Una volta scelto la versione e cliccato sul link, verrà scaricato il file
+mysql-5.5.62-winx64 (oppure mysql-5.5.62-winx32 in base al formato scelto 
+precedentemente).
+Estrarre e aprire il file per l'installazione.
+Appena la schermata per l'installazione viene avviata i passaggi da seguire 
+sono i seguenti:
+1) cliccare su next.
+2) accettare i termini di licenza e cliccare next.
+3) scegliere la versione "typical".
+4) cliccare su install.
+5) terminato l'installazione lasciare spuntata la casella per avviare
+automaticamente la finestra per configurare il server che userà 
+l'applicazione HomeBrew.
+6)Verrà così chiusa la finestra per l'installazione di MySQL Command Line.
+7) verrà aperta in automatico la finestra per la gestione del server.
+8) cliccare next.
+9) scegliere "Standard Configuration".
+10)spuntare la casella "Include Bin Directory in Window Path".
+11) scrivere una password da usare per entrare nel server di MySQL.
+12) scrivere nuovamente la password.
+13) cliccare next.
+14) cliccare execute.
+15) cliccare finish.
+16) andare su Start di Windows e digitare MySql Command Line.
+17) digitare la password definita durante l'installazione.
+
+Se dopo il passaggio 14 si è creato un errore, la cosa migliore da fare è 
+eliminare il programma appena installato, con TUTTE le cartelle a esso associate
+(anche quelle più nascoste). Dopo di chè riprovare a installare il programma. 
+
+Copiare i comandi contenuti nel file creazioneDb.txt che si trova nella cartella db del progetto.
+Così facendo il database è stato creato correttamente.
