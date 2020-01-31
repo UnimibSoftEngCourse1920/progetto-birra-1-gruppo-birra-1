@@ -29,7 +29,7 @@ l'applicazione HomeBrew.
 14) cliccare execute.
 15) cliccare finish.
 16) andare su Start di Windows e digitare MySql Command Line.
-17) digitare la password definita durante l'installazione.
+17) digitare la password definita durante l'installazione. (se non funziona, digitare 'root').
 
 Se dopo il passaggio 14 si è creato un errore, la cosa migliore da fare è 
 eliminare il programma appena installato, con TUTTE le cartelle a esso associate
